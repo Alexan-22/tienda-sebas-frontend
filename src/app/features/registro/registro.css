@@ -1,3 +1,467 @@
 :host {
   display: block;
 }
+
+/* =========================================
+   PÁGINA
+   ========================================= */
+
+.registro-page {
+  width: 100%;
+  min-height: 100vh;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  background: #ffffff;
+}
+
+
+/* =========================================
+   PANEL IZQUIERDO
+   ========================================= */
+
+.registro-hero {
+  position: relative;
+
+  min-height: 100vh;
+
+  display: flex;
+  align-items: flex-end;
+
+  padding: 70px;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 65% 35%,
+      #151515 0%,
+      #090909 38%,
+      #000000 72%
+    );
+
+  color: #ffffff;
+}
+
+.registro-hero::before {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.025),
+      transparent 45%
+    );
+
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 610px;
+
+  padding-bottom: 25px;
+}
+
+.hero-brand {
+  margin: 0 0 48px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  letter-spacing: 0.38em;
+}
+
+.hero-content h1 {
+  margin: 0;
+
+  font-size: clamp(52px, 5vw, 82px);
+  font-weight: 900;
+
+  line-height: 0.92;
+
+  letter-spacing: -0.055em;
+}
+
+.hero-description {
+  max-width: 570px;
+
+  margin: 30px 0 0;
+
+  color: #c5c5c5;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   PANEL DERECHO
+   ========================================= */
+
+.registro-form-section {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 55px 70px;
+
+  background: #ffffff;
+}
+
+.registro-form-container {
+  width: 100%;
+  max-width: 520px;
+}
+
+
+/* =========================================
+   VOLVER
+   ========================================= */
+
+.volver-link {
+  display: inline-block;
+
+  margin-bottom: 42px;
+
+  color: #999999;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  letter-spacing: 0.25em;
+
+  text-decoration: none;
+}
+
+.volver-link:hover {
+  color: #000000;
+}
+
+
+/* =========================================
+   CABECERA
+   ========================================= */
+
+.form-heading {
+  margin-bottom: 38px;
+}
+
+.form-heading span {
+  display: block;
+
+  margin-bottom: 17px;
+
+  color: #999999;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 0.34em;
+}
+
+.form-heading h2 {
+  margin: 0;
+
+  color: #000000;
+
+  font-size: clamp(29px, 3vw, 38px);
+  font-weight: 900;
+
+  line-height: 1;
+
+  letter-spacing: -0.04em;
+}
+
+
+/* =========================================
+   FORMULARIO
+   ========================================= */
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 16px;
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #000000;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 0.12em;
+}
+
+.form-group input {
+  width: 100%;
+  height: 56px;
+
+  border: 1px solid #d5d5d5;
+  border-radius: 0;
+
+  outline: none;
+
+  padding: 0 16px;
+
+  background: #ffffff;
+  color: #111111;
+
+  font-size: 14px;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.form-group input:focus {
+  border-color: #000000;
+
+  box-shadow:
+    inset 0 0 0 1px #000000;
+}
+
+.form-group input:disabled {
+  background: #f7f7f7;
+  color: #777777;
+}
+
+
+/* =========================================
+   CONTRASEÑA
+   ========================================= */
+
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 90px;
+}
+
+.show-password {
+  position: absolute;
+
+  top: 0;
+  right: 0;
+
+  width: 85px;
+  height: 56px;
+
+  border: 0;
+
+  background: transparent;
+  color: #000000;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* =========================================
+   MENSAJES
+   ========================================= */
+
+.alert {
+  margin-bottom: 22px;
+
+  padding: 15px 16px;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+.alert-error {
+  border: 1px solid #ffb4b4;
+
+  background: #fff1f1;
+  color: #c40000;
+}
+
+.alert-success {
+  border: 1px solid #b8dfc1;
+
+  background: #f0fff3;
+  color: #176b2c;
+}
+
+
+/* =========================================
+   BOTÓN
+   ========================================= */
+
+.register-button {
+  width: 100%;
+  height: 64px;
+
+  margin-top: 4px;
+
+  border: 1px solid #000000;
+
+  background: #000000;
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 0.3em;
+
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.register-button:hover:not(:disabled) {
+  background: #ffffff;
+  color: #000000;
+}
+
+.register-button:disabled {
+  border-color: #aaaaaa;
+
+  background: #aaaaaa;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   LOGIN
+   ========================================= */
+
+.login-section {
+  margin-top: 30px;
+
+  padding-top: 28px;
+
+  border-top: 1px solid #e5e5e5;
+
+  text-align: center;
+}
+
+.login-section p {
+  margin: 0 0 14px;
+
+  color: #777777;
+
+  font-size: 12px;
+}
+
+.login-section a {
+  color: #000000;
+
+  font-size: 12px;
+
+  letter-spacing: 0.2em;
+
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 950px) {
+
+  .registro-page {
+    grid-template-columns: 1fr;
+  }
+
+  .registro-hero {
+    min-height: 330px;
+
+    padding: 45px 35px;
+  }
+
+  .hero-content {
+    padding-bottom: 0;
+  }
+
+  .hero-brand {
+    margin-bottom: 28px;
+  }
+
+  .hero-content h1 {
+    font-size: 54px;
+  }
+
+  .registro-form-section {
+    min-height: auto;
+
+    padding: 55px 30px 70px;
+  }
+
+}
+
+
+/* =========================================
+   MÓVIL
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .registro-hero {
+    min-height: 280px;
+
+    padding: 35px 22px;
+  }
+
+  .hero-brand {
+    margin-bottom: 25px;
+
+    font-size: 11px;
+  }
+
+  .hero-content h1 {
+    font-size: 44px;
+  }
+
+  .hero-description {
+    margin-top: 20px;
+
+    font-size: 12px;
+  }
+
+  .registro-form-section {
+    padding: 40px 20px 60px;
+  }
+
+  .volver-link {
+    margin-bottom: 32px;
+
+    font-size: 11px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+
+    gap: 0;
+  }
+
+  .form-heading h2 {
+    font-size: 30px;
+  }
+
+}

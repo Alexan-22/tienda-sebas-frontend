@@ -1,0 +1,238 @@
+<div class="registro-page">
+
+  <!-- =========================================
+       PANEL IZQUIERDO
+       ========================================= -->
+  <section class="registro-hero">
+
+    <div class="hero-content">
+
+      <p class="hero-brand">
+        TIENDA SEBAS
+      </p>
+
+      <h1>
+        CREA TU<br>
+        CUENTA.
+      </h1>
+
+      <p class="hero-description">
+        Regístrate para comprar tus productos favoritos,
+        realizar pedidos y consultar tus compras.
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================
+       FORMULARIO
+       ========================================= -->
+  <section class="registro-form-section">
+
+    <div class="registro-form-container">
+
+      <a
+        routerLink="/"
+        class="volver-link"
+      >
+        ← VOLVER A LA TIENDA
+      </a>
+
+
+      <div class="form-heading">
+
+        <span>
+          MI CUENTA
+        </span>
+
+        <h2>
+          CREAR UNA CUENTA
+        </h2>
+
+      </div>
+
+
+      <form
+        #registroForm="ngForm"
+        (ngSubmit)="registrar()"
+        novalidate
+      >
+
+        <!-- NOMBRE + APELLIDO -->
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label for="nombre">
+              NOMBRE
+            </label>
+
+            <input
+              id="nombre"
+              name="nombre"
+              type="text"
+              [(ngModel)]="nombre"
+              placeholder="Dario"
+              autocomplete="given-name"
+              required
+              [disabled]="cargando"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="apellido">
+              APELLIDO
+            </label>
+
+            <input
+              id="apellido"
+              name="apellido"
+              type="text"
+              [(ngModel)]="apellido"
+              placeholder="Administrador"
+              autocomplete="family-name"
+              required
+              [disabled]="cargando"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- CORREO -->
+        <div class="form-group">
+
+          <label for="correo">
+            CORREO ELECTRÓNICO
+          </label>
+
+          <input
+            id="correo"
+            name="correo"
+            type="email"
+            [(ngModel)]="correo"
+            placeholder="dario@tiendasebas.com"
+            autocomplete="email"
+            required
+            [disabled]="cargando"
+          >
+
+        </div>
+
+
+        <!-- CONTRASEÑA -->
+        <div class="form-group">
+
+          <label for="password">
+            CONTRASEÑA
+          </label>
+
+          <div class="password-field">
+
+            <input
+              id="password"
+              name="password"
+              [type]="mostrarPassword ? 'text' : 'password'"
+              [(ngModel)]="password"
+              placeholder="Mínimo 6 caracteres"
+              autocomplete="new-password"
+              required
+              minlength="6"
+              [disabled]="cargando"
+            >
+
+            <button
+              type="button"
+              class="show-password"
+              (click)="mostrarPassword = !mostrarPassword"
+            >
+              {{ mostrarPassword ? 'OCULTAR' : 'VER' }}
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- CONFIRMAR CONTRASEÑA -->
+        <div class="form-group">
+
+          <label for="confirmarPassword">
+            CONFIRMAR CONTRASEÑA
+          </label>
+
+          <input
+            id="confirmarPassword"
+            name="confirmarPassword"
+            [type]="mostrarPassword ? 'text' : 'password'"
+            [(ngModel)]="confirmarPassword"
+            placeholder="Repite tu contraseña"
+            autocomplete="new-password"
+            required
+            [disabled]="cargando"
+          >
+
+        </div>
+
+
+        <!-- ERROR -->
+        @if (error) {
+
+          <div class="alert alert-error">
+            {{ error }}
+          </div>
+
+        }
+
+
+        <!-- ÉXITO -->
+        @if (mensaje) {
+
+          <div class="alert alert-success">
+            {{ mensaje }}
+          </div>
+
+        }
+
+
+        <!-- BOTÓN -->
+        <button
+          type="submit"
+          class="register-button"
+          [disabled]="cargando"
+        >
+
+          @if (cargando) {
+            CREANDO CUENTA...
+          } @else {
+            CREAR CUENTA
+          }
+
+        </button>
+
+      </form>
+
+
+      <div class="login-section">
+
+        <p>
+          ¿Ya tienes una cuenta?
+        </p>
+
+        <a routerLink="/login">
+          INICIAR SESIÓN
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>

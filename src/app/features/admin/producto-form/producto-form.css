@@ -1,0 +1,215 @@
+:host {
+  display: block;
+}
+
+.back {
+  display: inline-block;
+
+  margin-bottom: 25px;
+
+  color: #777;
+
+  text-decoration: none;
+
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+header {
+  margin-bottom: 25px;
+}
+
+header p {
+  margin: 0 0 7px;
+
+  color: #999;
+
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .2em;
+}
+
+h1 {
+  margin: 0;
+
+  font-size: 34px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+form {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr) 330px;
+
+  gap: 18px;
+
+  align-items: start;
+}
+
+.main,
+aside {
+  display: grid;
+
+  gap: 18px;
+}
+
+.card {
+  padding: 25px;
+
+  background: white;
+
+  border: 1px solid #e5e5e5;
+}
+
+.card h2 {
+  margin: 0 0 22px;
+
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+label {
+  display: block;
+
+  margin-top: 17px;
+
+  color: #555;
+
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+
+  margin-top: 8px;
+
+  padding: 12px;
+
+  border: 1px solid #d5d5d5;
+
+  background: white;
+
+  outline: none;
+
+  font-size: 11px;
+}
+
+input,
+select {
+  height: 46px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: black;
+}
+
+.columns {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 15px;
+}
+
+.check {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 50px;
+
+  margin: 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.check input {
+  width: 18px;
+  height: 18px;
+
+  margin: 0;
+
+  accent-color: black;
+}
+
+small {
+  display: block;
+
+  margin-top: 10px;
+
+  color: #999;
+
+  font-size: 9px;
+}
+
+.save {
+  height: 52px;
+
+  border: 0;
+
+  background: black;
+  color: white;
+
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .15em;
+
+  cursor: pointer;
+}
+
+.save:disabled {
+  background: #999;
+}
+
+.error {
+  margin-bottom: 18px;
+
+  padding: 14px;
+
+  background: #fef2f2;
+  color: #b91c1c;
+
+  border: 1px solid #fecaca;
+
+  font-size: 10px;
+}
+
+.loading {
+  padding: 60px;
+
+  background: white;
+
+  border: 1px solid #eee;
+
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+
+  form {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .columns {
+    grid-template-columns: 1fr;
+  }
+
+}

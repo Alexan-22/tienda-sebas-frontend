@@ -1,0 +1,226 @@
+<section class="page">
+
+  <header class="header">
+
+    <div>
+      <p>CATÁLOGO</p>
+      <h1>Productos</h1>
+      <span>
+        Administra los productos de la tienda.
+      </span>
+    </div>
+
+    <a routerLink="/admin/productos/nuevo">
+      + NUEVO PRODUCTO
+    </a>
+
+  </header>
+
+  <div class="stats">
+
+    <article>
+      <span>TOTAL</span>
+      <strong>{{ productos.length }}</strong>
+    </article>
+
+    <article>
+      <span>NUEVOS</span>
+      <strong>{{ totalNuevos }}</strong>
+    </article>
+
+    <article>
+      <span>DESTACADOS</span>
+      <strong>{{ totalDestacados }}</strong>
+    </article>
+
+  </div>
+
+  <section class="panel">
+
+    <div class="toolbar">
+
+      <input
+        type="search"
+        [(ngModel)]="busqueda"
+        (ngModelChange)="aplicarFiltro()"
+        placeholder="Buscar producto..."
+      >
+
+      <span>
+        {{ productosFiltrados.length }}
+        resultados
+      </span>
+
+    </div>
+
+    @if (cargando) {
+
+      <div class="message">
+        Cargando productos...
+      </div>
+
+    } @else if (error) {
+
+      <div class="message error">
+        {{ error }}
+      </div>
+
+    } @else if (
+      productosFiltrados.length === 0
+    ) {
+
+      <div class="message">
+        No hay productos.
+      </div>
+
+    } @else {
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>PRODUCTO</th>
+              <th>CATEGORÍA</th>
+              <th>GÉNERO</th>
+              <th>PRECIO</th>
+              <th>ESTADO</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @for (
+              producto of productosFiltrados;
+              track producto.idProducto
+            ) {
+
+              <tr>
+
+                <td>
+
+                  <div class="product">
+
+                    <div class="image">
+
+                      @if (imagenUrl(producto)) {
+                        <img
+                          [src]="imagenUrl(producto)"
+                          [alt]="producto.nombre"
+                        >
+                      } @else {
+                        <span>TS</span>
+                      }
+
+                    </div>
+
+                    <div>
+                      <strong>
+                        {{ producto.nombre }}
+                      </strong>
+
+                      <small>
+                        ID #{{ producto.idProducto }}
+                      </small>
+                    </div>
+
+                  </div>
+
+                </td>
+
+                <td>
+                  {{
+                    producto.categoria
+                      .nombreCategoria
+                  }}
+                </td>
+
+                <td>
+                  {{
+                    producto.genero
+                      .nombreGenero
+                  }}
+                </td>
+
+                <td>
+                  S/
+                  {{
+                    precioActual(producto)
+                      | number:'1.2-2'
+                  }}
+                </td>
+
+                <td>
+                  <span
+                    class="status"
+                    [class.inactive]="!producto.estado"
+                  >
+                    {{
+                      producto.estado
+                        ? 'ACTIVO'
+                        : 'INACTIVO'
+                    }}
+                  </span>
+                </td>
+
+                <td>
+
+                  <div class="actions">
+
+                    <a
+                      [routerLink]="[
+                        '/producto',
+                        producto.idProducto
+                      ]"
+                      target="_blank"
+                    >
+                      VER
+                    </a>
+
+                    <a
+                      [routerLink]="[
+                        '/admin/productos',
+                        producto.idProducto,
+                        'editar'
+                      ]"
+                    >
+                      EDITAR
+                    </a>
+
+                    <button
+                      type="button"
+                      (click)="eliminarProducto(producto)"
+                      [disabled]="
+                        eliminandoId ===
+                        producto.idProducto
+                      "
+                    >
+                      {{
+                        eliminandoId ===
+                        producto.idProducto
+                          ? '...'
+                          : 'ELIMINAR'
+                      }}
+                    </button>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    }
+
+  </section>
+
+</section>

@@ -1,0 +1,554 @@
+<app-promo-bar></app-promo-bar>
+
+<app-navbar></app-navbar>
+
+
+<main class="tienda-page">
+
+
+  <!-- =====================================
+       CABECERA
+       ===================================== -->
+
+  <section class="tienda-header">
+
+    <div class="tienda-container">
+
+      <p class="eyebrow">
+        Tienda Sebas
+      </p>
+
+      <h1 class="tienda-title">
+
+        @if (soloNuevos) {
+          Novedades
+        } @else {
+          Tienda
+        }
+
+      </h1>
+
+      <p class="tienda-description">
+
+        @if (soloNuevos) {
+
+          Descubre los últimos productos
+          de nuestra colección.
+
+        } @else {
+
+          Descubre nuestra colección para hombres,
+          mujeres, niños y niñas.
+
+        }
+
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================
+       NAVEGACIÓN POR GÉNERO
+       ===================================== -->
+
+  <section class="gender-navigation">
+
+    <div
+      class="tienda-container
+             gender-navigation-inner"
+    >
+
+      <button
+        type="button"
+        (click)="seleccionarGenero(0)"
+        [class.active]="generoSeleccionado === 0 && !soloNuevos"
+      >
+        Todos
+      </button>
+
+
+      <button
+        type="button"
+        (click)="seleccionarGenero(1)"
+        [class.active]="generoSeleccionado === 1"
+      >
+        Hombres
+      </button>
+
+
+      <button
+        type="button"
+        (click)="seleccionarGenero(2)"
+        [class.active]="generoSeleccionado === 2"
+      >
+        Mujeres
+      </button>
+
+
+      <button
+        type="button"
+        (click)="seleccionarGenero(3)"
+        [class.active]="generoSeleccionado === 3"
+      >
+        Niños
+      </button>
+
+
+      <button
+        type="button"
+        (click)="seleccionarGenero(4)"
+        [class.active]="generoSeleccionado === 4"
+      >
+        Niñas
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================
+       CONTENIDO
+       ===================================== -->
+
+  <section class="tienda-content">
+
+    <div class="tienda-container">
+
+
+      <!-- ===================================
+           BUSCADOR / CONTADOR / ORDEN
+           =================================== -->
+
+      <div class="catalog-toolbar">
+
+
+        <!-- BUSCADOR -->
+        <div class="search-section">
+
+          <label for="buscarProducto">
+            Buscar productos
+          </label>
+
+
+          <div class="search-box">
+
+            <input
+              id="buscarProducto"
+              type="search"
+              [(ngModel)]="busqueda"
+              (ngModelChange)="aplicarFiltros()"
+              placeholder="¿Qué estás buscando?"
+            >
+
+
+            <span class="search-icon">
+              ⌕
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- DERECHA -->
+        <div class="toolbar-right">
+
+
+          <!-- CONTADOR -->
+          <div class="product-counter">
+
+            <span>
+              Productos
+            </span>
+
+            <strong>
+              {{ productosFiltrados.length }}
+            </strong>
+
+          </div>
+
+
+          <!-- ORDEN -->
+          <div class="sort-section">
+
+            <label for="orden">
+              Ordenar por
+            </label>
+
+
+            <select
+              id="orden"
+              [(ngModel)]="ordenSeleccionado"
+              (change)="aplicarFiltros()"
+            >
+
+              <option value="relevancia">
+                Relevancia
+              </option>
+
+              <option value="precio-asc">
+                Precio: menor a mayor
+              </option>
+
+              <option value="precio-desc">
+                Precio: mayor a menor
+              </option>
+
+              <option value="nombre">
+                Nombre
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ===================================
+           CATÁLOGO
+           =================================== -->
+
+      <div class="catalog-layout">
+
+
+        <!-- =================================
+             FILTROS
+             ================================= -->
+
+        <aside class="filters">
+
+
+          <!-- CABECERA FILTROS -->
+          <div class="filters-heading">
+
+            <h2>
+              Filtros
+            </h2>
+
+
+            <button
+              type="button"
+              (click)="limpiarFiltros()"
+            >
+              Limpiar
+            </button>
+
+          </div>
+
+
+          <!-- NOVEDADES -->
+          <div class="filter-group">
+
+            <h3>
+              Colección
+            </h3>
+
+
+            <div class="filter-options">
+
+              <button
+                type="button"
+                [class.active]="soloNuevos"
+                (click)="soloNuevos = !soloNuevos; aplicarFiltros()"
+              >
+                Novedades
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- GÉNERO -->
+          <div class="filter-group">
+
+            <h3>
+              Género
+            </h3>
+
+
+            <div class="filter-options">
+
+              <button
+                type="button"
+                (click)="seleccionarGenero(0)"
+                [class.active]="generoSeleccionado === 0 && !soloNuevos"
+              >
+                Todos
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarGenero(1)"
+                [class.active]="generoSeleccionado === 1"
+              >
+                Hombres
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarGenero(2)"
+                [class.active]="generoSeleccionado === 2"
+              >
+                Mujeres
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarGenero(3)"
+                [class.active]="generoSeleccionado === 3"
+              >
+                Niños
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarGenero(4)"
+                [class.active]="generoSeleccionado === 4"
+              >
+                Niñas
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- CATEGORÍA -->
+          <div class="filter-group">
+
+            <h3>
+              Categoría
+            </h3>
+
+
+            <div class="filter-options">
+
+              <button
+                type="button"
+                (click)="seleccionarCategoria(0)"
+                [class.active]="categoriaSeleccionada === 0"
+              >
+                Todas
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarCategoria(1)"
+                [class.active]="categoriaSeleccionada === 1"
+              >
+                Polos
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarCategoria(2)"
+                [class.active]="categoriaSeleccionada === 2"
+              >
+                Camisas
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarCategoria(3)"
+                [class.active]="categoriaSeleccionada === 3"
+              >
+                Pantalones
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarCategoria(4)"
+                [class.active]="categoriaSeleccionada === 4"
+              >
+                Casacas
+              </button>
+
+            </div>
+
+          </div>
+
+        </aside>
+
+
+        <!-- =================================
+             PRODUCTOS
+             ================================= -->
+
+        <div class="products-area">
+
+
+          <!-- CARGANDO -->
+          @if (cargando) {
+
+            <div class="products-grid">
+
+              @for (
+                item of [1,2,3,4,5,6,7,8];
+                track item
+              ) {
+
+                <div class="product-skeleton">
+
+                  <div class="skeleton-image">
+                  </div>
+
+                  <div
+                    class="skeleton-line
+                           skeleton-small">
+                  </div>
+
+                  <div
+                    class="skeleton-line
+                           skeleton-medium">
+                  </div>
+
+                  <div
+                    class="skeleton-line
+                           skeleton-price">
+                  </div>
+
+                </div>
+
+              }
+
+            </div>
+
+          }
+
+
+          <!-- ERROR -->
+          @else if (errorCarga) {
+
+            <div class="catalog-message">
+
+              <span class="message-code">
+                Error
+              </span>
+
+
+              <h2>
+                No pudimos cargar los productos
+              </h2>
+
+
+              <p>
+                Comprueba que el servidor de la tienda
+                esté funcionando e inténtalo nuevamente.
+              </p>
+
+
+              <button
+                type="button"
+                (click)="cargarProductos()"
+              >
+                Intentar nuevamente
+              </button>
+
+            </div>
+
+          }
+
+
+          <!-- SIN RESULTADOS -->
+          @else if (
+            productosFiltrados.length === 0
+          ) {
+
+            <div class="catalog-message">
+
+              <span class="message-code">
+                0 productos
+              </span>
+
+
+              <h2>
+
+                @if (soloNuevos) {
+
+                  No hay novedades disponibles
+
+                } @else {
+
+                  No encontramos productos
+
+                }
+
+              </h2>
+
+
+              <p>
+
+                @if (soloNuevos) {
+
+                  Próximamente agregaremos nuevos
+                  productos a esta colección.
+
+                } @else {
+
+                  Prueba con otra búsqueda o cambia
+                  los filtros seleccionados.
+
+                }
+
+              </p>
+
+
+              <button
+                type="button"
+                (click)="limpiarFiltros()"
+              >
+                Ver todos los productos
+              </button>
+
+            </div>
+
+          }
+
+
+          <!-- PRODUCTOS -->
+          @else {
+
+            <div class="products-grid">
+
+              @for (
+                producto of productosFiltrados;
+                track producto.idProducto
+              ) {
+
+                <app-product-card
+                  [producto]="producto">
+                </app-product-card>
+
+              }
+
+            </div>
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<app-footer></app-footer>

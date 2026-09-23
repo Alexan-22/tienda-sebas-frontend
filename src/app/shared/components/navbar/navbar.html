@@ -1,46 +1,36 @@
-<header class="sticky top-0 z-50 border-b border-neutral-200 bg-white">
+<header class="site-header">
 
-  <div
-    class="mx-auto flex h-[76px] max-w-[1400px]
-           items-center justify-between px-5 lg:px-10"
-  >
+  <div class="navbar-container">
 
     <!-- LOGO -->
     <a
       routerLink="/"
-      class="flex shrink-0 items-center"
+      class="brand"
       (click)="cerrarMenu()"
     >
-      <div class="leading-none">
+      <span class="brand-main">
+        TIENDA SEBAS
+      </span>
 
-        <div class="text-[21px] font-black tracking-[-0.06em]">
-          TIENDA SEBAS
-        </div>
-
-        <div
-          class="mt-1 text-[8px] font-bold uppercase
-                 tracking-[0.35em] text-neutral-500"
-        >
-          Fashion Store
-        </div>
-
-      </div>
+      <span class="brand-sub">
+        POLVOS
+      </span>
     </a>
 
 
-    <!-- NAVEGACIÓN PC -->
-    <nav class="hidden items-center gap-8 lg:flex">
+    <!-- NAVEGACIÓN DESKTOP -->
+    <nav class="desktop-nav">
 
       <a
-        routerLink="/"
-        fragment="novedades"
+        routerLink="/tienda"
+        [queryParams]="{ nuevo: true }"
         class="nav-link"
       >
         Novedades
       </a>
 
       <a
-        routerLink="/"
+        routerLink="/tienda"
         [queryParams]="{ genero: 1 }"
         class="nav-link"
       >
@@ -48,7 +38,7 @@
       </a>
 
       <a
-        routerLink="/"
+        routerLink="/tienda"
         [queryParams]="{ genero: 2 }"
         class="nav-link"
       >
@@ -56,7 +46,7 @@
       </a>
 
       <a
-        routerLink="/"
+        routerLink="/tienda"
         [queryParams]="{ genero: 3 }"
         class="nav-link"
       >
@@ -64,8 +54,15 @@
       </a>
 
       <a
-        routerLink="/"
-        fragment="colecciones"
+        routerLink="/tienda"
+        [queryParams]="{ genero: 4 }"
+        class="nav-link"
+      >
+        Niñas
+      </a>
+
+      <a
+        routerLink="/tienda"
         class="nav-link"
       >
         Colecciones
@@ -75,112 +72,91 @@
 
 
     <!-- ACCIONES -->
-    <div class="flex items-center gap-2">
+    <div class="navbar-actions">
 
       <!-- CUENTA -->
       <button
         type="button"
         class="icon-button"
+        aria-label="Mi cuenta"
         title="Mi cuenta"
         (click)="irACuenta()"
       >
-
         <svg
+          width="21"
+          height="21"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           stroke-width="1.7"
-          class="h-[21px] w-[21px]"
         >
           <circle cx="12" cy="8" r="4"></circle>
-
-          <path
-            d="M4 21a8 8 0 0 1 16 0"
-          ></path>
+          <path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"></path>
         </svg>
-
       </button>
 
 
       <!-- CARRITO -->
       <a
         routerLink="/carrito"
-        class="icon-button relative"
+        class="icon-button cart-button"
+        aria-label="Carrito"
         title="Carrito"
       >
-
         <svg
+          width="22"
+          height="22"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           stroke-width="1.7"
-          class="h-[22px] w-[22px]"
         >
-          <path
-            d="M3 4h2l2.2 10.2a2 2 0 0 0
-               2 1.6h7.7a2 2 0 0 0
-               2-1.6L21 7H6"
-          ></path>
-
+          <path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.5h7.8a2 2 0 0 0 2-1.6L21 7H7"></path>
           <circle cx="10" cy="20" r="1"></circle>
           <circle cx="18" cy="20" r="1"></circle>
         </svg>
 
-
         @if (carritoService.cantidadTotal() > 0) {
-
-          <span
-            class="absolute right-0 top-0 flex
-                   h-[17px] min-w-[17px]
-                   items-center justify-center
-                   rounded-full bg-black px-1
-                   text-[9px] font-bold text-white"
-          >
+          <span class="cart-count">
             {{ carritoService.cantidadTotal() }}
           </span>
-
         }
-
       </a>
 
 
       <!-- MENÚ MÓVIL -->
       <button
         type="button"
-        class="icon-button lg:hidden"
+        class="icon-button menu-button"
         aria-label="Abrir menú"
         (click)="toggleMenu()"
       >
-
         @if (!menuAbierto) {
-
           <svg
+            width="23"
+            height="23"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             stroke-width="1.7"
-            class="h-6 w-6"
           >
             <path d="M4 7h16"></path>
             <path d="M4 12h16"></path>
             <path d="M4 17h16"></path>
           </svg>
-
         } @else {
-
           <svg
+            width="23"
+            height="23"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             stroke-width="1.7"
-            class="h-6 w-6"
           >
             <path d="M6 6l12 12"></path>
             <path d="M18 6L6 18"></path>
           </svg>
-
         }
-
       </button>
 
     </div>
@@ -188,22 +164,16 @@
   </div>
 
 
-  <!-- MENÚ PARA CELULAR -->
+  <!-- MENÚ MÓVIL -->
   @if (menuAbierto) {
 
-    <div
-      class="border-t border-neutral-200
-             bg-white px-5 py-6 lg:hidden"
-    >
+    <div class="mobile-menu">
 
-      <nav
-        class="flex flex-col text-sm font-bold
-               uppercase tracking-[0.12em]"
-      >
+      <nav class="mobile-nav">
 
         <a
-          routerLink="/"
-          fragment="novedades"
+          routerLink="/tienda"
+          [queryParams]="{ nuevo: true }"
           class="mobile-link"
           (click)="cerrarMenu()"
         >
@@ -211,7 +181,7 @@
         </a>
 
         <a
-          routerLink="/"
+          routerLink="/tienda"
           [queryParams]="{ genero: 1 }"
           class="mobile-link"
           (click)="cerrarMenu()"
@@ -220,7 +190,7 @@
         </a>
 
         <a
-          routerLink="/"
+          routerLink="/tienda"
           [queryParams]="{ genero: 2 }"
           class="mobile-link"
           (click)="cerrarMenu()"
@@ -229,7 +199,7 @@
         </a>
 
         <a
-          routerLink="/"
+          routerLink="/tienda"
           [queryParams]="{ genero: 3 }"
           class="mobile-link"
           (click)="cerrarMenu()"
@@ -238,49 +208,45 @@
         </a>
 
         <a
-          routerLink="/carrito"
+          routerLink="/tienda"
+          [queryParams]="{ genero: 4 }"
           class="mobile-link"
           (click)="cerrarMenu()"
         >
-          Carrito ({{ carritoService.cantidadTotal() }})
+          Niñas
         </a>
+
+        <a
+          routerLink="/tienda"
+          class="mobile-link"
+          (click)="cerrarMenu()"
+        >
+          Colecciones
+        </a>
+
+
+        <button
+          type="button"
+          class="mobile-link mobile-button"
+          (click)="irACuenta()"
+        >
+          @if (authService.autenticado()) {
+            Mis compras
+          } @else {
+            Iniciar sesión
+          }
+        </button>
 
 
         @if (authService.autenticado()) {
 
-          <a
-            routerLink="/mis-compras"
-            class="mobile-link"
-            (click)="cerrarMenu()"
-          >
-            Mis compras
-          </a>
-
           <button
             type="button"
-            class="mobile-link text-left"
+            class="mobile-link mobile-button logout-button"
             (click)="cerrarSesion()"
           >
             Cerrar sesión
           </button>
-
-        } @else {
-
-          <a
-            routerLink="/login"
-            class="mobile-link"
-            (click)="cerrarMenu()"
-          >
-            Iniciar sesión
-          </a>
-
-          <a
-            routerLink="/registro"
-            class="mobile-link"
-            (click)="cerrarMenu()"
-          >
-            Crear cuenta
-          </a>
 
         }
 

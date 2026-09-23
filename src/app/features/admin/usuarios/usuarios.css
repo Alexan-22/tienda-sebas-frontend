@@ -1,0 +1,82 @@
+:host {
+  display: block;
+}
+
+header {
+  margin-bottom: 25px;
+}
+
+header p,
+.panel-title p {
+  margin: 0 0 7px;
+
+  color: #999;
+
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .2em;
+}
+
+h1 {
+  margin: 0;
+
+  font-size: 34px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+header span {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #777;
+
+  font-size: 10px;
+}
+
+.panel {
+  min-height: 400px;
+
+  background: white;
+
+  border: 1px solid #e5e5e5;
+}
+
+.panel-title {
+  padding: 22px;
+
+  border-bottom: 1px solid #eee;
+}
+
+.panel-title h2 {
+  margin: 0;
+
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.empty {
+  min-height: 300px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.empty strong {
+  color: #eee;
+
+  font-size: 45px;
+  font-weight: 900;
+}
+
+.empty p {
+  color: #888;
+
+  font-size: 10px;
+}
