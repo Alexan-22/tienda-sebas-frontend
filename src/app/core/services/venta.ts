@@ -1,6 +1,4 @@
-import {
-  Injectable
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import {
   HttpClient
@@ -35,6 +33,10 @@ export class VentaService {
   ) {}
 
 
+  // =========================================================
+  // REALIZAR COMPRA
+  // =========================================================
+
   comprar(
     request: CompraRequest
   ): Observable<CompraResponse> {
@@ -43,17 +45,39 @@ export class VentaService {
       this.apiUrl,
       request
     );
+
   }
 
 
-  misCompras():
-    Observable<Venta[]> {
+  // =========================================================
+  // COMPRAS DEL CLIENTE LOGUEADO
+  // =========================================================
+
+  misCompras(): Observable<Venta[]> {
 
     return this.http.get<Venta[]>(
       `${this.apiUrl}/mis-compras`
     );
+
   }
 
+
+  // =========================================================
+  // ADMIN - LISTAR TODAS LAS VENTAS
+  // =========================================================
+
+  listarTodas(): Observable<Venta[]> {
+
+    return this.http.get<Venta[]>(
+      `${this.apiUrl}/admin`
+    );
+
+  }
+
+
+  // =========================================================
+  // DETALLE DE UNA VENTA
+  // =========================================================
 
   detalleVenta(
     idVenta: number
@@ -62,5 +86,7 @@ export class VentaService {
     return this.http.get<DetalleVenta[]>(
       `${this.apiUrl}/${idVenta}/detalle`
     );
+
   }
+
 }

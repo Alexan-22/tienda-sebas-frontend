@@ -1,1 +1,661 @@
-<p>ventas works!</p>
+<section class="page">
+
+  <!-- ==========================================
+       CABECERA
+  =========================================== -->
+
+  <header class="page-header">
+
+    <div>
+
+      <p>NEGOCIO</p>
+
+      <h1>Ventas</h1>
+
+      <span>
+        Consulta y administra las ventas
+        realizadas en Tienda Sebas.
+      </span>
+
+    </div>
+
+  </header>
+
+
+  <!-- ==========================================
+       ESTADÍSTICAS
+  =========================================== -->
+
+  <section class="stats">
+
+    <article>
+
+      <span>VENTAS TOTALES</span>
+
+      <strong>
+        {{ totalVentas }}
+      </strong>
+
+      <small>
+        Ventas registradas
+      </small>
+
+    </article>
+
+
+    <article>
+
+      <span>INGRESOS</span>
+
+      <strong>
+        S/
+        {{
+          ingresosTotales
+            | number:'1.2-2'
+        }}
+      </strong>
+
+      <small>
+        Ingresos acumulados
+      </small>
+
+    </article>
+
+
+    <article>
+
+      <span>VENTA PROMEDIO</span>
+
+      <strong>
+        S/
+        {{
+          ventaPromedio
+            | number:'1.2-2'
+        }}
+      </strong>
+
+      <small>
+        Promedio por venta
+      </small>
+
+    </article>
+
+  </section>
+
+
+  <!-- ==========================================
+       PANEL
+  =========================================== -->
+
+  <section class="panel">
+
+    <div class="panel-header">
+
+      <div class="title">
+
+        <p>REGISTRO DE VENTAS</p>
+
+        <h2>
+          Ventas
+        </h2>
+
+      </div>
+
+
+      <div class="filters">
+
+        <input
+          type="text"
+          [(ngModel)]="busqueda"
+          (ngModelChange)="aplicarFiltros()"
+          placeholder="Buscar cliente, correo o venta..."
+        >
+
+
+        <select
+          [(ngModel)]="filtroPago"
+          (ngModelChange)="aplicarFiltros()"
+        >
+
+          <option value="">
+            Todos los pagos
+          </option>
+
+          <option value="YAPE">
+            Yape
+          </option>
+
+          <option value="TARJETA">
+            Tarjeta
+          </option>
+
+        </select>
+
+
+        <select
+          [(ngModel)]="filtroEstado"
+          (ngModelChange)="aplicarFiltros()"
+        >
+
+          <option value="">
+            Todos los estados
+          </option>
+
+          @for (
+            estado of estados;
+            track estado
+          ) {
+
+            <option
+              [value]="estado"
+            >
+              {{ estado }}
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <!-- CARGANDO -->
+
+    @if (cargando) {
+
+      <div class="message">
+
+        Cargando ventas...
+
+      </div>
+
+    }
+
+
+    <!-- ERROR -->
+
+    @else if (error) {
+
+      <div class="message error">
+
+        {{ error }}
+
+      </div>
+
+    }
+
+
+    <!-- VACÍO -->
+
+    @else if (
+      ventasFiltradas.length === 0
+    ) {
+
+      <div class="message">
+
+        No se encontraron ventas.
+
+      </div>
+
+    }
+
+
+    <!-- TABLA -->
+
+    @else {
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>VENTA</th>
+
+              <th>FECHA</th>
+
+              <th>CLIENTE</th>
+
+              <th>MEDIO DE PAGO</th>
+
+              <th>TOTAL</th>
+
+              <th>ESTADO</th>
+
+              <th>ACCIÓN</th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              venta of ventasFiltradas;
+              track venta.idVenta
+            ) {
+
+              <tr>
+
+                <td>
+
+                  <strong>
+                    #{{ venta.idVenta }}
+                  </strong>
+
+                </td>
+
+
+                <td>
+
+                  {{
+                    venta.fechaVenta
+                      | date:'dd/MM/yyyy'
+                  }}
+
+                  <small class="time">
+
+                    {{
+                      venta.fechaVenta
+                        | date:'HH:mm'
+                    }}
+
+                  </small>
+
+                </td>
+
+
+                <td>
+
+                  <div class="customer">
+
+                    <strong>
+
+                      {{
+                        nombreCliente(
+                          venta
+                        )
+                      }}
+
+                    </strong>
+
+                    <span>
+
+                      {{
+                        venta.usuario?.correo
+                      }}
+
+                    </span>
+
+                  </div>
+
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="payment"
+                  >
+
+                    {{
+                      venta.medioPago
+                    }}
+
+                  </span>
+
+                </td>
+
+
+                <td>
+
+                  <strong>
+
+                    S/
+                    {{
+                      venta.total
+                        | number:'1.2-2'
+                    }}
+
+                  </strong>
+
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="status"
+                  >
+
+                    {{
+                      venta.estado
+                    }}
+
+                  </span>
+
+                </td>
+
+
+                <td>
+
+                  <button
+                    type="button"
+                    class="detail-button"
+                    (click)="
+                      verDetalle(
+                        venta
+                      )
+                    "
+                  >
+
+                    VER DETALLE
+
+                  </button>
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    }
+
+  </section>
+
+</section>
+
+
+<!-- ==========================================
+     MODAL DETALLE
+=========================================== -->
+
+@if (ventaSeleccionada) {
+
+  <div
+    class="modal-backdrop"
+    (click)="cerrarDetalle()"
+  >
+
+    <section
+      class="modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <header class="modal-header">
+
+        <div>
+
+          <p>
+            DETALLE DE VENTA
+          </p>
+
+          <h2>
+
+            Venta
+            #{{ ventaSeleccionada.idVenta }}
+
+          </h2>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="cerrarDetalle()"
+        >
+
+          ×
+
+        </button>
+
+      </header>
+
+
+      <div class="sale-info">
+
+        <div>
+
+          <span>CLIENTE</span>
+
+          <strong>
+
+            {{
+              nombreCliente(
+                ventaSeleccionada
+              )
+            }}
+
+          </strong>
+
+          <small>
+
+            {{
+              ventaSeleccionada
+                .usuario
+                ?.correo
+            }}
+
+          </small>
+
+        </div>
+
+
+        <div>
+
+          <span>FECHA</span>
+
+          <strong>
+
+            {{
+              ventaSeleccionada
+                .fechaVenta
+                | date:'dd/MM/yyyy HH:mm'
+            }}
+
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>PAGO</span>
+
+          <strong>
+
+            {{
+              ventaSeleccionada
+                .medioPago
+            }}
+
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>ESTADO</span>
+
+          <strong>
+
+            {{
+              ventaSeleccionada
+                .estado
+            }}
+
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      @if (cargandoDetalle) {
+
+        <div class="modal-message">
+
+          Cargando detalle...
+
+        </div>
+
+      }
+
+
+      @else if (errorDetalle) {
+
+        <div class="modal-message error">
+
+          {{ errorDetalle }}
+
+        </div>
+
+      }
+
+
+      @else {
+
+        <div class="detail-table">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>PRODUCTO</th>
+
+                <th>TALLA</th>
+
+                <th>CANT.</th>
+
+                <th>PRECIO</th>
+
+                <th>SUBTOTAL</th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                detalle of detalles;
+                track detalle.idDetalleVenta
+              ) {
+
+                <tr>
+
+                  <td>
+
+                    <strong>
+
+                      {{
+                        detalle
+                          .productoTalla
+                          .producto
+                          .nombre
+                      }}
+
+                    </strong>
+
+                  </td>
+
+
+                  <td>
+
+                    {{
+                      detalle
+                        .productoTalla
+                        .talla
+                        .nombreTalla
+                    }}
+
+                  </td>
+
+
+                  <td>
+
+                    {{ detalle.cantidad }}
+
+                  </td>
+
+
+                  <td>
+
+                    S/
+                    {{
+                      detalle
+                        .precioUnitario
+                        | number:'1.2-2'
+                    }}
+
+                  </td>
+
+
+                  <td>
+
+                    <strong>
+
+                      S/
+                      {{
+                        detalle
+                          .subtotal
+                          | number:'1.2-2'
+                      }}
+
+                    </strong>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <div class="modal-total">
+
+          <span>
+            TOTAL
+          </span>
+
+          <strong>
+
+            S/
+            {{
+              ventaSeleccionada
+                .total
+                | number:'1.2-2'
+            }}
+
+          </strong>
+
+        </div>
+
+      }
+
+    </section>
+
+  </div>
+
+}

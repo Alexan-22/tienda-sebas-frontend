@@ -1,1 +1,354 @@
-<p>usuarios works!</p>
+<header class="page-header">
+
+  <div>
+
+    <p>NEGOCIO</p>
+
+    <h1>USUARIOS</h1>
+
+    <span>
+      Administra las cuentas registradas en Tienda Sebas.
+    </span>
+
+  </div>
+
+</header>
+
+
+<section class="stats-grid">
+
+  <article class="stat-card">
+
+    <p>USUARIOS TOTALES</p>
+
+    <strong>
+      {{ totalUsuarios }}
+    </strong>
+
+    <span>
+      Cuentas registradas
+    </span>
+
+  </article>
+
+
+  <article class="stat-card">
+
+    <p>USUARIOS ACTIVOS</p>
+
+    <strong>
+      {{ usuariosActivos }}
+    </strong>
+
+    <span>
+      Cuentas habilitadas
+    </span>
+
+  </article>
+
+
+  <article class="stat-card">
+
+    <p>USUARIOS INACTIVOS</p>
+
+    <strong>
+      {{ usuariosInactivos }}
+    </strong>
+
+    <span>
+      Cuentas deshabilitadas
+    </span>
+
+  </article>
+
+
+  <article class="stat-card">
+
+    <p>ADMINISTRADORES</p>
+
+    <strong>
+      {{ administradores }}
+    </strong>
+
+    <span>
+      Cuentas administrativas
+    </span>
+
+  </article>
+
+</section>
+
+
+<section class="panel">
+
+  <div class="panel-header">
+
+    <div class="panel-title">
+
+      <p>GESTIÓN DE CUENTAS</p>
+
+      <h2>USUARIOS</h2>
+
+    </div>
+
+
+    <div class="filters">
+
+      <input
+        type="text"
+        [(ngModel)]="busqueda"
+        (ngModelChange)="aplicarFiltros()"
+        placeholder="Buscar nombre, correo o ID..."
+      >
+
+
+      <select
+        [(ngModel)]="filtroRol"
+        (ngModelChange)="aplicarFiltros()"
+      >
+
+        <option value="">
+          Todos los roles
+        </option>
+
+        @for (
+          rol of roles;
+          track rol
+        ) {
+
+          <option [value]="rol">
+            {{ rol }}
+          </option>
+
+        }
+
+      </select>
+
+
+      <select
+        [(ngModel)]="filtroEstado"
+        (ngModelChange)="aplicarFiltros()"
+      >
+
+        <option value="">
+          Todos los estados
+        </option>
+
+        <option value="ACTIVO">
+          Activos
+        </option>
+
+        <option value="INACTIVO">
+          Inactivos
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  @if (cargando) {
+
+    <div class="state-message">
+
+      <span class="loader"></span>
+
+      <p>
+        Cargando usuarios...
+      </p>
+
+    </div>
+
+  } @else if (error) {
+
+    <div class="state-message error">
+
+      <strong>
+        ERROR
+      </strong>
+
+      <p>
+        {{ error }}
+      </p>
+
+      <button
+        type="button"
+        (click)="cargarUsuarios()"
+      >
+        REINTENTAR
+      </button>
+
+    </div>
+
+  } @else if (
+    usuariosFiltrados.length === 0
+  ) {
+
+    <div class="state-message">
+
+      <strong>
+        0
+      </strong>
+
+      <p>
+        No se encontraron usuarios.
+      </p>
+
+      <button
+        type="button"
+        (click)="limpiarFiltros()"
+      >
+        LIMPIAR FILTROS
+      </button>
+
+    </div>
+
+  } @else {
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>USUARIO</th>
+
+            <th>CORREO</th>
+
+            <th>ROL</th>
+
+            <th>ESTADO</th>
+
+            <th>ACCIÓN</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            usuario of usuariosFiltrados;
+            track usuario.idUsuario
+          ) {
+
+            <tr>
+
+              <td>
+
+                <div class="user-cell">
+
+                  <div class="user-avatar">
+
+                    {{ iniciales(usuario) }}
+
+                  </div>
+
+
+                  <div>
+
+                    <strong>
+                      {{ nombreCompleto(usuario) }}
+                    </strong>
+
+                    <span>
+                      ID #{{ usuario.idUsuario }}
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <td>
+
+                <span class="email">
+                  {{ usuario.correo }}
+                </span>
+
+              </td>
+
+
+              <td>
+
+                <span
+                  class="role-badge"
+                  [class.admin]="esAdministrador(usuario)"
+                >
+                  {{ usuario.rol }}
+                </span>
+
+              </td>
+
+
+              <td>
+
+                @if (usuario.estado) {
+
+                  <span class="status active">
+                    ACTIVO
+                  </span>
+
+                } @else {
+
+                  <span class="status inactive">
+                    INACTIVO
+                  </span>
+
+                }
+
+              </td>
+
+
+              <td>
+
+                <button
+                  type="button"
+                  class="action-button"
+                  [class.activate]="!usuario.estado"
+                  [disabled]="procesandoId === usuario.idUsuario"
+                  (click)="cambiarEstado(usuario)"
+                >
+
+                  @if (
+                    procesandoId === usuario.idUsuario
+                  ) {
+
+                    PROCESANDO...
+
+                  } @else if (
+                    usuario.estado
+                  ) {
+
+                    DESACTIVAR
+
+                  } @else {
+
+                    ACTIVAR
+
+                  }
+
+                </button>
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  }
+
+</section>

@@ -1,14 +1,10 @@
+import { Injectable } from '@angular/core';
 import {
-  Injectable
-} from '@angular/core';
-
-import {
-  HttpClient
+  HttpClient,
+  HttpParams
 } from '@angular/common/http';
 
-import {
-  Observable
-} from 'rxjs';
+import { Observable } from 'rxjs';
 
 import {
   ProductoTalla
@@ -29,6 +25,10 @@ export class ProductoTallaService {
   ) {}
 
 
+  // ==========================================
+  // LISTAR TALLAS Y STOCK DE UN PRODUCTO
+  // ==========================================
+
   listarPorProducto(
     idProducto: number
   ): Observable<ProductoTalla[]> {
@@ -37,4 +37,62 @@ export class ProductoTallaService {
       `${this.apiUrl}/producto/${idProducto}`
     );
   }
+
+
+  // ==========================================
+  // REGISTRAR TALLA PARA UN PRODUCTO
+  // ==========================================
+
+  registrar(
+    idProducto: number,
+    idTalla: number,
+    stock: number
+  ): Observable<ProductoTalla> {
+
+    const params = new HttpParams()
+      .set(
+        'idProducto',
+        idProducto.toString()
+      )
+      .set(
+        'idTalla',
+        idTalla.toString()
+      )
+      .set(
+        'stock',
+        stock.toString()
+      );
+
+
+    return this.http.post<ProductoTalla>(
+      `${this.apiUrl}/admin`,
+      null,
+      { params }
+    );
+  }
+
+
+  // ==========================================
+  // ACTUALIZAR STOCK
+  // ==========================================
+
+  actualizarStock(
+    idProductoTalla: number,
+    stock: number
+  ): Observable<ProductoTalla> {
+
+    const params = new HttpParams()
+      .set(
+        'stock',
+        stock.toString()
+      );
+
+
+    return this.http.put<ProductoTalla>(
+      `${this.apiUrl}/admin/${idProductoTalla}/stock`,
+      null,
+      { params }
+    );
+  }
+
 }

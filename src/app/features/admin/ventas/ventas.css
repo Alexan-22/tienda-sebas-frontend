@@ -2,12 +2,18 @@
   display: block;
 }
 
-header {
+
+/* ==========================================
+   CABECERA
+========================================== */
+
+.page-header {
   margin-bottom: 25px;
 }
 
-header p,
-.title p {
+.page-header p,
+.title p,
+.modal-header p {
   margin: 0 0 7px;
 
   color: #999;
@@ -25,7 +31,7 @@ h1 {
   text-transform: uppercase;
 }
 
-header span {
+.page-header span {
   display: block;
 
   margin-top: 8px;
@@ -35,10 +41,16 @@ header span {
   font-size: 10px;
 }
 
+
+/* ==========================================
+   ESTADÍSTICAS
+========================================== */
+
 .stats {
   display: grid;
 
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns:
+    repeat(3, 1fr);
 
   gap: 12px;
 
@@ -58,6 +70,7 @@ header span {
 
   font-size: 8px;
   font-weight: 900;
+  letter-spacing: .12em;
 }
 
 .stats strong {
@@ -65,8 +78,26 @@ header span {
 
   margin-top: 12px;
 
+  color: #111;
+
   font-size: 28px;
+  font-weight: 900;
 }
+
+.stats small {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #aaa;
+
+  font-size: 8px;
+}
+
+
+/* ==========================================
+   PANEL
+========================================== */
 
 .panel {
   background: white;
@@ -74,21 +105,85 @@ header span {
   border: 1px solid #e5e5e5;
 }
 
-.title {
-  padding: 22px;
+.panel-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 20px 22px;
 
   border-bottom: 1px solid #eee;
+}
+
+.title {
+  flex-shrink: 0;
+}
+
+.title {
+  padding: 0;
+
+  border: 0;
 }
 
 .title h2 {
   margin: 0;
 
   font-size: 15px;
+  font-weight: 900;
   text-transform: uppercase;
 }
 
-.empty {
-  padding: 80px 20px;
+
+/* ==========================================
+   FILTROS
+========================================== */
+
+.filters {
+  display: flex;
+
+  gap: 8px;
+}
+
+.filters input,
+.filters select {
+  height: 42px;
+
+  padding: 0 13px;
+
+  background: white;
+
+  border: 1px solid #ddd;
+
+  outline: none;
+
+  color: #333;
+
+  font-size: 9px;
+}
+
+.filters input {
+  width: 260px;
+}
+
+.filters select {
+  min-width: 130px;
+}
+
+.filters input:focus,
+.filters select:focus {
+  border-color: #111;
+}
+
+
+/* ==========================================
+   MENSAJES
+========================================== */
+
+.message {
+  padding: 70px 20px;
 
   color: #888;
 
@@ -97,10 +192,411 @@ header span {
   font-size: 10px;
 }
 
-@media (max-width: 700px) {
+.message.error,
+.modal-message.error {
+  color: #c62828;
+}
+
+
+/* ==========================================
+   TABLA
+========================================== */
+
+.table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+thead {
+  background: #fafafa;
+}
+
+th {
+  padding: 15px 18px;
+
+  color: #999;
+
+  text-align: left;
+
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .15em;
+
+  border-bottom: 1px solid #eee;
+}
+
+td {
+  padding: 17px 18px;
+
+  color: #333;
+
+  font-size: 10px;
+
+  border-bottom: 1px solid #eee;
+
+  vertical-align: middle;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover {
+  background: #fcfcfc;
+}
+
+.time {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #aaa;
+
+  font-size: 8px;
+}
+
+
+/* ==========================================
+   CLIENTE
+========================================== */
+
+.customer strong {
+  display: block;
+
+  color: #111;
+
+  font-size: 10px;
+}
+
+.customer span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #999;
+
+  font-size: 8px;
+}
+
+
+/* ==========================================
+   BADGES
+========================================== */
+
+.payment {
+  display: inline-block;
+
+  padding: 6px 9px;
+
+  background: #f2f2f2;
+
+  color: #222;
+
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.status {
+  display: inline-block;
+
+  padding: 6px 9px;
+
+  background: #e9faf2;
+
+  color: #08794f;
+
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+
+/* ==========================================
+   BOTÓN DETALLE
+========================================== */
+
+.detail-button {
+  min-width: 100px;
+
+  padding: 11px 14px;
+
+  background: #0b0b0b;
+
+  border: 1px solid #0b0b0b;
+
+  color: white;
+
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .05em;
+}
+
+.detail-button:hover {
+  background: #292929;
+}
+
+
+/* ==========================================
+   MODAL
+========================================== */
+
+.modal-backdrop {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 25px;
+
+  background:
+    rgba(0, 0, 0, .55);
+}
+
+.modal {
+  width: min(
+    900px,
+    100%
+  );
+
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  background: white;
+
+  border: 1px solid #ddd;
+}
+
+.modal-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 22px 25px;
+
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h2 {
+  margin: 0;
+
+  color: #111;
+
+  font-size: 20px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.close-button {
+  width: 38px;
+  height: 38px;
+
+  background: white;
+
+  border: 1px solid #ddd;
+
+  color: #111;
+
+  font-size: 22px;
+  line-height: 1;
+}
+
+.close-button:hover {
+  background: #111;
+
+  color: white;
+}
+
+
+/* ==========================================
+   INFO DE LA VENTA
+========================================== */
+
+.sale-info {
+  display: grid;
+
+  grid-template-columns:
+    2fr 1fr 1fr 1fr;
+
+  border-bottom: 1px solid #eee;
+}
+
+.sale-info > div {
+  min-height: 90px;
+
+  padding: 20px;
+
+  border-right: 1px solid #eee;
+}
+
+.sale-info > div:last-child {
+  border-right: 0;
+}
+
+.sale-info span {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #999;
+
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+
+.sale-info strong {
+  display: block;
+
+  color: #111;
+
+  font-size: 10px;
+}
+
+.sale-info small {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #999;
+
+  font-size: 8px;
+}
+
+
+/* ==========================================
+   DETALLE
+========================================== */
+
+.modal-message {
+  padding: 60px 20px;
+
+  color: #888;
+
+  text-align: center;
+
+  font-size: 10px;
+}
+
+.detail-table {
+  overflow-x: auto;
+}
+
+.modal-total {
+  display: flex;
+
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 30px;
+
+  padding: 22px 25px;
+
+  background: #fafafa;
+
+  border-top: 1px solid #eee;
+}
+
+.modal-total span {
+  color: #777;
+
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .15em;
+}
+
+.modal-total strong {
+  color: #111;
+
+  font-size: 24px;
+  font-weight: 900;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (
+  max-width: 1000px
+) {
+
+  .panel-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+  }
+
+  .filters input {
+    flex: 1;
+    min-width: 220px;
+  }
+
+}
+
+
+@media (
+  max-width: 700px
+) {
 
   .stats {
     grid-template-columns: 1fr;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+
+  .filters input,
+  .filters select {
+    width: 100%;
+  }
+
+  .sale-info {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+  .sale-info > div {
+    border-bottom:
+      1px solid #eee;
+  }
+
+}
+
+
+@media (
+  max-width: 480px
+) {
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .sale-info {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-backdrop {
+    padding: 10px;
   }
 
 }

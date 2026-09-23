@@ -3,9 +3,26 @@ import {
 } from './producto-talla';
 
 
+export interface UsuarioVenta {
+
+  idUsuario: number;
+
+  nombre: string;
+
+  apellido: string;
+
+  correo: string;
+
+  estado: boolean;
+
+}
+
+
 export interface Venta {
 
   idVenta: number;
+
+  usuario: UsuarioVenta;
 
   fechaVenta: string;
 
@@ -14,6 +31,7 @@ export interface Venta {
   estado: string;
 
   medioPago: string;
+
 }
 
 
@@ -28,4 +46,5 @@ export interface DetalleVenta {
   precioUnitario: number;
 
   subtotal: number;
+
 }
