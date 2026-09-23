@@ -1,0 +1,273 @@
+<app-promo-bar class="no-print"></app-promo-bar>
+
+<div class="no-print">
+  <app-navbar></app-navbar>
+</div>
+
+
+<main class="min-h-screen bg-neutral-100 px-5 py-16">
+
+  <section
+    class="mx-auto max-w-[850px]">
+
+
+    <div
+      class="no-print mb-7 flex items-center justify-between">
+
+      <a
+        routerLink="/mis-compras"
+        class="text-[10px] font-black uppercase tracking-[0.18em]">
+
+        ← Mis compras
+
+      </a>
+
+
+      <button
+        type="button"
+        (click)="imprimir()"
+        class="h-12 bg-black px-6 text-[10px] font-black uppercase tracking-[0.18em] text-white">
+
+        Imprimir boleta
+
+      </button>
+
+    </div>
+
+
+    @if (cargando) {
+
+      <div
+        class="h-[600px] animate-pulse bg-white">
+      </div>
+
+    } @else if (error) {
+
+      <div class="bg-white p-12 text-center">
+
+        <p class="font-bold">
+          No pudimos cargar esta compra.
+        </p>
+
+      </div>
+
+    } @else {
+
+      <div
+        id="boleta"
+        class="bg-white p-8 sm:p-12">
+
+
+        <!-- CABECERA -->
+
+        <div
+          class="flex flex-col justify-between gap-8 border-b border-black pb-8 sm:flex-row">
+
+          <div>
+
+            <div
+              class="flex h-12 w-12 items-center justify-center bg-black text-sm font-black text-white">
+
+              TS
+
+            </div>
+
+            <h1
+              class="mt-4 text-2xl font-black uppercase">
+
+              Tienda Sebas
+
+            </h1>
+
+            <p
+              class="mt-1 text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-400">
+
+              Fashion Store
+
+            </p>
+
+          </div>
+
+
+          <div class="sm:text-right">
+
+            <p
+              class="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
+
+              Boleta de venta
+
+            </p>
+
+            <p
+              class="mt-2 text-3xl font-black">
+
+              #{{ idVenta }}
+
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- DETALLE -->
+
+        <div class="mt-10">
+
+          <div
+            class="hidden grid-cols-[1fr_80px_100px_100px] border-b border-neutral-200 pb-3 text-[9px] font-black uppercase tracking-[0.15em] text-neutral-400 sm:grid">
+
+            <span>Producto</span>
+
+            <span class="text-center">
+              Cant.
+            </span>
+
+            <span class="text-right">
+              Precio
+            </span>
+
+            <span class="text-right">
+              Subtotal
+            </span>
+
+          </div>
+
+
+          @for (
+            detalle of detalles;
+            track detalle.idDetalleVenta
+          ) {
+
+            <div
+              class="grid gap-3 border-b border-neutral-100 py-6 sm:grid-cols-[1fr_80px_100px_100px] sm:items-center">
+
+              <div>
+
+                <p class="text-sm font-bold">
+
+                  {{
+                    detalle
+                      .productoTalla
+                      .producto
+                      .nombre
+                  }}
+
+                </p>
+
+                <p
+                  class="mt-1 text-[10px] uppercase text-neutral-400">
+
+                  Talla:
+                  {{
+                    detalle
+                      .productoTalla
+                      .talla
+                      .nombreTalla
+                  }}
+
+                </p>
+
+              </div>
+
+
+              <p
+                class="text-sm sm:text-center">
+
+                {{ detalle.cantidad }}
+
+              </p>
+
+
+              <p
+                class="text-sm sm:text-right">
+
+                S/
+                {{
+                  detalle.precioUnitario
+                    | number:'1.2-2'
+                }}
+
+              </p>
+
+
+              <p
+                class="text-sm font-bold sm:text-right">
+
+                S/
+                {{
+                  detalle.subtotal
+                    | number:'1.2-2'
+                }}
+
+              </p>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- TOTAL -->
+
+        <div
+          class="ml-auto mt-10 max-w-[320px]">
+
+          <div
+            class="flex items-center justify-between border-t-2 border-black pt-5">
+
+            <span
+              class="text-sm font-black uppercase">
+
+              Total
+
+            </span>
+
+            <span
+              class="text-2xl font-black">
+
+              S/
+              {{
+                total
+                  | number:'1.2-2'
+              }}
+
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="mt-14 border-t border-neutral-200 pt-7 text-center">
+
+          <p
+            class="text-xs font-bold uppercase">
+
+            Gracias por tu compra
+
+          </p>
+
+          <p
+            class="mt-2 text-[10px] text-neutral-400">
+
+            Tienda Sebas · Perú
+
+          </p>
+
+        </div>
+
+      </div>
+
+    }
+
+  </section>
+
+</main>
+
+
+<div class="no-print">
+  <app-footer></app-footer>
+</div>

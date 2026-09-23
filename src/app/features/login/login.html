@@ -1,0 +1,230 @@
+<main
+  class="grid min-h-screen lg:grid-cols-2">
+
+
+  <!-- IZQUIERDA -->
+
+  <section
+    class="relative hidden overflow-hidden bg-black lg:flex lg:items-end">
+
+    <div
+      class="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-white/5 blur-3xl">
+    </div>
+
+
+    <div
+      class="relative z-10 p-14 xl:p-20">
+
+      <a
+        routerLink="/"
+        class="text-sm font-black uppercase tracking-[0.25em] text-white">
+
+        Tienda Sebas
+
+      </a>
+
+
+      <h1
+        class="mt-10 max-w-xl text-6xl font-black uppercase leading-[0.88] tracking-[-0.06em] text-white xl:text-7xl">
+
+        Bienvenido
+        <br>
+        de nuevo.
+
+      </h1>
+
+
+      <p
+        class="mt-7 max-w-md text-sm leading-7 text-neutral-400">
+
+        Inicia sesión para continuar
+        con tus compras y consultar
+        tus pedidos.
+
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- LOGIN -->
+
+  <section
+    class="flex items-center justify-center px-6 py-16">
+
+    <div
+      class="w-full max-w-[460px]">
+
+
+      <a
+        routerLink="/"
+        class="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
+
+        ← Volver a la tienda
+
+      </a>
+
+
+      <div class="mt-10">
+
+        <p
+          class="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
+
+          Mi cuenta
+
+        </p>
+
+        <h2
+          class="mt-3 text-4xl font-black uppercase tracking-[-0.05em]">
+
+          Iniciar sesión
+
+        </h2>
+
+      </div>
+
+
+      @if (registroExitoso) {
+
+        <div
+          class="mt-7 border border-green-200 bg-green-50 p-4">
+
+          <p
+            class="text-xs font-medium text-green-700">
+
+            Cuenta creada correctamente.
+            Ya puedes iniciar sesión.
+
+          </p>
+
+        </div>
+
+      }
+
+
+      <form
+        class="mt-9"
+        (ngSubmit)="iniciarSesion()">
+
+
+        <div>
+
+          <label
+            class="text-[10px] font-black uppercase tracking-[0.15em]">
+
+            Correo electrónico
+
+          </label>
+
+          <input
+            type="email"
+            name="correo"
+            [(ngModel)]="correo"
+            autocomplete="email"
+            class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
+
+        </div>
+
+
+        <div class="mt-5">
+
+          <label
+            class="text-[10px] font-black uppercase tracking-[0.15em]">
+
+            Contraseña
+
+          </label>
+
+
+          <div
+            class="relative mt-3">
+
+            <input
+              name="password"
+              [(ngModel)]="password"
+              [type]="mostrarPassword ? 'text' : 'password'"
+              autocomplete="current-password"
+              class="h-14 w-full border border-neutral-300 px-4 pr-20 text-sm outline-none focus:border-black">
+
+
+            <button
+              type="button"
+              (click)="mostrarPassword = !mostrarPassword"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-[9px] font-black uppercase">
+
+              {{
+                mostrarPassword
+                  ? 'Ocultar'
+                  : 'Ver'
+              }}
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        @if (error) {
+
+          <div
+            class="mt-6 border border-red-200 bg-red-50 p-4">
+
+            <p
+              class="text-xs text-red-700">
+
+              {{ error }}
+
+            </p>
+
+          </div>
+
+        }
+
+
+        <button
+          type="submit"
+          [disabled]="cargando"
+          class="mt-7 h-16 w-full bg-black text-[10px] font-black uppercase tracking-[0.2em] text-white disabled:bg-neutral-400">
+
+          @if (cargando) {
+
+            Ingresando...
+
+          } @else {
+
+            Iniciar sesión
+
+          }
+
+        </button>
+
+      </form>
+
+
+      <div
+        class="mt-8 border-t border-neutral-200 pt-7 text-center">
+
+        <p
+          class="text-sm text-neutral-500">
+
+          ¿No tienes una cuenta?
+
+        </p>
+
+        <a
+          routerLink="/registro"
+          class="mt-3 inline-block text-[10px] font-black uppercase tracking-[0.18em] underline">
+
+          Crear una cuenta
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>

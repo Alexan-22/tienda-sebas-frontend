@@ -1,0 +1,145 @@
+<article class="group">
+
+  <a
+    [routerLink]="[
+      '/producto',
+      producto.idProducto
+    ]"
+    class="block cursor-pointer">
+
+
+    <div
+      class="relative aspect-[3/4] overflow-hidden bg-neutral-100">
+
+      @if (imagenUrl) {
+
+        <img
+          [src]="imagenUrl"
+          [alt]="producto.nombre"
+          class="h-full w-full object-cover transition duration-700 group-hover:scale-105">
+
+      } @else {
+
+        <div
+          class="flex h-full w-full items-center justify-center">
+
+          <div class="text-center">
+
+            <span
+              class="text-4xl font-black text-neutral-200">
+
+              TS
+
+            </span>
+
+            <p
+              class="mt-2 text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-300">
+
+              Sin imagen
+
+            </p>
+
+          </div>
+
+        </div>
+
+      }
+
+
+      @if (producto.nuevo) {
+
+        <span
+          class="absolute left-3 top-3 bg-black px-3 py-2 text-[9px] font-bold uppercase tracking-[0.15em] text-white">
+
+          Nuevo
+
+        </span>
+
+      }
+
+
+      @if (tieneOferta) {
+
+        <span
+          class="absolute right-3 top-3 bg-white px-3 py-2 text-[9px] font-black uppercase tracking-[0.15em] text-black">
+
+          Oferta
+
+        </span>
+
+      }
+
+    </div>
+
+
+    <div class="pt-4">
+
+      <p
+        class="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+
+        {{
+          producto
+            .categoria
+            .nombreCategoria
+        }}
+
+      </p>
+
+
+      <h3
+        class="mt-1 text-sm font-semibold">
+
+        {{ producto.nombre }}
+
+      </h3>
+
+
+      <div
+        class="mt-2 flex items-center gap-3">
+
+        @if (tieneOferta) {
+
+          <span
+            class="text-sm font-bold">
+
+            S/
+            {{
+              producto.precioOferta
+                | number:'1.2-2'
+            }}
+
+          </span>
+
+          <span
+            class="text-xs text-neutral-400 line-through">
+
+            S/
+            {{
+              producto.precio
+                | number:'1.2-2'
+            }}
+
+          </span>
+
+        } @else {
+
+          <span
+            class="text-sm font-bold">
+
+            S/
+            {{
+              producto.precio
+                | number:'1.2-2'
+            }}
+
+          </span>
+
+        }
+
+      </div>
+
+    </div>
+
+  </a>
+
+</article>

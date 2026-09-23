@@ -1,0 +1,206 @@
+<app-promo-bar></app-promo-bar>
+
+<app-navbar></app-navbar>
+
+
+<main class="bg-neutral-50">
+
+  <section
+    class="mx-auto flex min-h-[700px] max-w-[1000px] items-center justify-center px-5 py-20">
+
+
+    @if (compra) {
+
+      <div
+        class="w-full bg-white p-8 text-center sm:p-14">
+
+
+        <div
+          class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-black text-3xl text-white">
+
+          ✓
+
+        </div>
+
+
+        <p
+          class="mt-8 text-[10px] font-bold uppercase tracking-[0.35em] text-neutral-400">
+
+          Tienda Sebas
+
+        </p>
+
+
+        <h1
+          class="mt-3 text-4xl font-black uppercase tracking-[-0.05em] sm:text-5xl">
+
+          Compra realizada
+
+        </h1>
+
+
+        <p
+          class="mx-auto mt-5 max-w-lg text-sm leading-7 text-neutral-500">
+
+          Tu pedido fue registrado
+          correctamente. Gracias por comprar
+          en Tienda Sebas.
+
+        </p>
+
+
+        <div
+          class="mx-auto mt-10 max-w-lg border border-neutral-200 text-left">
+
+
+          <div
+            class="flex justify-between border-b border-neutral-200 p-5">
+
+            <span
+              class="text-sm text-neutral-500">
+
+              N° de venta
+
+            </span>
+
+            <strong>
+
+              #{{ compra.idVenta }}
+
+            </strong>
+
+          </div>
+
+
+          <div
+            class="flex justify-between border-b border-neutral-200 p-5">
+
+            <span
+              class="text-sm text-neutral-500">
+
+              Estado
+
+            </span>
+
+            <strong>
+
+              {{ compra.estado }}
+
+            </strong>
+
+          </div>
+
+
+          <div
+            class="flex justify-between border-b border-neutral-200 p-5">
+
+            <span
+              class="text-sm text-neutral-500">
+
+              Medio de pago
+
+            </span>
+
+            <strong>
+
+              {{ compra.medioPago }}
+
+            </strong>
+
+          </div>
+
+
+          <div
+            class="flex justify-between p-5">
+
+            <span
+              class="font-black uppercase">
+
+              Total
+
+            </span>
+
+            <strong
+              class="text-xl">
+
+              S/
+              {{
+                compra.total
+                  | number:'1.2-2'
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+
+
+          <a
+            routerLink="/"
+            class="flex h-14 items-center justify-center bg-black px-8 text-[10px] font-black uppercase tracking-[0.2em] text-white">
+
+            Seguir comprando
+
+          </a>
+
+
+          <a
+            [routerLink]="[
+              '/mis-compras',
+              compra.idVenta
+            ]"
+            class="flex h-14 items-center justify-center border border-black px-8 text-[10px] font-black uppercase tracking-[0.2em] transition hover:bg-black hover:text-white">
+
+            Ver boleta
+
+          </a>
+
+        </div>
+
+      </div>
+
+    } @else {
+
+      <div class="text-center">
+
+        <h1
+          class="text-3xl font-black uppercase">
+
+          No hay información
+          de compra
+
+        </h1>
+
+
+        <p
+          class="mt-4 text-sm text-neutral-500">
+
+          Puedes consultar tus pedidos
+          desde Mis compras.
+
+        </p>
+
+
+        <a
+          routerLink="/mis-compras"
+          class="mt-7 inline-flex h-14 items-center bg-black px-8 text-xs font-bold uppercase text-white">
+
+          Mis compras
+
+        </a>
+
+      </div>
+
+    }
+
+  </section>
+
+</main>
+
+
+<app-footer></app-footer>

@@ -1,0 +1,25 @@
+@media print {
+
+  .no-print {
+    display: none !important;
+  }
+
+  :host {
+    display: block;
+  }
+
+  main {
+    background: white !important;
+    padding: 0 !important;
+  }
+
+  #boleta {
+    box-shadow: none !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  @page {
+    margin: 15mm;
+  }
+}

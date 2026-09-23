@@ -1,0 +1,443 @@
+<app-promo-bar></app-promo-bar>
+
+<app-navbar></app-navbar>
+
+
+<main
+  class="min-h-screen bg-neutral-50">
+
+  <section
+    class="mx-auto max-w-[1400px] px-5 py-14 lg:px-10 lg:py-20">
+
+
+    <div
+      class="mb-10">
+
+      <p
+        class="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
+
+        Finalizar pedido
+
+      </p>
+
+      <h1
+        class="mt-3 text-5xl font-black uppercase tracking-[-0.06em]">
+
+        Checkout
+
+      </h1>
+
+    </div>
+
+
+    <div
+      class="grid gap-10 lg:grid-cols-[1fr_420px]">
+
+
+      <!-- DATOS -->
+
+      <div class="space-y-7">
+
+
+        <section
+          class="bg-white p-7 lg:p-10">
+
+          <p
+            class="text-[10px] font-black uppercase tracking-[0.2em]">
+
+            01 · Datos de entrega
+
+          </p>
+
+
+          <div
+            class="mt-7 grid gap-5 sm:grid-cols-2">
+
+
+            <div>
+
+              <label
+                class="text-[9px] font-black uppercase tracking-[0.15em]">
+
+                Nombres *
+
+              </label>
+
+              <input
+                type="text"
+                name="nombres"
+                [(ngModel)]="datos.nombres"
+                class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
+
+            </div>
+
+
+            <div>
+
+              <label
+                class="text-[9px] font-black uppercase tracking-[0.15em]">
+
+                Apellidos *
+
+              </label>
+
+              <input
+                type="text"
+                name="apellidos"
+                [(ngModel)]="datos.apellidos"
+                class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
+
+            </div>
+
+
+            <div>
+
+              <label
+                class="text-[9px] font-black uppercase tracking-[0.15em]">
+
+                Teléfono *
+
+              </label>
+
+              <input
+                type="tel"
+                maxlength="9"
+                name="telefono"
+                [(ngModel)]="datos.telefono"
+                placeholder="999999999"
+                class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
+
+            </div>
+
+
+            <div>
+
+              <label
+                class="text-[9px] font-black uppercase tracking-[0.15em]">
+
+                Distrito *
+
+              </label>
+
+              <input
+                type="text"
+                name="distrito"
+                [(ngModel)]="datos.distrito"
+                class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
+
+            </div>
+
+
+            <div
+              class="sm:col-span-2">
+
+              <label
+                class="text-[9px] font-black uppercase tracking-[0.15em]">
+
+                Dirección *
+
+              </label>
+
+              <input
+                type="text"
+                name="direccion"
+                [(ngModel)]="datos.direccion"
+                class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
+
+            </div>
+
+
+            <div
+              class="sm:col-span-2">
+
+              <label
+                class="text-[9px] font-black uppercase tracking-[0.15em]">
+
+                Referencia
+
+              </label>
+
+              <textarea
+                name="referencia"
+                [(ngModel)]="datos.referencia"
+                rows="3"
+                class="mt-3 w-full resize-none border border-neutral-300 p-4 text-sm outline-none focus:border-black">
+              </textarea>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- PAGO -->
+
+        <section
+          class="bg-white p-7 lg:p-10">
+
+          <p
+            class="text-[10px] font-black uppercase tracking-[0.2em]">
+
+            02 · Método de pago
+
+          </p>
+
+
+          <div
+            class="mt-7 grid gap-4 sm:grid-cols-2">
+
+
+            <button
+              type="button"
+              (click)="seleccionarPago('YAPE')"
+              class="p-6 text-left transition"
+              [class.border-2]="datos.metodoPago === 'YAPE'"
+              [class.border-black]="datos.metodoPago === 'YAPE'"
+              [class.border]="datos.metodoPago !== 'YAPE'"
+              [class.border-neutral-200]="datos.metodoPago !== 'YAPE'">
+
+              <p
+                class="text-lg font-black">
+
+                YAPE
+
+              </p>
+
+              <p
+                class="mt-2 text-xs text-neutral-500">
+
+                Pago mediante Yape.
+
+              </p>
+
+            </button>
+
+
+            <button
+              type="button"
+              (click)="seleccionarPago('TARJETA')"
+              class="p-6 text-left transition"
+              [class.border-2]="datos.metodoPago === 'TARJETA'"
+              [class.border-black]="datos.metodoPago === 'TARJETA'"
+              [class.border]="datos.metodoPago !== 'TARJETA'"
+              [class.border-neutral-200]="datos.metodoPago !== 'TARJETA'">
+
+              <p
+                class="text-lg font-black">
+
+                TARJETA
+
+              </p>
+
+              <p
+                class="mt-2 text-xs text-neutral-500">
+
+                Pago con tarjeta.
+
+              </p>
+
+            </button>
+
+          </div>
+
+        </section>
+
+
+        @if (error) {
+
+          <div
+            class="border border-red-200 bg-red-50 p-5">
+
+            <p
+              class="text-xs text-red-700">
+
+              {{ error }}
+
+            </p>
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- RESUMEN -->
+
+      <aside>
+
+        <div
+          class="sticky top-[110px] bg-white p-7">
+
+
+          <p
+            class="text-[10px] font-black uppercase tracking-[0.2em]">
+
+            Tu pedido
+
+          </p>
+
+
+          <div
+            class="mt-7 space-y-5">
+
+
+            @for (
+              item of items();
+              track item.idProductoTalla
+            ) {
+
+              <div
+                class="flex justify-between gap-5 border-b border-neutral-100 pb-5">
+
+                <div>
+
+                  <p
+                    class="text-xs font-bold">
+
+                    {{ item.nombre }}
+
+                  </p>
+
+                  <p
+                    class="mt-1 text-[9px] text-neutral-400">
+
+                    Talla {{ item.talla }}
+                    ·
+                    Cant. {{ item.cantidad }}
+
+                  </p>
+
+                </div>
+
+
+                <strong
+                  class="whitespace-nowrap text-xs">
+
+                  S/
+                  {{
+                    item.precio *
+                    item.cantidad
+                      | number:'1.2-2'
+                  }}
+
+                </strong>
+
+              </div>
+
+            }
+
+          </div>
+
+
+          <div
+            class="mt-6 flex justify-between text-sm">
+
+            <span
+              class="text-neutral-500">
+
+              Subtotal
+
+            </span>
+
+            <strong>
+
+              S/
+              {{
+                subtotal()
+                  | number:'1.2-2'
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <div
+            class="mt-5 flex justify-between text-sm">
+
+            <span
+              class="text-neutral-500">
+
+              Envío
+
+            </span>
+
+            <span>
+              Por calcular
+            </span>
+
+          </div>
+
+
+          <div
+            class="mt-6 flex justify-between border-t border-neutral-200 pt-6">
+
+            <span
+              class="font-black uppercase">
+
+              Total
+
+            </span>
+
+            <strong
+              class="text-xl">
+
+              S/
+              {{
+                subtotal()
+                  | number:'1.2-2'
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <button
+            type="button"
+            (click)="continuarPago()"
+            [disabled]="procesando"
+            class="mt-7 h-16 w-full bg-black text-[10px] font-black uppercase tracking-[0.2em] text-white disabled:bg-neutral-400">
+
+            @if (procesando) {
+
+              Procesando...
+
+            } @else if (
+              datos.metodoPago ===
+              'YAPE'
+            ) {
+
+              Continuar con Yape
+
+            } @else {
+
+              Continuar con tarjeta
+
+            }
+
+          </button>
+
+
+          <a
+            routerLink="/carrito"
+            class="mt-5 block text-center text-[9px] font-black uppercase tracking-[0.15em] underline">
+
+            Volver al carrito
+
+          </a>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<app-footer></app-footer>

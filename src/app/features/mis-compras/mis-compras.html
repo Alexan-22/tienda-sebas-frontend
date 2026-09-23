@@ -1,0 +1,169 @@
+<app-promo-bar></app-promo-bar>
+
+<app-navbar></app-navbar>
+
+
+<main class="min-h-[700px] bg-neutral-50">
+
+  <section
+    class="mx-auto max-w-[1200px] px-5 py-16 lg:px-10 lg:py-20">
+
+    <div>
+
+      <p
+        class="text-[10px] font-bold uppercase tracking-[0.35em] text-neutral-400">
+
+        Mi cuenta
+
+      </p>
+
+      <h1
+        class="mt-3 text-4xl font-black uppercase tracking-[-0.05em] sm:text-6xl">
+
+        Mis compras
+
+      </h1>
+
+    </div>
+
+
+    @if (cargando) {
+
+      <div class="mt-12 space-y-4">
+
+        @for (item of [1,2,3]; track item) {
+
+          <div
+            class="h-32 animate-pulse bg-neutral-200">
+          </div>
+
+        }
+
+      </div>
+
+    } @else if (error) {
+
+      <div
+        class="mt-12 border border-red-200 bg-red-50 p-7">
+
+        <p class="text-sm text-red-700">
+          No pudimos cargar tus compras.
+        </p>
+
+      </div>
+
+    } @else if (ventas.length === 0) {
+
+      <div
+        class="mt-12 bg-white p-12 text-center">
+
+        <p
+          class="text-2xl font-black uppercase">
+          Todavía no tienes compras
+        </p>
+
+        <p
+          class="mt-3 text-sm text-neutral-500">
+          Cuando realices tu primera compra aparecerá aquí.
+        </p>
+
+        <a
+          routerLink="/"
+          class="mt-7 inline-flex h-14 items-center bg-black px-8 text-[10px] font-black uppercase tracking-[0.2em] text-white">
+
+          Explorar tienda
+
+        </a>
+
+      </div>
+
+    } @else {
+
+      <div class="mt-12 space-y-4">
+
+        @for (
+          venta of ventas;
+          track venta.idVenta
+        ) {
+
+          <article
+            class="grid gap-6 bg-white p-6 sm:grid-cols-[1fr_auto] sm:items-center lg:p-8">
+
+            <div>
+
+              <div
+                class="flex flex-wrap items-center gap-3">
+
+                <h2
+                  class="text-lg font-black uppercase">
+
+                  Pedido #{{ venta.idVenta }}
+
+                </h2>
+
+                <span
+                  class="bg-neutral-100 px-3 py-1 text-[9px] font-black uppercase tracking-[0.15em]">
+
+                  {{ venta.estado }}
+
+                </span>
+
+              </div>
+
+
+              <div
+                class="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-xs text-neutral-500">
+
+                <span>
+
+                  {{
+                    venta.fechaVenta
+                      | date:'dd/MM/yyyy HH:mm'
+                  }}
+
+                </span>
+
+                <span>
+                  {{ venta.medioPago }}
+                </span>
+
+                <strong class="text-black">
+
+                  S/
+                  {{
+                    venta.total
+                      | number:'1.2-2'
+                  }}
+
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <a
+              [routerLink]="[
+                '/mis-compras',
+                venta.idVenta
+              ]"
+              class="flex h-12 items-center justify-center border border-black px-6 text-[10px] font-black uppercase tracking-[0.15em] transition hover:bg-black hover:text-white">
+
+              Ver detalle
+
+            </a>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+</main>
+
+
+<app-footer></app-footer>

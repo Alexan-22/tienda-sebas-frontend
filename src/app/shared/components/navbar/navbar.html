@@ -1,0 +1,293 @@
+<header class="sticky top-0 z-50 border-b border-neutral-200 bg-white">
+
+  <div
+    class="mx-auto flex h-[76px] max-w-[1400px]
+           items-center justify-between px-5 lg:px-10"
+  >
+
+    <!-- LOGO -->
+    <a
+      routerLink="/"
+      class="flex shrink-0 items-center"
+      (click)="cerrarMenu()"
+    >
+      <div class="leading-none">
+
+        <div class="text-[21px] font-black tracking-[-0.06em]">
+          TIENDA SEBAS
+        </div>
+
+        <div
+          class="mt-1 text-[8px] font-bold uppercase
+                 tracking-[0.35em] text-neutral-500"
+        >
+          Fashion Store
+        </div>
+
+      </div>
+    </a>
+
+
+    <!-- NAVEGACIÓN PC -->
+    <nav class="hidden items-center gap-8 lg:flex">
+
+      <a
+        routerLink="/"
+        fragment="novedades"
+        class="nav-link"
+      >
+        Novedades
+      </a>
+
+      <a
+        routerLink="/"
+        [queryParams]="{ genero: 1 }"
+        class="nav-link"
+      >
+        Hombres
+      </a>
+
+      <a
+        routerLink="/"
+        [queryParams]="{ genero: 2 }"
+        class="nav-link"
+      >
+        Mujeres
+      </a>
+
+      <a
+        routerLink="/"
+        [queryParams]="{ genero: 3 }"
+        class="nav-link"
+      >
+        Niños
+      </a>
+
+      <a
+        routerLink="/"
+        fragment="colecciones"
+        class="nav-link"
+      >
+        Colecciones
+      </a>
+
+    </nav>
+
+
+    <!-- ACCIONES -->
+    <div class="flex items-center gap-2">
+
+      <!-- CUENTA -->
+      <button
+        type="button"
+        class="icon-button"
+        title="Mi cuenta"
+        (click)="irACuenta()"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          class="h-[21px] w-[21px]"
+        >
+          <circle cx="12" cy="8" r="4"></circle>
+
+          <path
+            d="M4 21a8 8 0 0 1 16 0"
+          ></path>
+        </svg>
+
+      </button>
+
+
+      <!-- CARRITO -->
+      <a
+        routerLink="/carrito"
+        class="icon-button relative"
+        title="Carrito"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          class="h-[22px] w-[22px]"
+        >
+          <path
+            d="M3 4h2l2.2 10.2a2 2 0 0 0
+               2 1.6h7.7a2 2 0 0 0
+               2-1.6L21 7H6"
+          ></path>
+
+          <circle cx="10" cy="20" r="1"></circle>
+          <circle cx="18" cy="20" r="1"></circle>
+        </svg>
+
+
+        @if (carritoService.cantidadTotal() > 0) {
+
+          <span
+            class="absolute right-0 top-0 flex
+                   h-[17px] min-w-[17px]
+                   items-center justify-center
+                   rounded-full bg-black px-1
+                   text-[9px] font-bold text-white"
+          >
+            {{ carritoService.cantidadTotal() }}
+          </span>
+
+        }
+
+      </a>
+
+
+      <!-- MENÚ MÓVIL -->
+      <button
+        type="button"
+        class="icon-button lg:hidden"
+        aria-label="Abrir menú"
+        (click)="toggleMenu()"
+      >
+
+        @if (!menuAbierto) {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            class="h-6 w-6"
+          >
+            <path d="M4 7h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 17h16"></path>
+          </svg>
+
+        } @else {
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            class="h-6 w-6"
+          >
+            <path d="M6 6l12 12"></path>
+            <path d="M18 6L6 18"></path>
+          </svg>
+
+        }
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- MENÚ PARA CELULAR -->
+  @if (menuAbierto) {
+
+    <div
+      class="border-t border-neutral-200
+             bg-white px-5 py-6 lg:hidden"
+    >
+
+      <nav
+        class="flex flex-col text-sm font-bold
+               uppercase tracking-[0.12em]"
+      >
+
+        <a
+          routerLink="/"
+          fragment="novedades"
+          class="mobile-link"
+          (click)="cerrarMenu()"
+        >
+          Novedades
+        </a>
+
+        <a
+          routerLink="/"
+          [queryParams]="{ genero: 1 }"
+          class="mobile-link"
+          (click)="cerrarMenu()"
+        >
+          Hombres
+        </a>
+
+        <a
+          routerLink="/"
+          [queryParams]="{ genero: 2 }"
+          class="mobile-link"
+          (click)="cerrarMenu()"
+        >
+          Mujeres
+        </a>
+
+        <a
+          routerLink="/"
+          [queryParams]="{ genero: 3 }"
+          class="mobile-link"
+          (click)="cerrarMenu()"
+        >
+          Niños
+        </a>
+
+        <a
+          routerLink="/carrito"
+          class="mobile-link"
+          (click)="cerrarMenu()"
+        >
+          Carrito ({{ carritoService.cantidadTotal() }})
+        </a>
+
+
+        @if (authService.autenticado()) {
+
+          <a
+            routerLink="/mis-compras"
+            class="mobile-link"
+            (click)="cerrarMenu()"
+          >
+            Mis compras
+          </a>
+
+          <button
+            type="button"
+            class="mobile-link text-left"
+            (click)="cerrarSesion()"
+          >
+            Cerrar sesión
+          </button>
+
+        } @else {
+
+          <a
+            routerLink="/login"
+            class="mobile-link"
+            (click)="cerrarMenu()"
+          >
+            Iniciar sesión
+          </a>
+
+          <a
+            routerLink="/registro"
+            class="mobile-link"
+            (click)="cerrarMenu()"
+          >
+            Crear cuenta
+          </a>
+
+        }
+
+      </nav>
+
+    </div>
+
+  }
+
+</header>
