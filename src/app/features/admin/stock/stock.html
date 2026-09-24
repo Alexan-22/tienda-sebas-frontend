@@ -1,9 +1,7 @@
 <section class="page">
 
   <header class="page-header">
-
     <div>
-
       <p class="eyebrow">
         INVENTARIO
       </p>
@@ -16,16 +14,17 @@
         Controla las existencias disponibles
         de cada producto.
       </span>
-
     </div>
-
   </header>
 
+
+  <!-- ===================================================== -->
+  <!-- ESTADÍSTICAS -->
+  <!-- ===================================================== -->
 
   <section class="stats">
 
     <article>
-
       <div class="stat-icon">
         ▣
       </div>
@@ -41,12 +40,10 @@
           Productos registrados
         </small>
       </div>
-
     </article>
 
 
     <article>
-
       <div class="stat-icon">
         ≡
       </div>
@@ -62,12 +59,10 @@
           Stock total disponible
         </small>
       </div>
-
     </article>
 
 
     <article>
-
       <div class="stat-icon warning">
         !
       </div>
@@ -80,15 +75,13 @@
         </strong>
 
         <small>
-          Productos con 5 o menos
+          Tallas con 5 o menos
         </small>
       </div>
-
     </article>
 
 
     <article>
-
       <div class="stat-icon danger">
         ×
       </div>
@@ -104,18 +97,20 @@
           Productos agotados
         </small>
       </div>
-
     </article>
 
   </section>
 
+
+  <!-- ===================================================== -->
+  <!-- PANEL -->
+  <!-- ===================================================== -->
 
   <section class="panel">
 
     <div class="panel-header">
 
       <div>
-
         <p class="eyebrow">
           CONTROL DE INVENTARIO
         </p>
@@ -123,15 +118,11 @@
         <h2>
           Productos
         </h2>
-
       </div>
 
 
       <div class="search">
-
-        <span>
-          ⌕
-        </span>
+        <span>⌕</span>
 
         <input
           type="search"
@@ -139,18 +130,20 @@
           (ngModelChange)="aplicarFiltro()"
           placeholder="Buscar producto..."
         >
-
       </div>
 
     </div>
 
 
+    <!-- =================================================== -->
+    <!-- CARGANDO -->
+    <!-- =================================================== -->
+
     @if (cargando) {
 
       <div class="message">
 
-        <div class="loader">
-        </div>
+        <div class="loader"></div>
 
         <strong>
           Cargando inventario
@@ -161,6 +154,11 @@
         </span>
 
       </div>
+
+
+    <!-- =================================================== -->
+    <!-- ERROR -->
+    <!-- =================================================== -->
 
     } @else if (error) {
 
@@ -183,6 +181,11 @@
 
       </div>
 
+
+    <!-- =================================================== -->
+    <!-- SIN RESULTADOS -->
+    <!-- =================================================== -->
+
     } @else if (
       inventarioFiltrado.length === 0
     ) {
@@ -200,6 +203,11 @@
 
       </div>
 
+
+    <!-- =================================================== -->
+    <!-- PRODUCTOS -->
+    <!-- =================================================== -->
+
     } @else {
 
       <div class="inventory-list">
@@ -210,6 +218,10 @@
         ) {
 
           <article class="product-card">
+
+            <!-- =========================================== -->
+            <!-- CABECERA PRODUCTO -->
+            <!-- =========================================== -->
 
             <div class="product-header">
 
@@ -222,12 +234,8 @@
                   ) {
 
                     <img
-                      [src]="
-                        imagenUrl(item.producto)
-                      "
-                      [alt]="
-                        item.producto.nombre
-                      "
+                      [src]="imagenUrl(item.producto)"
+                      [alt]="item.producto.nombre"
                     >
 
                   } @else {
@@ -246,9 +254,7 @@
                   <div class="product-title">
 
                     <h3>
-                      {{
-                        item.producto.nombre
-                      }}
+                      {{ item.producto.nombre }}
                     </h3>
 
                     <span
@@ -268,7 +274,6 @@
 
 
                   <p>
-
                     {{
                       item.producto.categoria
                         .nombreCategoria
@@ -280,7 +285,6 @@
                       item.producto.genero
                         .nombreGenero
                     }}
-
                   </p>
 
                 </div>
@@ -307,6 +311,10 @@
             </div>
 
 
+            <!-- =========================================== -->
+            <!-- TALLAS ASIGNADAS -->
+            <!-- =========================================== -->
+
             @if (
               item.tallas.length === 0
             ) {
@@ -321,6 +329,20 @@
                   Este producto todavía no tiene
                   tallas ni stock registrados.
                 </span>
+
+                @if (
+                  tallasNoAsignadas(item).length > 0
+                ) {
+
+                  <button
+                    type="button"
+                    class="add-size-button"
+                    (click)="abrirAsignacion(item)"
+                  >
+                    + ASIGNAR PRIMERA TALLA
+                  </button>
+
+                }
 
               </div>
 
@@ -356,6 +378,8 @@
 
                   <div class="size-row">
 
+                    <!-- TALLA -->
+
                     <div>
 
                       <strong class="size-name">
@@ -368,6 +392,8 @@
 
                     </div>
 
+
+                    <!-- ESTADO -->
 
                     <div>
 
@@ -404,6 +430,8 @@
                     </div>
 
 
+                    <!-- CANTIDAD -->
+
                     <div class="quantity">
 
                       <button
@@ -439,6 +467,8 @@
                     </div>
 
 
+                    <!-- ACTUALIZAR -->
+
                     <div>
 
                       <button
@@ -455,7 +485,6 @@
                           )
                         "
                       >
-
                         {{
                           guardandoId ===
                           productoTalla
@@ -463,7 +492,6 @@
                             ? 'GUARDANDO...'
                             : 'ACTUALIZAR'
                         }}
-
                       </button>
 
                     </div>
@@ -471,6 +499,219 @@
                   </div>
 
                 }
+
+              </div>
+
+            }
+
+
+            <!-- =========================================== -->
+            <!-- ACCIONES DE TALLAS -->
+            <!-- =========================================== -->
+
+            @if (
+              item.tallas.length > 0
+            ) {
+
+              <div class="size-actions">
+
+                <div>
+
+                  <strong>
+                    GESTIÓN DE TALLAS
+                  </strong>
+
+                  <span>
+                    Asigna otra talla disponible
+                    a este producto.
+                  </span>
+
+                </div>
+
+
+                @if (
+                  tallasNoAsignadas(item).length > 0
+                ) {
+
+                  <button
+                    type="button"
+                    class="add-size-button"
+                    (click)="abrirAsignacion(item)"
+                  >
+                    {{
+                      productoAsignandoId ===
+                      item.producto.idProducto
+                        ? 'CERRAR'
+                        : '+ ASIGNAR NUEVA TALLA'
+                    }}
+                  </button>
+
+                } @else {
+
+                  <span class="all-sizes">
+                    TODAS LAS TALLAS ASIGNADAS
+                  </span>
+
+                }
+
+              </div>
+
+            }
+
+
+            <!-- =========================================== -->
+            <!-- FORMULARIO NUEVA TALLA -->
+            <!-- =========================================== -->
+
+            @if (
+              productoAsignandoId ===
+              item.producto.idProducto
+            ) {
+
+              <div class="assign-size">
+
+                <div class="assign-title">
+
+                  <div>
+
+                    <p class="eyebrow">
+                      NUEVA TALLA
+                    </p>
+
+                    <h4>
+                      Asignar talla a
+                      {{ item.producto.nombre }}
+                    </h4>
+
+                  </div>
+
+                  <button
+                    type="button"
+                    class="close-assign"
+                    (click)="cancelarAsignacion()"
+                    [disabled]="guardandoNuevaTalla"
+                  >
+                    ×
+                  </button>
+
+                </div>
+
+
+                <div class="assign-form">
+
+                  <!-- SELECT TALLA -->
+
+                  <label>
+
+                    <span>
+                      TALLA
+                    </span>
+
+                    <select
+                      [(ngModel)]="nuevaTallaId"
+                      [disabled]="guardandoNuevaTalla"
+                    >
+
+                      @for (
+                        talla of tallasNoAsignadas(item);
+                        track talla.idTalla
+                      ) {
+
+                        <option
+                          [ngValue]="talla.idTalla"
+                        >
+                          {{ talla.nombreTalla }}
+                        </option>
+
+                      }
+
+                    </select>
+
+                  </label>
+
+
+                  <!-- STOCK INICIAL -->
+
+                  <label>
+
+                    <span>
+                      STOCK INICIAL
+                    </span>
+
+                    <div class="initial-stock">
+
+                      <button
+                        type="button"
+                        [disabled]="
+                          guardandoNuevaTalla ||
+                          nuevoStock <= 0
+                        "
+                        (click)="
+                          nuevoStock =
+                            nuevoStock > 0
+                              ? nuevoStock - 1
+                              : 0
+                        "
+                      >
+                        −
+                      </button>
+
+                      <input
+                        type="number"
+                        min="0"
+                        [(ngModel)]="nuevoStock"
+                        [disabled]="guardandoNuevaTalla"
+                      >
+
+                      <button
+                        type="button"
+                        [disabled]="guardandoNuevaTalla"
+                        (click)="
+                          nuevoStock =
+                            (+nuevoStock || 0) + 1
+                        "
+                      >
+                        +
+                      </button>
+
+                    </div>
+
+                  </label>
+
+
+                  <!-- BOTONES -->
+
+                  <div class="assign-buttons">
+
+                    <button
+                      type="button"
+                      class="cancel-button"
+                      [disabled]="guardandoNuevaTalla"
+                      (click)="cancelarAsignacion()"
+                    >
+                      CANCELAR
+                    </button>
+
+
+                    <button
+                      type="button"
+                      class="confirm-button"
+                      [disabled]="
+                        guardandoNuevaTalla ||
+                        nuevaTallaId === null
+                      "
+                      (click)="asignarTalla(item)"
+                    >
+                      {{
+                        guardandoNuevaTalla
+                          ? 'ASIGNANDO...'
+                          : 'ASIGNAR TALLA'
+                      }}
+                    </button>
+
+                  </div>
+
+                </div>
 
               </div>
 

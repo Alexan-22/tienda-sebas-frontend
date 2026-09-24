@@ -56,6 +56,7 @@ export class MisCompras implements OnInit {
   cargando = true;
   error = false;
 
+
   constructor(
     private ventaService: VentaService
   ) {}
@@ -77,7 +78,12 @@ export class MisCompras implements OnInit {
 
         next: (ventas) => {
 
-          this.ventas = ventas;
+          this.ventas = [...ventas]
+            .sort(
+              (a, b) =>
+                new Date(b.fechaVenta).getTime() -
+                new Date(a.fechaVenta).getTime()
+            );
 
           this.cargando = false;
         },
@@ -95,5 +101,79 @@ export class MisCompras implements OnInit {
         }
 
       });
+  }
+
+
+  get cantidadCompras(): number {
+    return this.ventas.length;
+  }
+
+
+  get totalGastado(): number {
+
+    return this.ventas.reduce(
+      (total, venta) =>
+        total + Number(venta.total || 0),
+      0
+    );
+  }
+
+
+  get ultimaCompra(): Venta | null {
+
+    if (this.ventas.length === 0) {
+      return null;
+    }
+
+    return this.ventas[0];
+  }
+
+
+  claseEstado(
+    estado: string
+  ): string {
+
+    const valor =
+      estado?.toUpperCase() || '';
+
+    switch (valor) {
+
+      case 'REGISTRADA':
+        return 'estado-registrada';
+
+      case 'PAGADA':
+        return 'estado-pagada';
+
+      case 'ENVIADA':
+        return 'estado-enviada';
+
+      case 'ENTREGADA':
+        return 'estado-entregada';
+
+      case 'CANCELADA':
+        return 'estado-cancelada';
+
+      default:
+        return 'estado-default';
+    }
+  }
+
+
+  textoPago(
+    medioPago: string
+  ): string {
+
+    const pago =
+      medioPago?.toUpperCase() || '';
+
+    if (pago === 'YAPE') {
+      return 'Yape';
+    }
+
+    if (pago === 'TARJETA') {
+      return 'Tarjeta';
+    }
+
+    return medioPago;
   }
 }

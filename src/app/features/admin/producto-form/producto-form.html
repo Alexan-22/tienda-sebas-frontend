@@ -7,8 +7,12 @@
     ← VOLVER A PRODUCTOS
   </a>
 
+
   <header>
-    <p>CATÁLOGO</p>
+
+    <p>
+      CATÁLOGO
+    </p>
 
     <h1>
       {{
@@ -17,13 +21,26 @@
           : 'Nuevo producto'
       }}
     </h1>
+
   </header>
 
+
+  <!-- ===================================================== -->
+  <!-- ERROR GENERAL -->
+  <!-- ===================================================== -->
+
   @if (error) {
+
     <div class="error">
       {{ error }}
     </div>
+
   }
+
+
+  <!-- ===================================================== -->
+  <!-- CARGANDO -->
+  <!-- ===================================================== -->
 
   @if (cargando) {
 
@@ -33,15 +50,32 @@
 
   } @else {
 
+
+    <!-- =================================================== -->
+    <!-- FORMULARIO -->
+    <!-- =================================================== -->
+
     <form (ngSubmit)="guardar()">
+
+
+      <!-- ================================================= -->
+      <!-- COLUMNA PRINCIPAL -->
+      <!-- ================================================= -->
 
       <div class="main">
 
+
+        <!-- INFORMACIÓN -->
+
         <section class="card">
 
-          <h2>Información</h2>
+          <h2>
+            Información
+          </h2>
+
 
           <label>
+
             NOMBRE
 
             <input
@@ -49,28 +83,43 @@
               name="nombre"
               [(ngModel)]="nombre"
               required
+              [disabled]="guardando"
             >
+
           </label>
 
+
           <label>
+
             DESCRIPCIÓN
 
             <textarea
               name="descripcion"
               [(ngModel)]="descripcion"
               rows="6"
+              [disabled]="guardando"
             ></textarea>
+
           </label>
 
         </section>
 
+
+        <!-- ================================================= -->
+        <!-- PRECIO -->
+        <!-- ================================================= -->
+
         <section class="card">
 
-          <h2>Precio</h2>
+          <h2>
+            Precio
+          </h2>
+
 
           <div class="columns">
 
             <label>
+
               PRECIO NORMAL
 
               <input
@@ -79,10 +128,14 @@
                 [(ngModel)]="precio"
                 step="0.01"
                 min="0"
+                [disabled]="guardando"
               >
+
             </label>
 
+
             <label>
+
               PRECIO OFERTA
 
               <input
@@ -91,30 +144,47 @@
                 [(ngModel)]="precioOferta"
                 step="0.01"
                 min="0"
+                [disabled]="guardando"
               >
+
             </label>
 
           </div>
 
         </section>
 
+
+        <!-- ================================================= -->
+        <!-- CLASIFICACIÓN -->
+        <!-- ================================================= -->
+
         <section class="card">
 
-          <h2>Clasificación</h2>
+          <h2>
+            Clasificación
+          </h2>
+
 
           <div class="columns">
 
+            <!-- GÉNERO -->
+
             <label>
+
               GÉNERO
 
               <select
                 name="genero"
                 [(ngModel)]="idGenero"
+                [disabled]="guardando"
               >
 
-                <option [ngValue]="null">
+                <option
+                  [ngValue]="null"
+                >
                   Seleccionar
                 </option>
+
 
                 @for (
                   genero of generos;
@@ -124,25 +194,36 @@
                   <option
                     [ngValue]="genero.idGenero"
                   >
-                    {{ genero.nombreGenero }}
+                    {{
+                      genero.nombreGenero
+                    }}
                   </option>
 
                 }
 
               </select>
+
             </label>
 
+
+            <!-- CATEGORÍA -->
+
             <label>
+
               CATEGORÍA
 
               <select
                 name="categoria"
                 [(ngModel)]="idCategoria"
+                [disabled]="guardando"
               >
 
-                <option [ngValue]="null">
+                <option
+                  [ngValue]="null"
+                >
                   Seleccionar
                 </option>
+
 
                 @for (
                   categoria of categorias;
@@ -160,6 +241,7 @@
                 }
 
               </select>
+
             </label>
 
           </div>
@@ -168,80 +250,241 @@
 
       </div>
 
+
+      <!-- ================================================= -->
+      <!-- COLUMNA DERECHA -->
+      <!-- ================================================= -->
+
       <aside>
 
-        <section class="card">
 
-          <h2>Imagen</h2>
+        <!-- ================================================= -->
+        <!-- IMAGEN -->
+        <!-- ================================================= -->
 
-          <label>
-            NOMBRE DE ARCHIVO
+        <section class="card image-card">
+
+          <h2>
+            Imagen
+          </h2>
+
+
+          <!-- PREVISUALIZACIÓN -->
+
+          <div class="image-preview">
+
+            @if (imagenActualUrl()) {
+
+              <img
+                [src]="imagenActualUrl()"
+                [alt]="
+                  nombre ||
+                  'Imagen del producto'
+                "
+              >
+
+            } @else {
+
+              <div class="image-empty">
+
+                <strong>
+                  TS
+                </strong>
+
+                <span>
+                  SIN IMAGEN
+                </span>
+
+              </div>
+
+            }
+
+          </div>
+
+
+          <!-- SELECCIONAR ARCHIVO -->
+
+          <label class="file-label">
+
+            IMAGEN DEL PRODUCTO
 
             <input
-              type="text"
-              name="imagen"
-              [(ngModel)]="imagen"
-              placeholder="producto.jpg"
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+              (change)="
+                seleccionarImagen($event)
+              "
+              [disabled]="guardando"
             >
+
           </label>
 
+
+          <!-- ARCHIVO SELECCIONADO -->
+
+          @if (archivoImagen) {
+
+            <div class="selected-file">
+
+              <div>
+
+                <strong>
+                  IMAGEN SELECCIONADA
+                </strong>
+
+                <span>
+                  {{
+                    archivoImagen.name
+                  }}
+                </span>
+
+              </div>
+
+
+              <button
+                type="button"
+                (click)="cancelarImagen()"
+                [disabled]="guardando"
+              >
+                QUITAR
+              </button>
+
+            </div>
+
+          }
+
+
+          <!-- ERROR IMAGEN -->
+
+          @if (errorImagen) {
+
+            <div class="image-error">
+              {{ errorImagen }}
+            </div>
+
+          }
+
+
           <small>
-            Después conectaremos aquí
-            la subida de archivos.
+            Formatos permitidos:
+            JPG, PNG o WEBP.
+            Máximo 5 MB.
           </small>
+
+
+          <!-- IMAGEN ACTUAL -->
+
+          @if (
+            imagen &&
+            !archivoImagen
+          ) {
+
+            <div class="current-image-info">
+
+              <span>
+                IMAGEN ACTUAL
+              </span>
+
+              <strong>
+                {{ imagen }}
+              </strong>
+
+            </div>
+
+          }
 
         </section>
 
+
+        <!-- ================================================= -->
+        <!-- VISIBILIDAD -->
+        <!-- ================================================= -->
+
         <section class="card">
 
-          <h2>Visibilidad</h2>
+          <h2>
+            Visibilidad
+          </h2>
+
 
           <label class="check">
-            <span>Producto activo</span>
+
+            <span>
+              Producto activo
+            </span>
 
             <input
               type="checkbox"
               name="estado"
               [(ngModel)]="estado"
+              [disabled]="guardando"
             >
+
           </label>
 
+
           <label class="check">
-            <span>Nuevo</span>
+
+            <span>
+              Nuevo
+            </span>
 
             <input
               type="checkbox"
               name="nuevo"
               [(ngModel)]="nuevo"
+              [disabled]="guardando"
             >
+
           </label>
 
+
           <label class="check">
-            <span>Destacado</span>
+
+            <span>
+              Destacado
+            </span>
 
             <input
               type="checkbox"
               name="destacado"
               [(ngModel)]="destacado"
+              [disabled]="guardando"
             >
+
           </label>
 
         </section>
+
+
+        <!-- ================================================= -->
+        <!-- GUARDAR -->
+        <!-- ================================================= -->
 
         <button
           class="save"
           type="submit"
           [disabled]="guardando"
         >
-          {{
-            guardando
-              ? 'GUARDANDO...'
-              : (
-                editando
-                  ? 'GUARDAR CAMBIOS'
-                  : 'CREAR PRODUCTO'
-              )
-          }}
+
+          @if (subiendoImagen) {
+
+            SUBIENDO IMAGEN...
+
+          } @else if (guardando) {
+
+            GUARDANDO...
+
+          } @else if (editando) {
+
+            GUARDAR CAMBIOS
+
+          } @else {
+
+            CREAR PRODUCTO
+
+          }
+
         </button>
 
       </aside>

@@ -1,25 +1,110 @@
+:host {
+  display: block;
+}
+
+
+/* ==========================================
+   IMPRESIÓN
+   ========================================== */
+
 @media print {
 
+  /*
+   * Ocultamos elementos que no pertenecen
+   * a la boleta.
+   */
   .no-print {
     display: none !important;
   }
 
+
+  /*
+   * Evitamos fondos y espacios del layout
+   * normal de la aplicación.
+   */
   :host {
-    display: block;
+    display: block !important;
   }
 
-  main {
-    background: white !important;
+
+  .boleta-page {
+    min-height: auto !important;
+
+    background: #ffffff !important;
+
+    padding: 0 !important;
+
+    margin: 0 !important;
+  }
+
+
+  .boleta-page > section {
+    width: 100% !important;
+
+    max-width: none !important;
+
+    margin: 0 !important;
+
     padding: 0 !important;
   }
 
+
+  /*
+   * Esta es la parte que queremos imprimir.
+   */
   #boleta {
-    box-shadow: none !important;
-    margin: 0 !important;
+    display: block !important;
+
+    visibility: visible !important;
+
+    width: 100% !important;
+
     max-width: none !important;
+
+    min-height: auto !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    background: #ffffff !important;
+
+    box-shadow: none !important;
+
+    color: #000000 !important;
   }
 
+
+  #boleta * {
+    visibility: visible !important;
+  }
+
+
+  /*
+   * Evita cortes incómodos en productos.
+   */
+  #boleta section > div {
+    break-inside: avoid;
+
+    page-break-inside: avoid;
+  }
+
+
+  /*
+   * Mantener colores importantes como
+   * el logo negro.
+   */
+  * {
+    -webkit-print-color-adjust: exact !important;
+
+    print-color-adjust: exact !important;
+  }
+
+
   @page {
+    size: A4;
+
     margin: 15mm;
   }
+
 }

@@ -6,9 +6,9 @@
 <main class="tienda-page">
 
 
-  <!-- =====================================
+  <!-- =====================================================
        CABECERA
-       ===================================== -->
+       ===================================================== -->
 
   <section class="tienda-header">
 
@@ -22,11 +22,14 @@
 
         @if (soloNuevos) {
           Novedades
+        } @else if (soloOfertas) {
+          Ofertas
         } @else {
           Tienda
         }
 
       </h1>
+
 
       <p class="tienda-description">
 
@@ -34,6 +37,11 @@
 
           Descubre los últimos productos
           de nuestra colección.
+
+        } @else if (soloOfertas) {
+
+          Encuentra productos seleccionados
+          con precios especiales.
 
         } @else {
 
@@ -49,9 +57,9 @@
   </section>
 
 
-  <!-- =====================================
+  <!-- =====================================================
        NAVEGACIÓN POR GÉNERO
-       ===================================== -->
+       ===================================================== -->
 
   <section class="gender-navigation">
 
@@ -63,7 +71,7 @@
       <button
         type="button"
         (click)="seleccionarGenero(0)"
-        [class.active]="generoSeleccionado === 0 && !soloNuevos"
+        [class.active]="generoSeleccionado === 0"
       >
         Todos
       </button>
@@ -109,23 +117,24 @@
   </section>
 
 
-  <!-- =====================================
+  <!-- =====================================================
        CONTENIDO
-       ===================================== -->
+       ===================================================== -->
 
   <section class="tienda-content">
 
     <div class="tienda-container">
 
 
-      <!-- ===================================
+      <!-- =================================================
            BUSCADOR / CONTADOR / ORDEN
-           =================================== -->
+           ================================================= -->
 
       <div class="catalog-toolbar">
 
 
         <!-- BUSCADOR -->
+
         <div class="search-section">
 
           <label for="buscarProducto">
@@ -154,10 +163,12 @@
 
 
         <!-- DERECHA -->
+
         <div class="toolbar-right">
 
 
           <!-- CONTADOR -->
+
           <div class="product-counter">
 
             <span>
@@ -172,6 +183,7 @@
 
 
           <!-- ORDEN -->
+
           <div class="sort-section">
 
             <label for="orden">
@@ -210,21 +222,22 @@
       </div>
 
 
-      <!-- ===================================
+      <!-- =================================================
            CATÁLOGO
-           =================================== -->
+           ================================================= -->
 
       <div class="catalog-layout">
 
 
-        <!-- =================================
+        <!-- =================================================
              FILTROS
-             ================================= -->
+             ================================================= -->
 
         <aside class="filters">
 
 
-          <!-- CABECERA FILTROS -->
+          <!-- CABECERA -->
+
           <div class="filters-heading">
 
             <h2>
@@ -242,7 +255,10 @@
           </div>
 
 
-          <!-- NOVEDADES -->
+          <!-- =================================================
+               COLECCIÓN
+               ================================================= -->
+
           <div class="filter-group">
 
             <h3>
@@ -255,9 +271,24 @@
               <button
                 type="button"
                 [class.active]="soloNuevos"
-                (click)="soloNuevos = !soloNuevos; aplicarFiltros()"
+                (click)="
+                  soloNuevos = !soloNuevos;
+                  aplicarFiltros()
+                "
               >
                 Novedades
+              </button>
+
+
+              <button
+                type="button"
+                [class.active]="soloOfertas"
+                (click)="
+                  soloOfertas = !soloOfertas;
+                  aplicarFiltros()
+                "
+              >
+                Ofertas
               </button>
 
             </div>
@@ -265,7 +296,10 @@
           </div>
 
 
-          <!-- GÉNERO -->
+          <!-- =================================================
+               GÉNERO
+               ================================================= -->
+
           <div class="filter-group">
 
             <h3>
@@ -278,7 +312,7 @@
               <button
                 type="button"
                 (click)="seleccionarGenero(0)"
-                [class.active]="generoSeleccionado === 0 && !soloNuevos"
+                [class.active]="generoSeleccionado === 0"
               >
                 Todos
               </button>
@@ -324,7 +358,10 @@
           </div>
 
 
-          <!-- CATEGORÍA -->
+          <!-- =================================================
+               CATEGORÍA
+               ================================================= -->
+
           <div class="filter-group">
 
             <h3>
@@ -382,17 +419,198 @@
 
           </div>
 
+
+          <!-- =================================================
+               TALLA
+               ================================================= -->
+
+          <div class="filter-group">
+
+            <h3>
+              Talla
+            </h3>
+
+
+            <div class="size-filter">
+
+              <button
+                type="button"
+                (click)="seleccionarTalla(1)"
+                [class.active]="tallaSeleccionada === 1"
+              >
+                XS
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarTalla(2)"
+                [class.active]="tallaSeleccionada === 2"
+              >
+                S
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarTalla(3)"
+                [class.active]="tallaSeleccionada === 3"
+              >
+                M
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarTalla(4)"
+                [class.active]="tallaSeleccionada === 4"
+              >
+                L
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarTalla(5)"
+                [class.active]="tallaSeleccionada === 5"
+              >
+                XL
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarTalla(6)"
+                [class.active]="tallaSeleccionada === 6"
+              >
+                XXL
+              </button>
+
+
+              <button
+                type="button"
+                (click)="seleccionarTalla(7)"
+                [class.active]="tallaSeleccionada === 7"
+              >
+                XXXL
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               DISPONIBILIDAD
+               ================================================= -->
+
+          <div class="filter-group">
+
+            <h3>
+              Disponibilidad
+            </h3>
+
+
+            <label class="availability-filter">
+
+              <input
+                type="checkbox"
+                [(ngModel)]="soloDisponibles"
+                (ngModelChange)="aplicarFiltros()"
+              >
+
+              <span class="availability-box">
+              </span>
+
+              <span class="availability-text">
+                Solo productos con stock
+              </span>
+
+            </label>
+
+          </div>
+
+
+          <!-- =================================================
+               PRECIO
+               ================================================= -->
+
+          <div class="filter-group">
+
+            <h3>
+              Precio
+            </h3>
+
+
+            <div class="price-filter">
+
+              <label>
+
+                <span>
+                  Desde
+                </span>
+
+                <div class="price-input">
+
+                  <span>
+                    S/
+                  </span>
+
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    [(ngModel)]="precioMinimo"
+                    (ngModelChange)="aplicarFiltros()"
+                    placeholder="0"
+                  >
+
+                </div>
+
+              </label>
+
+
+              <label>
+
+                <span>
+                  Hasta
+                </span>
+
+                <div class="price-input">
+
+                  <span>
+                    S/
+                  </span>
+
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    [(ngModel)]="precioMaximo"
+                    (ngModelChange)="aplicarFiltros()"
+                    placeholder="500"
+                  >
+
+                </div>
+
+              </label>
+
+            </div>
+
+          </div>
+
         </aside>
 
 
-        <!-- =================================
+        <!-- =================================================
              PRODUCTOS
-             ================================= -->
+             ================================================= -->
 
         <div class="products-area">
 
 
           <!-- CARGANDO -->
+
           @if (cargando) {
 
             <div class="products-grid">
@@ -432,6 +650,7 @@
 
 
           <!-- ERROR -->
+
           @else if (errorCarga) {
 
             <div class="catalog-message">
@@ -465,6 +684,7 @@
 
 
           <!-- SIN RESULTADOS -->
+
           @else if (
             productosFiltrados.length === 0
           ) {
@@ -482,6 +702,10 @@
 
                   No hay novedades disponibles
 
+                } @else if (soloOfertas) {
+
+                  No hay ofertas disponibles
+
                 } @else {
 
                   No encontramos productos
@@ -497,6 +721,11 @@
 
                   Próximamente agregaremos nuevos
                   productos a esta colección.
+
+                } @else if (soloOfertas) {
+
+                  Actualmente no encontramos productos
+                  en oferta con estos filtros.
 
                 } @else {
 
@@ -521,6 +750,7 @@
 
 
           <!-- PRODUCTOS -->
+
           @else {
 
             <div class="products-grid">

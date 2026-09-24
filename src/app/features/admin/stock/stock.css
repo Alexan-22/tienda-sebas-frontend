@@ -729,3 +729,419 @@
   }
 
 }
+
+/* =========================================================
+   GESTIÓN / ASIGNACIÓN DE TALLAS
+   ========================================================= */
+
+.size-actions {
+  min-height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 16px 22px;
+
+  border-top: 1px solid #eeeeee;
+
+  background: #fafafa;
+}
+
+.size-actions > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.size-actions strong {
+  color: #111;
+
+  font-size: 8px;
+  font-weight: 900;
+
+  letter-spacing: .1em;
+}
+
+.size-actions span {
+  color: #999;
+
+  font-size: 8px;
+}
+
+
+/* BOTÓN AGREGAR TALLA */
+
+.add-size-button {
+  min-height: 36px;
+
+  padding: 0 16px;
+
+  border: 1px solid #111;
+
+  background: #fff;
+  color: #111;
+
+  font-size: 7px;
+  font-weight: 900;
+
+  letter-spacing: .08em;
+
+  cursor: pointer;
+
+  transition:
+    background .2s ease,
+    color .2s ease;
+}
+
+.add-size-button:hover {
+  background: #111;
+  color: #fff;
+}
+
+
+/* TODAS LAS TALLAS YA ASIGNADAS */
+
+.all-sizes {
+  display: inline-flex;
+
+  align-items: center;
+
+  min-height: 32px;
+
+  padding: 0 12px;
+
+  background: #f1f1f1;
+  color: #888 !important;
+
+  font-size: 7px !important;
+  font-weight: 900;
+
+  letter-spacing: .08em;
+}
+
+
+/* =========================================================
+   FORMULARIO ASIGNAR TALLA
+   ========================================================= */
+
+.assign-size {
+  padding: 20px 22px;
+
+  border-top: 1px solid #e5e5e5;
+
+  background: #fff;
+}
+
+.assign-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 18px;
+}
+
+.assign-title h4 {
+  margin: 0;
+
+  color: #111;
+
+  font-size: 13px;
+  font-weight: 900;
+
+  text-transform: uppercase;
+}
+
+.close-assign {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #ddd;
+
+  background: #fff;
+  color: #111;
+
+  font-size: 18px;
+
+  cursor: pointer;
+}
+
+.close-assign:hover:not(:disabled) {
+  background: #111;
+  color: #fff;
+
+  border-color: #111;
+}
+
+.close-assign:disabled {
+  opacity: .5;
+
+  cursor: not-allowed;
+}
+
+
+/* FORMULARIO */
+
+.assign-form {
+  display: grid;
+
+  grid-template-columns:
+    minmax(180px, 1fr)
+    minmax(220px, 1fr)
+    auto;
+
+  align-items: end;
+
+  gap: 16px;
+}
+
+.assign-form label {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.assign-form label > span {
+  color: #777;
+
+  font-size: 7px;
+  font-weight: 900;
+
+  letter-spacing: .12em;
+}
+
+
+/* SELECT */
+
+.assign-form select {
+  width: 100%;
+  height: 40px;
+
+  padding: 0 12px;
+
+  border: 1px solid #ddd;
+
+  outline: none;
+
+  background: #fafafa;
+  color: #111;
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.assign-form select:focus {
+  border-color: #111;
+
+  background: #fff;
+}
+
+
+/* =========================================================
+   STOCK INICIAL
+   ========================================================= */
+
+.initial-stock {
+  height: 40px;
+
+  display: flex;
+  align-items: stretch;
+}
+
+.initial-stock button {
+  width: 40px;
+
+  flex: 0 0 40px;
+
+  border: 1px solid #ddd;
+
+  background: #fff;
+  color: #111;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+.initial-stock button:hover:not(:disabled) {
+  background: #111;
+  color: #fff;
+
+  border-color: #111;
+}
+
+.initial-stock button:disabled {
+  opacity: .4;
+
+  cursor: not-allowed;
+}
+
+.initial-stock input {
+  width: 80px;
+
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  border-left: 0;
+  border-right: 0;
+
+  outline: none;
+
+  background: #fafafa;
+
+  text-align: center;
+
+  color: #111;
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.initial-stock input:focus {
+  background: #fff;
+}
+
+
+/* =========================================================
+   BOTONES DEL FORMULARIO
+   ========================================================= */
+
+.assign-buttons {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.cancel-button,
+.confirm-button {
+  height: 40px;
+
+  padding: 0 16px;
+
+  font-size: 7px;
+  font-weight: 900;
+
+  letter-spacing: .08em;
+
+  cursor: pointer;
+}
+
+.cancel-button {
+  border: 1px solid #ddd;
+
+  background: #fff;
+  color: #555;
+}
+
+.cancel-button:hover:not(:disabled) {
+  border-color: #111;
+
+  color: #111;
+}
+
+.confirm-button {
+  min-width: 125px;
+
+  border: 1px solid #111;
+
+  background: #111;
+  color: #fff;
+}
+
+.confirm-button:hover:not(:disabled) {
+  background: #333;
+}
+
+.cancel-button:disabled,
+.confirm-button:disabled {
+  opacity: .5;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   BOTÓN EN PRODUCTOS SIN TALLAS
+   ========================================================= */
+
+.no-sizes .add-size-button {
+  margin-top: 10px;
+}
+
+
+/* =========================================================
+   QUITAR FLECHAS NATIVAS INPUT NUMBER
+   ========================================================= */
+
+.quantity input::-webkit-inner-spin-button,
+.quantity input::-webkit-outer-spin-button,
+.initial-stock input::-webkit-inner-spin-button,
+.initial-stock input::-webkit-outer-spin-button {
+  margin: 0;
+
+  -webkit-appearance: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE ASIGNAR TALLA
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .assign-form {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+  .assign-buttons {
+    grid-column:
+      1 / -1;
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .size-actions {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .add-size-button {
+    width: 100%;
+  }
+
+  .assign-form {
+    grid-template-columns: 1fr;
+  }
+
+  .assign-buttons {
+    grid-column: auto;
+
+    flex-direction: column;
+  }
+
+  .cancel-button,
+  .confirm-button {
+    width: 100%;
+  }
+
+  .initial-stock input {
+    flex: 1;
+  }
+
+}
+

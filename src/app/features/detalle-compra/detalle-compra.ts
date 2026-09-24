@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   OnInit
 } from '@angular/core';
@@ -35,6 +36,7 @@ import {
 
 @Component({
   selector: 'app-detalle-compra',
+
   standalone: true,
 
   imports: [
@@ -45,8 +47,11 @@ import {
     Footer
   ],
 
-  templateUrl: './detalle-compra.html',
-  styleUrl: './detalle-compra.css'
+  templateUrl:
+    './detalle-compra.html',
+
+  styleUrl:
+    './detalle-compra.css'
 })
 export class DetalleCompra implements OnInit {
 
@@ -55,76 +60,178 @@ export class DetalleCompra implements OnInit {
   detalles: DetalleVenta[] = [];
 
   cargando = true;
+
   error = false;
 
 
   constructor(
     private route: ActivatedRoute,
-    private ventaService: VentaService
+
+    private ventaService: VentaService,
+
+    private cdr: ChangeDetectorRef
   ) {}
 
 
+  // ==========================================
+  // INICIALIZACIÓN
+  // ==========================================
+
   ngOnInit(): void {
 
-    this.idVenta =
-      Number(
-        this.route.snapshot
-          .paramMap
-          .get('id')
-      );
+    const idParam =
+      this.route.snapshot
+        .paramMap
+        .get('id');
 
-    if (!this.idVenta) {
+
+    this.idVenta =
+      Number(idParam);
+
+
+    if (
+      !this.idVenta ||
+      Number.isNaN(this.idVenta)
+    ) {
 
       this.error = true;
+
       this.cargando = false;
+
+      this.cdr.detectChanges();
 
       return;
     }
+
 
     this.cargarDetalle();
   }
 
 
+  // ==========================================
+  // CARGAR DETALLE DE LA VENTA
+  // ==========================================
+
   cargarDetalle(): void {
 
+    this.cargando = true;
+
+    this.error = false;
+
+
     this.ventaService
-      .detalleVenta(this.idVenta)
+      .detalleVenta(
+        this.idVenta
+      )
       .subscribe({
 
-        next: (detalles) => {
+        next: (
+          detalles: DetalleVenta[]
+        ) => {
 
-          this.detalles = detalles;
+          console.log(
+            'DETALLE DE VENTA:',
+            detalles
+          );
 
-          this.cargando = false;
+
+          this.detalles =
+            detalles ?? [];
+
+
+          this.cargando =
+            false;
+
+
+          this.error =
+            false;
+
+
+          this.cdr.detectChanges();
         },
 
-        error: (error) => {
+
+        error: (
+          error: unknown
+        ) => {
 
           console.error(
-            'Error cargando detalle:',
+            'ERROR CARGANDO DETALLE:',
             error
           );
+
+
+          this.detalles = [];
 
           this.error = true;
 
           this.cargando = false;
+
+
+          this.cdr.detectChanges();
         }
 
       });
   }
 
 
+  // ==========================================
+  // TOTAL
+  // ==========================================
+
   get total(): number {
 
     return this.detalles.reduce(
-      (total, detalle) =>
-        total + detalle.subtotal,
+      (
+        total,
+        detalle
+      ) => {
+
+        return (
+          total +
+          Number(
+            detalle.subtotal ?? 0
+          )
+        );
+
+      },
       0
     );
   }
 
 
+  // ==========================================
+  // TOTAL DE PRODUCTOS
+  // ==========================================
+
+  get totalProductos(): number {
+
+    return this.detalles.reduce(
+      (
+        total,
+        detalle
+      ) => {
+
+        return (
+          total +
+          Number(
+            detalle.cantidad ?? 0
+          )
+        );
+
+      },
+      0
+    );
+  }
+
+
+  // ==========================================
+  // IMPRIMIR
+  // ==========================================
+
   imprimir(): void {
+
     window.print();
   }
+
 }

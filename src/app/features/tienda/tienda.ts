@@ -12,12 +12,29 @@ import {
 } from '@angular/router';
 
 import {
+  forkJoin,
+  of
+} from 'rxjs';
+
+import {
+  catchError
+} from 'rxjs/operators';
+
+import {
   ProductoService
 } from '../../core/services/producto';
 
 import {
+  ProductoTallaService
+} from '../../core/services/producto-talla';
+
+import {
   Producto
 } from '../../core/models/producto';
+
+import {
+  ProductoTalla
+} from '../../core/models/producto-talla';
 
 import {
   PromoBar
@@ -34,6 +51,11 @@ import {
 import {
   ProductCard
 } from '../../shared/components/product-card/product-card';
+
+
+interface InventarioProducto {
+  [idProducto: number]: ProductoTalla[];
+}
 
 
 @Component({
@@ -58,9 +80,16 @@ export class Tienda implements OnInit {
 
   productosFiltrados: Producto[] = [];
 
+  inventario: InventarioProducto = {};
+
   cargando = true;
 
   errorCarga = false;
+
+
+  // ==========================================
+  // FILTROS
+  // ==========================================
 
   busqueda = '';
 
@@ -68,13 +97,24 @@ export class Tienda implements OnInit {
 
   categoriaSeleccionada = 0;
 
+  tallaSeleccionada = 0;
+
   soloNuevos = false;
+
+  soloOfertas = false;
+
+  soloDisponibles = false;
+
+  precioMinimo: number | null = null;
+
+  precioMaximo: number | null = null;
 
   ordenSeleccionado = 'relevancia';
 
 
   constructor(
     private productoService: ProductoService,
+    private productoTallaService: ProductoTallaService,
     private route: ActivatedRoute
   ) {}
 
@@ -86,11 +126,10 @@ export class Tienda implements OnInit {
      *
      * /tienda
      * /tienda?genero=1
-     * /tienda?genero=2
-     * /tienda?genero=3
-     * /tienda?genero=4
+     * /tienda?categoria=2
      * /tienda?nuevo=true
      */
+
     this.route.queryParamMap
       .subscribe(params => {
 
@@ -119,6 +158,10 @@ export class Tienda implements OnInit {
   }
 
 
+  // ==========================================
+  // CARGAR PRODUCTOS
+  // ==========================================
+
   cargarProductos(): void {
 
     this.cargando = true;
@@ -130,22 +173,32 @@ export class Tienda implements OnInit {
       .listar()
       .subscribe({
 
-        next: (
-          productos: Producto[]
-        ) => {
+        next: productos => {
 
           this.productos =
             productos ?? [];
 
 
-          this.aplicarFiltros();
+          if (
+            this.productos.length === 0
+          ) {
+
+            this.productosFiltrados = [];
+
+            this.inventario = {};
+
+            this.cargando = false;
+
+            return;
+          }
 
 
-          this.cargando = false;
+          this.cargarInventario();
+
         },
 
 
-        error: (error) => {
+        error: error => {
 
           console.error(
             'Error cargando catálogo:',
@@ -157,15 +210,97 @@ export class Tienda implements OnInit {
 
           this.productosFiltrados = [];
 
+          this.inventario = {};
 
           this.errorCarga = true;
 
           this.cargando = false;
+
         }
 
       });
+
   }
 
+
+  // ==========================================
+  // CARGAR TALLAS Y STOCK
+  // ==========================================
+
+  cargarInventario(): void {
+
+    const consultas =
+      this.productos.map(
+        producto =>
+          this.productoTallaService
+            .listarPorProducto(
+              producto.idProducto
+            )
+            .pipe(
+              catchError(error => {
+
+                console.error(
+                  `Error cargando tallas del producto ${producto.idProducto}:`,
+                  error
+                );
+
+                return of([]);
+              })
+            )
+      );
+
+
+    forkJoin(consultas)
+      .subscribe({
+
+        next: resultados => {
+
+          this.inventario = {};
+
+
+          this.productos.forEach(
+            (producto, index) => {
+
+              this.inventario[
+                producto.idProducto
+              ] =
+                resultados[index] ?? [];
+
+            }
+          );
+
+
+          this.aplicarFiltros();
+
+          this.cargando = false;
+
+        },
+
+
+        error: error => {
+
+          console.error(
+            'Error cargando inventario:',
+            error
+          );
+
+
+          this.inventario = {};
+
+          this.aplicarFiltros();
+
+          this.cargando = false;
+
+        }
+
+      });
+
+  }
+
+
+  // ==========================================
+  // APLICAR FILTROS
+  // ==========================================
 
   aplicarFiltros(): void {
 
@@ -173,9 +308,10 @@ export class Tienda implements OnInit {
       [...this.productos];
 
 
-    /*
-     * BUSCADOR
-     */
+    // ------------------------------------------
+    // BUSCADOR
+    // ------------------------------------------
+
     const texto =
       this.busqueda
         .trim()
@@ -219,12 +355,14 @@ export class Tienda implements OnInit {
 
           }
         );
+
     }
 
 
-    /*
-     * FILTRO POR GÉNERO
-     */
+    // ------------------------------------------
+    // GÉNERO
+    // ------------------------------------------
+
     if (
       this.generoSeleccionado !== 0
     ) {
@@ -236,12 +374,14 @@ export class Tienda implements OnInit {
               ?.idGenero ===
             this.generoSeleccionado
         );
+
     }
 
 
-    /*
-     * FILTRO POR CATEGORÍA
-     */
+    // ------------------------------------------
+    // CATEGORÍA
+    // ------------------------------------------
+
     if (
       this.categoriaSeleccionada !== 0
     ) {
@@ -253,12 +393,14 @@ export class Tienda implements OnInit {
               ?.idCategoria ===
             this.categoriaSeleccionada
         );
+
     }
 
 
-    /*
-     * FILTRO NOVEDADES
-     */
+    // ------------------------------------------
+    // NOVEDADES
+    // ------------------------------------------
+
     if (this.soloNuevos) {
 
       resultado =
@@ -266,12 +408,102 @@ export class Tienda implements OnInit {
           producto =>
             producto.nuevo === true
         );
+
     }
 
 
-    /*
-     * ORDENAMIENTO
-     */
+    // ------------------------------------------
+    // OFERTAS
+    // ------------------------------------------
+
+    if (this.soloOfertas) {
+
+      resultado =
+        resultado.filter(
+          producto =>
+            this.tieneOferta(producto)
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // DISPONIBILIDAD
+    // ------------------------------------------
+
+    if (this.soloDisponibles) {
+
+      resultado =
+        resultado.filter(
+          producto =>
+            this.stockTotal(producto) > 0
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // TALLA
+    // ------------------------------------------
+
+    if (
+      this.tallaSeleccionada !== 0
+    ) {
+
+      resultado =
+        resultado.filter(
+          producto =>
+            this.tieneTallaDisponible(
+              producto,
+              this.tallaSeleccionada
+            )
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // PRECIO MÍNIMO
+    // ------------------------------------------
+
+    if (
+      this.precioMinimo != null &&
+      this.precioMinimo >= 0
+    ) {
+
+      resultado =
+        resultado.filter(
+          producto =>
+            this.precioFinal(producto) >=
+            Number(this.precioMinimo)
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // PRECIO MÁXIMO
+    // ------------------------------------------
+
+    if (
+      this.precioMaximo != null &&
+      this.precioMaximo >= 0
+    ) {
+
+      resultado =
+        resultado.filter(
+          producto =>
+            this.precioFinal(producto) <=
+            Number(this.precioMaximo)
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // ORDENAMIENTO
+    // ------------------------------------------
+
     switch (
       this.ordenSeleccionado
     ) {
@@ -314,8 +546,13 @@ export class Tienda implements OnInit {
 
     this.productosFiltrados =
       resultado;
+
   }
 
+
+  // ==========================================
+  // PRECIO FINAL
+  // ==========================================
 
   precioFinal(
     producto: Producto
@@ -328,13 +565,97 @@ export class Tienda implements OnInit {
         producto.precio
     ) {
 
-      return producto.precioOferta;
+      return Number(
+        producto.precioOferta
+      );
+
     }
 
 
-    return producto.precio;
+    return Number(
+      producto.precio
+    );
+
   }
 
+
+  // ==========================================
+  // TIENE OFERTA
+  // ==========================================
+
+  tieneOferta(
+    producto: Producto
+  ): boolean {
+
+    return (
+      producto.precioOferta != null &&
+      Number(producto.precioOferta) > 0 &&
+      Number(producto.precioOferta) <
+      Number(producto.precio)
+    );
+
+  }
+
+
+  // ==========================================
+  // STOCK TOTAL
+  // ==========================================
+
+  stockTotal(
+    producto: Producto
+  ): number {
+
+    const tallas =
+      this.inventario[
+        producto.idProducto
+      ] ?? [];
+
+
+    return tallas.reduce(
+      (
+        total,
+        productoTalla
+      ) =>
+        total +
+        Number(
+          productoTalla.stock ?? 0
+        ),
+      0
+    );
+
+  }
+
+
+  // ==========================================
+  // TIENE TALLA DISPONIBLE
+  // ==========================================
+
+  tieneTallaDisponible(
+    producto: Producto,
+    idTalla: number
+  ): boolean {
+
+    const tallas =
+      this.inventario[
+        producto.idProducto
+      ] ?? [];
+
+
+    return tallas.some(
+      productoTalla =>
+        productoTalla.talla
+          ?.idTalla === idTalla &&
+        Number(
+          productoTalla.stock
+        ) > 0
+    );
+
+  }
+
+
+  // ==========================================
+  // SELECCIONAR GÉNERO
+  // ==========================================
 
   seleccionarGenero(
     idGenero: number
@@ -343,16 +664,14 @@ export class Tienda implements OnInit {
     this.generoSeleccionado =
       idGenero;
 
-    /*
-     * Si el usuario cambia de género
-     * manualmente, dejamos de mostrar
-     * solamente novedades.
-     */
-    this.soloNuevos = false;
-
     this.aplicarFiltros();
+
   }
 
+
+  // ==========================================
+  // SELECCIONAR CATEGORÍA
+  // ==========================================
 
   seleccionarCategoria(
     idCategoria: number
@@ -362,8 +681,40 @@ export class Tienda implements OnInit {
       idCategoria;
 
     this.aplicarFiltros();
+
   }
 
+
+  // ==========================================
+  // SELECCIONAR TALLA
+  // ==========================================
+
+  seleccionarTalla(
+    idTalla: number
+  ): void {
+
+    if (
+      this.tallaSeleccionada === idTalla
+    ) {
+
+      this.tallaSeleccionada = 0;
+
+    } else {
+
+      this.tallaSeleccionada =
+        idTalla;
+
+    }
+
+
+    this.aplicarFiltros();
+
+  }
+
+
+  // ==========================================
+  // LIMPIAR FILTROS
+  // ==========================================
 
   limpiarFiltros(): void {
 
@@ -373,12 +724,24 @@ export class Tienda implements OnInit {
 
     this.categoriaSeleccionada = 0;
 
+    this.tallaSeleccionada = 0;
+
     this.soloNuevos = false;
+
+    this.soloOfertas = false;
+
+    this.soloDisponibles = false;
+
+    this.precioMinimo = null;
+
+    this.precioMaximo = null;
 
     this.ordenSeleccionado =
       'relevancia';
 
+
     this.aplicarFiltros();
+
   }
 
 }

@@ -4,15 +4,13 @@
   <app-navbar></app-navbar>
 </div>
 
+<main class="boleta-page min-h-screen bg-neutral-100 px-5 py-16">
 
-<main class="min-h-screen bg-neutral-100 px-5 py-16">
+  <section class="mx-auto max-w-[850px]">
 
-  <section
-    class="mx-auto max-w-[850px]">
+    <!-- ACCIONES -->
 
-
-    <div
-      class="no-print mb-7 flex items-center justify-between">
+    <div class="no-print mb-7 flex items-center justify-between">
 
       <a
         routerLink="/mis-compras"
@@ -22,11 +20,11 @@
 
       </a>
 
-
       <button
         type="button"
         (click)="imprimir()"
-        class="h-12 bg-black px-6 text-[10px] font-black uppercase tracking-[0.18em] text-white">
+        [disabled]="cargando || error || detalles.length === 0"
+        class="h-12 bg-black px-6 text-[10px] font-black uppercase tracking-[0.18em] text-white disabled:cursor-not-allowed disabled:bg-neutral-300">
 
         Imprimir boleta
 
@@ -35,87 +33,175 @@
     </div>
 
 
+    <!-- CARGANDO -->
+
     @if (cargando) {
 
-      <div
-        class="h-[600px] animate-pulse bg-white">
+      <div class="min-h-[600px] animate-pulse bg-white p-12">
+
+        <div class="h-12 w-12 bg-neutral-100"></div>
+
+        <div class="mt-5 h-8 w-52 bg-neutral-100"></div>
+
+        <div class="mt-16 h-10 bg-neutral-100"></div>
+
+        <div class="mt-4 h-20 bg-neutral-100"></div>
+
+        <div class="mt-4 h-20 bg-neutral-100"></div>
+
       </div>
 
     } @else if (error) {
 
+      <!-- ERROR -->
+
       <div class="bg-white p-12 text-center">
 
-        <p class="font-bold">
-          No pudimos cargar esta compra.
+        <p class="text-lg font-black uppercase">
+          No pudimos cargar esta compra
+        </p>
+
+        <p class="mt-3 text-sm text-neutral-500">
+          Intenta nuevamente o vuelve a Mis compras.
+        </p>
+
+        <a
+          routerLink="/mis-compras"
+          class="mt-8 inline-flex h-12 items-center bg-black px-7 text-[10px] font-black uppercase tracking-[0.18em] text-white">
+
+          Volver a mis compras
+
+        </a>
+
+      </div>
+
+    } @else if (detalles.length === 0) {
+
+      <!-- SIN DETALLES -->
+
+      <div class="bg-white p-12 text-center">
+
+        <p class="text-lg font-black uppercase">
+          Esta venta no tiene productos
+        </p>
+
+        <p class="mt-3 text-sm text-neutral-500">
+          No encontramos detalles para la venta #{{ idVenta }}.
         </p>
 
       </div>
 
     } @else {
 
-      <div
+      <!-- BOLETA -->
+
+      <article
         id="boleta"
-        class="bg-white p-8 sm:p-12">
+        class="boleta bg-white p-8 sm:p-12">
 
 
         <!-- CABECERA -->
 
-        <div
-          class="flex flex-col justify-between gap-8 border-b border-black pb-8 sm:flex-row">
+        <header
+          class="flex flex-col justify-between gap-8 border-b-2 border-black pb-8 sm:flex-row">
 
           <div>
 
             <div
-              class="flex h-12 w-12 items-center justify-center bg-black text-sm font-black text-white">
-
+              class="flex h-14 w-14 items-center justify-center bg-black text-sm font-black text-white">
               TS
-
             </div>
 
-            <h1
-              class="mt-4 text-2xl font-black uppercase">
-
+            <h1 class="mt-4 text-2xl font-black uppercase">
               Tienda Sebas
-
             </h1>
 
             <p
               class="mt-1 text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-400">
+              Polvos · Fashion Store
+            </p>
 
-              Fashion Store
-
+            <p class="mt-5 text-[10px] leading-5 text-neutral-500">
+              Lima, Perú
+              <br>
+              Comprobante de compra
             </p>
 
           </div>
-
 
           <div class="sm:text-right">
 
             <p
               class="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
-
               Boleta de venta
-
             </p>
 
-            <p
-              class="mt-2 text-3xl font-black">
-
+            <p class="mt-2 text-4xl font-black">
               #{{ idVenta }}
+            </p>
 
+            <p class="mt-3 text-[10px] uppercase text-neutral-400">
+              Venta registrada
             </p>
 
           </div>
 
-        </div>
+        </header>
 
 
-        <!-- DETALLE -->
+        <!-- INFORMACIÓN -->
 
-        <div class="mt-10">
+        <section
+          class="grid gap-6 border-b border-neutral-200 py-7 sm:grid-cols-3">
+
+          <div>
+
+            <p
+              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+              N° de venta
+            </p>
+
+            <p class="mt-2 text-sm font-black">
+              #{{ idVenta }}
+            </p>
+
+          </div>
+
+          <div>
+
+            <p
+              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+              Productos
+            </p>
+
+            <p class="mt-2 text-sm font-black">
+              {{ totalProductos }}
+            </p>
+
+          </div>
+
+          <div>
+
+            <p
+              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+              Moneda
+            </p>
+
+            <p class="mt-2 text-sm font-black">
+              PEN · Soles
+            </p>
+
+          </div>
+
+        </section>
+
+
+        <!-- DETALLE DE PRODUCTOS -->
+
+        <section class="mt-10">
 
           <div
-            class="hidden grid-cols-[1fr_80px_100px_100px] border-b border-neutral-200 pb-3 text-[9px] font-black uppercase tracking-[0.15em] text-neutral-400 sm:grid">
+            class="hidden grid-cols-[1fr_80px_110px_110px] border-b border-neutral-300 pb-3 text-[9px] font-black uppercase tracking-[0.15em] text-neutral-400 sm:grid">
 
             <span>Producto</span>
 
@@ -140,11 +226,13 @@
           ) {
 
             <div
-              class="grid gap-3 border-b border-neutral-100 py-6 sm:grid-cols-[1fr_80px_100px_100px] sm:items-center">
+              class="grid gap-3 border-b border-neutral-100 py-6 sm:grid-cols-[1fr_80px_110px_110px] sm:items-center">
+
+              <!-- PRODUCTO -->
 
               <div>
 
-                <p class="text-sm font-bold">
+                <p class="text-sm font-black uppercase">
 
                   {{
                     detalle
@@ -156,9 +244,9 @@
                 </p>
 
                 <p
-                  class="mt-1 text-[10px] uppercase text-neutral-400">
+                  class="mt-2 text-[9px] font-bold uppercase tracking-[0.12em] text-neutral-400">
 
-                  Talla:
+                  Talla
                   {{
                     detalle
                       .productoTalla
@@ -171,61 +259,98 @@
               </div>
 
 
-              <p
-                class="text-sm sm:text-center">
+              <!-- CANTIDAD -->
 
-                {{ detalle.cantidad }}
+              <div class="flex justify-between sm:block">
 
-              </p>
+                <span
+                  class="text-[9px] font-black uppercase text-neutral-400 sm:hidden">
+                  Cantidad
+                </span>
 
+                <p class="text-sm font-bold sm:text-center">
+                  {{ detalle.cantidad }}
+                </p>
 
-              <p
-                class="text-sm sm:text-right">
-
-                S/
-                {{
-                  detalle.precioUnitario
-                    | number:'1.2-2'
-                }}
-
-              </p>
+              </div>
 
 
-              <p
-                class="text-sm font-bold sm:text-right">
+              <!-- PRECIO -->
 
-                S/
-                {{
-                  detalle.subtotal
-                    | number:'1.2-2'
-                }}
+              <div class="flex justify-between sm:block">
 
-              </p>
+                <span
+                  class="text-[9px] font-black uppercase text-neutral-400 sm:hidden">
+                  Precio
+                </span>
+
+                <p class="text-sm sm:text-right">
+
+                  S/
+                  {{
+                    detalle.precioUnitario
+                      | number:'1.2-2'
+                  }}
+
+                </p>
+
+              </div>
+
+
+              <!-- SUBTOTAL -->
+
+              <div class="flex justify-between sm:block">
+
+                <span
+                  class="text-[9px] font-black uppercase text-neutral-400 sm:hidden">
+                  Subtotal
+                </span>
+
+                <p class="text-sm font-black sm:text-right">
+
+                  S/
+                  {{
+                    detalle.subtotal
+                      | number:'1.2-2'
+                  }}
+
+                </p>
+
+              </div>
 
             </div>
 
           }
 
-        </div>
+        </section>
 
 
-        <!-- TOTAL -->
+        <!-- RESUMEN -->
 
-        <div
-          class="ml-auto mt-10 max-w-[320px]">
+        <section class="ml-auto mt-10 max-w-[340px]">
+
+          <div
+            class="flex items-center justify-between border-b border-neutral-200 py-3">
+
+            <span
+              class="text-[10px] font-bold uppercase text-neutral-500">
+              Productos
+            </span>
+
+            <span class="text-sm font-bold">
+              {{ totalProductos }}
+            </span>
+
+          </div>
 
           <div
             class="flex items-center justify-between border-t-2 border-black pt-5">
 
-            <span
-              class="text-sm font-black uppercase">
-
+            <span class="text-sm font-black uppercase">
               Total
-
             </span>
 
-            <span
-              class="text-2xl font-black">
+            <span class="text-2xl font-black">
 
               S/
               {{
@@ -237,29 +362,30 @@
 
           </div>
 
-        </div>
+        </section>
 
 
-        <div
+        <!-- PIE -->
+
+        <footer
           class="mt-14 border-t border-neutral-200 pt-7 text-center">
 
           <p
-            class="text-xs font-bold uppercase">
-
+            class="text-xs font-black uppercase tracking-[0.12em]">
             Gracias por tu compra
-
           </p>
 
-          <p
-            class="mt-2 text-[10px] text-neutral-400">
-
-            Tienda Sebas · Perú
-
+          <p class="mt-2 text-[10px] text-neutral-400">
+            Tienda Sebas · Lima, Perú
           </p>
 
-        </div>
+          <p class="mt-1 text-[9px] text-neutral-300">
+            Conserva este comprobante como constancia de tu compra.
+          </p>
 
-      </div>
+        </footer>
+
+      </article>
 
     }
 

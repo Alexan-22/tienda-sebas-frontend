@@ -1,6 +1,7 @@
 import {
   Component,
-  OnInit
+  OnInit,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import {
@@ -22,12 +23,20 @@ import {
 } from '../../core/models/producto-talla';
 
 import {
+  ProductoImagen
+} from '../../core/models/producto-imagen';
+
+import {
   ProductoService
 } from '../../core/services/producto';
 
 import {
   ProductoTallaService
 } from '../../core/services/producto-talla';
+
+import {
+  ProductoImagenService
+} from '../../core/services/producto-imagen';
 
 import {
   CarritoService
@@ -59,23 +68,33 @@ import {
     Footer
   ],
 
-  templateUrl:
-    './product-detail.html',
+  templateUrl: './product-detail.html',
 
-  styleUrl:
-    './product-detail.css'
+  styleUrl: './product-detail.css'
 })
-export class ProductDetail
-  implements OnInit {
+export class ProductDetail implements OnInit {
 
-  producto:
-    Producto | null = null;
+  producto: Producto | null = null;
 
-  tallas:
-    ProductoTalla[] = [];
+  tallas: ProductoTalla[] = [];
 
-  tallaSeleccionada:
-    ProductoTalla | null = null;
+  tallaSeleccionada: ProductoTalla | null = null;
+
+
+  // ==========================================
+  // GALERÍA
+  // ==========================================
+
+  imagenes: ProductoImagen[] = [];
+
+  imagenSeleccionada: string | null = null;
+
+  cargandoImagenes = true;
+
+
+  // ==========================================
+  // ESTADO
+  // ==========================================
 
   cantidad = 1;
 
@@ -93,40 +112,69 @@ export class ProductDetail
 
 
   constructor(
-    private route:
-      ActivatedRoute,
+    private route: ActivatedRoute,
 
-    private router:
-      Router,
+    private router: Router,
 
-    private productoService:
-      ProductoService,
+    private productoService: ProductoService,
 
-    private productoTallaService:
-      ProductoTallaService,
+    private productoTallaService: ProductoTallaService,
 
-    private carritoService:
-      CarritoService
+    private productoImagenService: ProductoImagenService,
+
+    private carritoService: CarritoService,
+
+    private cdr: ChangeDetectorRef
   ) {}
 
 
+  // ==========================================
+  // INICIALIZACIÓN
+  // ==========================================
+
   ngOnInit(): void {
 
+    const idParam =
+      this.route.snapshot.paramMap.get('id');
+
     const id =
-      Number(
-        this.route.snapshot
-          .paramMap
-          .get('id')
+      Number(idParam);
+
+
+    console.log(
+      '=============================='
+    );
+
+    console.log(
+      'PRODUCT DETAIL INICIADO'
+    );
+
+    console.log(
+      'ID RECIBIDO:',
+      id
+    );
+
+    console.log(
+      '=============================='
+    );
+
+
+    if (!id || Number.isNaN(id)) {
+
+      console.error(
+        'ID DE PRODUCTO NO VÁLIDO:',
+        idParam
       );
-
-
-    if (!id) {
 
       this.errorCarga = true;
 
       this.cargando = false;
 
       this.cargandoTallas = false;
+
+      this.cargandoImagenes = false;
+
+      this.cdr.detectChanges();
 
       return;
     }
@@ -135,12 +183,24 @@ export class ProductDetail
     this.cargarProducto(id);
 
     this.cargarTallas(id);
+
+    this.cargarImagenes(id);
   }
 
+
+  // ==========================================
+  // PRODUCTO
+  // ==========================================
 
   cargarProducto(
     id: number
   ): void {
+
+    console.log(
+      'Solicitando producto:',
+      id
+    );
+
 
     this.productoService
       .buscarPorId(id)
@@ -150,11 +210,58 @@ export class ProductDetail
           producto: Producto
         ) => {
 
+          console.log(
+            'PRODUCTO CARGADO:',
+            producto
+          );
+
+          console.log(
+            'CARGANDO ANTES:',
+            this.cargando
+          );
+
+
           this.producto =
             producto;
 
+
+          if (
+            producto.imagen &&
+            !this.imagenSeleccionada
+          ) {
+
+            this.imagenSeleccionada =
+              producto.imagen;
+          }
+
+
+          this.errorCarga =
+            false;
+
           this.cargando =
             false;
+
+
+          console.log(
+            'CARGANDO DESPUÉS:',
+            this.cargando
+          );
+
+          console.log(
+            'PRODUCTO EN COMPONENTE:',
+            this.producto
+          );
+
+
+          /*
+           * Forzamos una actualización de la vista.
+           *
+           * Esto también nos permite comprobar si
+           * el problema del skeleton corresponde
+           * a detección de cambios.
+           */
+
+          this.cdr.detectChanges();
         },
 
 
@@ -163,20 +270,31 @@ export class ProductDetail
         ) => {
 
           console.error(
-            'Error cargando producto:',
+            'ERROR CARGANDO PRODUCTO:',
             error
           );
+
+
+          this.producto =
+            null;
 
           this.errorCarga =
             true;
 
           this.cargando =
             false;
+
+
+          this.cdr.detectChanges();
         }
 
       });
   }
 
+
+  // ==========================================
+  // TALLAS
+  // ==========================================
 
   cargarTallas(
     idProducto: number
@@ -193,15 +311,32 @@ export class ProductDetail
       .subscribe({
 
         next: (
-          tallas:
-            ProductoTalla[]
+          tallas: ProductoTalla[]
         ) => {
 
+          console.log(
+            'TALLAS CARGADAS:',
+            tallas
+          );
+
+
           this.tallas =
-            tallas;
+            (tallas ?? [])
+              .sort(
+                (
+                  a,
+                  b
+                ) =>
+                  a.talla.idTalla -
+                  b.talla.idTalla
+              );
+
 
           this.cargandoTallas =
             false;
+
+
+          this.cdr.detectChanges();
         },
 
 
@@ -210,28 +345,156 @@ export class ProductDetail
         ) => {
 
           console.error(
-            'Error cargando tallas:',
+            'ERROR CARGANDO TALLAS:',
             error
           );
+
 
           this.tallas = [];
 
           this.cargandoTallas =
             false;
+
+
+          this.cdr.detectChanges();
         }
 
       });
   }
 
 
+  // ==========================================
+  // IMÁGENES ADICIONALES
+  // ==========================================
+
+  cargarImagenes(
+    idProducto: number
+  ): void {
+
+    this.cargandoImagenes =
+      true;
+
+
+    this.productoImagenService
+      .listarPorProducto(
+        idProducto
+      )
+      .subscribe({
+
+        next: (
+          imagenes: ProductoImagen[]
+        ) => {
+
+          console.log(
+            'IMÁGENES ADICIONALES:',
+            imagenes
+          );
+
+
+          this.imagenes =
+            (imagenes ?? [])
+              .sort(
+                (
+                  a,
+                  b
+                ) =>
+                  a.orden -
+                  b.orden
+              );
+
+
+          if (
+            !this.imagenSeleccionada &&
+            this.imagenes.length > 0
+          ) {
+
+            this.imagenSeleccionada =
+              this.imagenes[0].imagen;
+          }
+
+
+          this.cargandoImagenes =
+            false;
+
+
+          this.cdr.detectChanges();
+        },
+
+
+        error: (
+          error: unknown
+        ) => {
+
+          console.error(
+            'ERROR CARGANDO GALERÍA:',
+            error
+          );
+
+
+          this.imagenes = [];
+
+          this.cargandoImagenes =
+            false;
+
+
+          /*
+           * Un fallo de galería no bloquea
+           * el detalle del producto.
+           */
+
+          this.cdr.detectChanges();
+        }
+
+      });
+  }
+
+
+  // ==========================================
+  // SELECCIONAR IMAGEN
+  // ==========================================
+
+  seleccionarImagen(
+    imagen: string
+  ): void {
+
+    this.imagenSeleccionada =
+      imagen;
+  }
+
+
+  // ==========================================
+  // URL DE IMAGEN
+  // ==========================================
+
+  obtenerImagenUrl(
+    imagen: string | null
+  ): string | null {
+
+    if (!imagen) {
+
+      return null;
+    }
+
+
+    return (
+      this.uploadsUrl +
+      imagen
+    );
+  }
+
+
+  // ==========================================
+  // SELECCIONAR TALLA
+  // ==========================================
+
   seleccionarTalla(
-    productoTalla:
-      ProductoTalla
+    productoTalla: ProductoTalla
   ): void {
 
     if (
       productoTalla.stock <= 0
     ) {
+
       return;
     }
 
@@ -243,11 +506,16 @@ export class ProductDetail
   }
 
 
+  // ==========================================
+  // AUMENTAR CANTIDAD
+  // ==========================================
+
   aumentarCantidad(): void {
 
     if (
       !this.tallaSeleccionada
     ) {
+
       return;
     }
 
@@ -262,14 +530,24 @@ export class ProductDetail
   }
 
 
+  // ==========================================
+  // DISMINUIR CANTIDAD
+  // ==========================================
+
   disminuirCantidad(): void {
 
-    if (this.cantidad > 1) {
+    if (
+      this.cantidad > 1
+    ) {
 
       this.cantidad--;
     }
   }
 
+
+  // ==========================================
+  // AGREGAR AL CARRITO
+  // ==========================================
 
   agregarAlCarrito(): void {
 
@@ -277,6 +555,7 @@ export class ProductDetail
       !this.producto ||
       !this.tallaSeleccionada
     ) {
+
       return;
     }
 
@@ -317,14 +596,23 @@ export class ProductDetail
       true;
 
 
-    setTimeout(() => {
+    setTimeout(
+      () => {
 
-      this.productoAgregado =
-        false;
+        this.productoAgregado =
+          false;
 
-    }, 2000);
+        this.cdr.detectChanges();
+
+      },
+      2000
+    );
   }
 
+
+  // ==========================================
+  // COMPRAR AHORA
+  // ==========================================
 
   comprarAhora(): void {
 
@@ -332,11 +620,13 @@ export class ProductDetail
       !this.producto ||
       !this.tallaSeleccionada
     ) {
+
       return;
     }
 
 
     this.agregarAlCarrito();
+
 
     this.router.navigate([
       '/carrito'
@@ -344,21 +634,22 @@ export class ProductDetail
   }
 
 
+  // ==========================================
+  // IMAGEN PRINCIPAL
+  // ==========================================
+
   get imagenUrl():
     string | null {
 
-    if (!this.producto?.imagen) {
-
-      return null;
-    }
-
-
-    return (
-      this.uploadsUrl +
-      this.producto.imagen
+    return this.obtenerImagenUrl(
+      this.imagenSeleccionada
     );
   }
 
+
+  // ==========================================
+  // OFERTA
+  // ==========================================
 
   get tieneOferta():
     boolean {
@@ -377,6 +668,10 @@ export class ProductDetail
   }
 
 
+  // ==========================================
+  // PRECIO ACTUAL
+  // ==========================================
+
   get precioActual():
     number {
 
@@ -388,8 +683,7 @@ export class ProductDetail
 
     if (
       this.tieneOferta &&
-      this.producto.precioOferta
-        != null
+      this.producto.precioOferta != null
     ) {
 
       return this.producto
@@ -401,12 +695,95 @@ export class ProductDetail
   }
 
 
+  // ==========================================
+  // PORCENTAJE DE DESCUENTO
+  // ==========================================
+
+  get porcentajeDescuento():
+    number {
+
+    if (
+      !this.producto ||
+      !this.tieneOferta ||
+      this.producto.precioOferta == null
+    ) {
+
+      return 0;
+    }
+
+
+    return Math.round(
+      (
+        (
+          this.producto.precio -
+          this.producto.precioOferta
+        ) /
+        this.producto.precio
+      ) * 100
+    );
+  }
+
+
+  // ==========================================
+  // STOCK TOTAL
+  // ==========================================
+
+  get stockTotal():
+    number {
+
+    return this.tallas.reduce(
+      (
+        total,
+        productoTalla
+      ) =>
+        total +
+        Number(
+          productoTalla.stock ?? 0
+        ),
+      0
+    );
+  }
+
+
+  // ==========================================
+  // HAY STOCK
+  // ==========================================
+
   get hayStock():
     boolean {
 
-    return this.tallas.some(
-      talla =>
-        talla.stock > 0
+    return (
+      this.stockTotal > 0
     );
   }
+
+
+  // ==========================================
+  // SUBTOTAL
+  // ==========================================
+
+  get subtotal():
+    number {
+
+    return (
+      this.precioActual *
+      this.cantidad
+    );
+  }
+
+
+  // ==========================================
+  // IMAGEN SELECCIONADA
+  // ==========================================
+
+  esImagenSeleccionada(
+    imagen: string
+  ): boolean {
+
+    return (
+      this.imagenSeleccionada ===
+      imagen
+    );
+  }
+
 }

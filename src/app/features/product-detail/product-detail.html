@@ -3,189 +3,301 @@
 <app-navbar></app-navbar>
 
 
-<main
-  class="min-h-screen bg-white">
-
+<main class="product-page">
 
   @if (cargando) {
 
-    <div
-      class="mx-auto grid max-w-[1500px] gap-10 px-5 py-16 lg:grid-cols-2 lg:px-10">
+    <section class="detail-container loading-layout">
 
-      <div
-        class="aspect-[3/4] animate-pulse bg-neutral-200">
+      <div class="image-skeleton"></div>
+
+      <div class="info-skeleton">
+        <div class="skeleton-line skeleton-title"></div>
+        <div class="skeleton-line skeleton-price"></div>
+        <div class="skeleton-line skeleton-text"></div>
+        <div class="skeleton-line skeleton-text"></div>
       </div>
 
-      <div>
-
-        <div
-          class="h-8 w-3/4 animate-pulse bg-neutral-200">
-        </div>
-
-        <div
-          class="mt-5 h-5 w-1/4 animate-pulse bg-neutral-200">
-        </div>
-
-      </div>
-
-    </div>
+    </section>
 
   } @else if (
     errorCarga ||
     !producto
   ) {
 
-    <section
-      class="mx-auto max-w-[1200px] px-5 py-28 text-center">
+    <section class="product-error">
 
-      <h1
-        class="text-3xl font-black uppercase">
-
+      <span>
         Producto no disponible
+      </span>
 
+      <h1>
+        No encontramos este producto
       </h1>
 
-      <a
-        routerLink="/"
-        class="mt-7 inline-flex h-14 items-center bg-black px-8 text-[10px] font-black uppercase tracking-[0.2em] text-white">
+      <p>
+        El producto que buscas no está disponible
+        o pudo haber sido retirado de la tienda.
+      </p>
 
+      <a routerLink="/tienda">
         Volver a la tienda
-
       </a>
 
     </section>
 
   } @else {
 
-    <section
-      class="mx-auto grid max-w-[1500px] gap-10 px-5 py-10 lg:grid-cols-2 lg:gap-20 lg:px-10 lg:py-16">
+    <!-- ==========================================
+         BREADCRUMB
+         ========================================== -->
+
+    <div class="detail-container breadcrumb">
+
+      <a routerLink="/tienda">
+        Tienda
+      </a>
+
+      <span>/</span>
+
+      <a
+        routerLink="/tienda"
+        [queryParams]="{
+          genero: producto.genero.idGenero
+        }"
+      >
+        {{ producto.genero.nombreGenero }}
+      </a>
+
+      <span>/</span>
+
+      <a
+        routerLink="/tienda"
+        [queryParams]="{
+          categoria: producto.categoria.idCategoria
+        }"
+      >
+        {{ producto.categoria.nombreCategoria }}
+      </a>
+
+      <span>/</span>
+
+      <strong>
+        {{ producto.nombre }}
+      </strong>
+
+    </div>
 
 
-      <!-- IMAGEN -->
+    <!-- ==========================================
+         DETALLE
+         ========================================== -->
 
-      <div
-        class="aspect-[3/4] overflow-hidden bg-neutral-100">
+    <section class="detail-container product-layout">
 
-        @if (imagenUrl) {
 
-          <img
-            [src]="imagenUrl"
-            [alt]="producto.nombre"
-            class="h-full w-full object-cover">
+      <!-- ========================================
+           GALERÍA
+           ======================================== -->
 
-        } @else {
+      <div class="gallery-section">
 
-          <div
-            class="flex h-full items-center justify-center">
 
-            <div class="text-center">
+        <!-- MINIATURAS -->
 
-              <p
-                class="text-7xl font-black text-neutral-200">
+        <div class="gallery-thumbnails">
 
-                TS
 
-              </p>
+          <!-- IMAGEN PRINCIPAL -->
 
-              <p
-                class="mt-3 text-[9px] font-black uppercase tracking-[0.3em] text-neutral-300">
+          @if (producto.imagen) {
 
-                Sin imagen
+            <button
+              type="button"
+              class="thumbnail"
+              [class.active]="
+                esImagenSeleccionada(
+                  producto.imagen
+                )
+              "
+              (click)="
+                seleccionarImagen(
+                  producto.imagen
+                )
+              "
+            >
 
-              </p>
+              <img
+                [src]="
+                  obtenerImagenUrl(
+                    producto.imagen
+                  )
+                "
+                [alt]="producto.nombre"
+              >
 
+            </button>
+
+          }
+
+
+          <!-- IMÁGENES ADICIONALES -->
+
+          @for (
+            productoImagen of imagenes;
+            track productoImagen.idProductoImagen
+          ) {
+
+            <button
+              type="button"
+              class="thumbnail"
+              [class.active]="
+                esImagenSeleccionada(
+                  productoImagen.imagen
+                )
+              "
+              (click)="
+                seleccionarImagen(
+                  productoImagen.imagen
+                )
+              "
+            >
+
+              <img
+                [src]="
+                  obtenerImagenUrl(
+                    productoImagen.imagen
+                  )
+                "
+                [alt]="producto.nombre"
+              >
+
+            </button>
+
+          }
+
+
+          @if (cargandoImagenes) {
+
+            <div class="thumbnail-loading">
             </div>
+
+          }
+
+        </div>
+
+
+        <!-- IMAGEN GRANDE -->
+
+        <div class="main-image">
+
+
+          <!-- ETIQUETAS -->
+
+          <div class="product-badges">
+
+            @if (producto.nuevo) {
+
+              <span class="badge-new">
+                Nuevo
+              </span>
+
+            }
+
+
+            @if (tieneOferta) {
+
+              <span class="badge-offer">
+                -{{ porcentajeDescuento }}%
+              </span>
+
+            }
 
           </div>
 
-        }
+
+          @if (imagenUrl) {
+
+            <img
+              [src]="imagenUrl"
+              [alt]="producto.nombre"
+            >
+
+          } @else {
+
+            <div class="no-image">
+
+              <strong>
+                TS
+              </strong>
+
+              <span>
+                Sin imagen
+              </span>
+
+            </div>
+
+          }
+
+        </div>
 
       </div>
 
 
-      <!-- INFORMACIÓN -->
+      <!-- ========================================
+           INFORMACIÓN
+           ======================================== -->
 
-      <div
-        class="lg:py-8">
-
-
-        <a
-          routerLink="/"
-          class="text-[9px] font-black uppercase tracking-[0.2em] text-neutral-400">
-
-          ← Volver
-
-        </a>
+      <div class="product-info">
 
 
-        <p
-          class="mt-10 text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-400">
-
-          {{
-            producto
-              .categoria
-              .nombreCategoria
-          }}
-
+        <p class="product-category">
+          {{ producto.categoria.nombreCategoria }}
           ·
-
-          {{
-            producto
-              .genero
-              .nombreGenero
-          }}
-
+          {{ producto.genero.nombreGenero }}
         </p>
 
 
-        <h1
-          class="mt-3 text-4xl font-black uppercase leading-none tracking-[-0.05em] sm:text-5xl">
-
+        <h1>
           {{ producto.nombre }}
-
         </h1>
 
 
         <!-- PRECIO -->
 
-        <div
-          class="mt-7 flex items-center gap-4">
+        <div class="price-section">
 
           @if (tieneOferta) {
 
-            <span
-              class="text-2xl font-black">
-
+            <span class="current-price">
               S/
               {{
-                producto.precioOferta
+                precioActual
                   | number:'1.2-2'
               }}
-
             </span>
 
-            <span
-              class="text-sm text-neutral-400 line-through">
-
+            <span class="old-price">
               S/
               {{
                 producto.precio
                   | number:'1.2-2'
               }}
+            </span>
 
+            <span class="discount-label">
+              Ahorras
+              {{ porcentajeDescuento }}%
             </span>
 
           } @else {
 
-            <span
-              class="text-2xl font-black">
-
+            <span class="current-price">
               S/
               {{
                 producto.precio
                   | number:'1.2-2'
               }}
-
             </span>
 
           }
@@ -193,42 +305,66 @@
         </div>
 
 
-        <p
-          class="mt-7 max-w-xl text-sm leading-7 text-neutral-500">
+        <!-- STOCK GENERAL -->
 
+        @if (cargandoTallas) {
+
+          <p class="stock-status neutral">
+            Comprobando disponibilidad...
+          </p>
+
+        } @else if (hayStock) {
+
+          <p class="stock-status available">
+            ● Disponible
+            ·
+            {{ stockTotal }}
+            unidades en stock
+          </p>
+
+        } @else {
+
+          <p class="stock-status unavailable">
+            ● Producto agotado
+          </p>
+
+        }
+
+
+        <!-- DESCRIPCIÓN -->
+
+        <p class="product-description">
           {{ producto.descripcion }}
-
         </p>
 
 
-        <!-- TALLAS -->
+        <!-- ======================================
+             TALLAS
+             ====================================== -->
 
-        <div
-          class="mt-10 border-t border-neutral-200 pt-8">
+        <div class="product-option">
 
-          <div
-            class="flex items-center justify-between">
+          <div class="option-heading">
 
-            <p
-              class="text-[10px] font-black uppercase tracking-[0.2em]">
+            <div>
 
-              Selecciona talla
+              <span class="option-number">
+                01
+              </span>
 
-            </p>
+              <strong>
+                Selecciona tu talla
+              </strong>
 
-            @if (
-              tallaSeleccionada
-            ) {
+            </div>
 
-              <p
-                class="text-[10px] text-neutral-400">
 
-                Stock:
-                {{
-                  tallaSeleccionada.stock
-                }}
+            @if (tallaSeleccionada) {
 
-              </p>
+              <span class="selected-stock">
+                {{ tallaSeleccionada.stock }}
+                disponibles
+              </span>
 
             }
 
@@ -237,29 +373,22 @@
 
           @if (cargandoTallas) {
 
-            <p
-              class="mt-5 text-xs text-neutral-400">
-
+            <p class="option-message">
               Cargando tallas...
-
             </p>
 
           } @else if (
             tallas.length === 0
           ) {
 
-            <p
-              class="mt-5 text-xs text-red-600">
-
-              Este producto no tiene
-              tallas configuradas.
-
+            <p class="option-message error">
+              Este producto no tiene tallas
+              configuradas.
             </p>
 
           } @else {
 
-            <div
-              class="mt-5 flex flex-wrap gap-2">
+            <div class="size-options">
 
               @for (
                 productoTalla of tallas;
@@ -268,18 +397,47 @@
 
                 <button
                   type="button"
-                  [disabled]="productoTalla.stock <= 0"
-                  (click)="seleccionarTalla(productoTalla)"
-                  class="relative flex h-12 min-w-14 items-center justify-center border px-4 text-xs font-black transition disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-300"
-                  [class.border-black]="tallaSeleccionada?.idProductoTalla === productoTalla.idProductoTalla"
-                  [class.bg-black]="tallaSeleccionada?.idProductoTalla === productoTalla.idProductoTalla"
-                  [class.text-white]="tallaSeleccionada?.idProductoTalla === productoTalla.idProductoTalla">
+                  class="size-button"
 
-                  {{
+                  [disabled]="
+                    productoTalla.stock <= 0
+                  "
+
+                  [class.active]="
+                    tallaSeleccionada
+                      ?.idProductoTalla ===
                     productoTalla
-                      .talla
-                      .nombreTalla
-                  }}
+                      .idProductoTalla
+                  "
+
+                  [class.out-of-stock]="
+                    productoTalla.stock <= 0
+                  "
+
+                  (click)="
+                    seleccionarTalla(
+                      productoTalla
+                    )
+                  "
+                >
+
+                  <span>
+                    {{
+                      productoTalla
+                        .talla
+                        .nombreTalla
+                    }}
+                  </span>
+
+                  @if (
+                    productoTalla.stock <= 0
+                  ) {
+
+                    <small>
+                      Agotado
+                    </small>
+
+                  }
 
                 </button>
 
@@ -292,70 +450,165 @@
         </div>
 
 
-        <!-- CANTIDAD -->
+        <!-- ======================================
+             CANTIDAD
+             ====================================== -->
 
-        <div
-          class="mt-8">
+        <div class="product-option quantity-option">
 
-          <p
-            class="text-[10px] font-black uppercase tracking-[0.2em]">
+          <div class="option-heading">
 
-            Cantidad
+            <div>
 
-          </p>
+              <span class="option-number">
+                02
+              </span>
 
-
-          <div
-            class="mt-4 flex h-14 w-40 border border-neutral-300">
-
-            <button
-              type="button"
-              (click)="disminuirCantidad()"
-              class="flex w-12 items-center justify-center text-lg">
-
-              −
-
-            </button>
-
-            <div
-              class="flex flex-1 items-center justify-center text-sm font-bold">
-
-              {{ cantidad }}
+              <strong>
+                Cantidad
+              </strong>
 
             </div>
 
-            <button
-              type="button"
-              (click)="aumentarCantidad()"
-              class="flex w-12 items-center justify-center text-lg">
+          </div>
 
-              +
 
-            </button>
+          <div class="quantity-row">
+
+            <div class="quantity-selector">
+
+              <button
+                type="button"
+                (click)="disminuirCantidad()"
+                [disabled]="cantidad <= 1"
+                aria-label="Disminuir cantidad"
+              >
+                −
+              </button>
+
+
+              <span>
+                {{ cantidad }}
+              </span>
+
+
+              <button
+                type="button"
+                (click)="aumentarCantidad()"
+                [disabled]="
+                  !tallaSeleccionada ||
+                  cantidad >= tallaSeleccionada.stock
+                "
+                aria-label="Aumentar cantidad"
+              >
+                +
+              </button>
+
+            </div>
+
+
+            @if (tallaSeleccionada) {
+
+              <p class="quantity-help">
+
+                Máximo:
+                {{ tallaSeleccionada.stock }}
+
+              </p>
+
+            } @else {
+
+              <p class="quantity-help">
+                Selecciona primero una talla
+              </p>
+
+            }
 
           </div>
 
         </div>
 
 
-        <!-- BOTONES -->
+        <!-- ======================================
+             RESUMEN
+             ====================================== -->
 
-        <div
-          class="mt-8 grid gap-3 sm:grid-cols-2">
+        <div class="purchase-summary">
+
+          <div>
+
+            <span>
+              Precio unitario
+            </span>
+
+            <strong>
+              S/
+              {{
+                precioActual
+                  | number:'1.2-2'
+              }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Cantidad
+            </span>
+
+            <strong>
+              {{ cantidad }}
+            </strong>
+
+          </div>
+
+
+          <div class="summary-total">
+
+            <span>
+              Subtotal
+            </span>
+
+            <strong>
+              S/
+              {{
+                subtotal
+                  | number:'1.2-2'
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- ======================================
+             BOTONES
+             ====================================== -->
+
+        <div class="purchase-actions">
 
           <button
             type="button"
+            class="add-cart-button"
             (click)="agregarAlCarrito()"
-            [disabled]="!tallaSeleccionada"
-            class="h-16 border border-black text-[10px] font-black uppercase tracking-[0.18em] transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:border-neutral-300 disabled:text-neutral-300">
+            [disabled]="
+              !tallaSeleccionada ||
+              !hayStock
+            "
+          >
 
-            @if (!tallaSeleccionada) {
+            @if (!hayStock) {
+
+              Producto agotado
+
+            } @else if (!tallaSeleccionada) {
 
               Selecciona una talla
 
-            } @else if (
-              productoAgregado
-            ) {
+            } @else if (productoAgregado) {
 
               ✓ Agregado al carrito
 
@@ -370,53 +623,77 @@
 
           <button
             type="button"
+            class="buy-button"
             (click)="comprarAhora()"
-            [disabled]="!tallaSeleccionada"
-            class="h-16 bg-black text-[10px] font-black uppercase tracking-[0.18em] text-white transition hover:bg-neutral-800 disabled:bg-neutral-300">
-
+            [disabled]="
+              !tallaSeleccionada ||
+              !hayStock
+            "
+          >
             Comprar ahora
-
           </button>
 
         </div>
 
 
-        <!-- BENEFICIOS -->
+        <!-- ======================================
+             BENEFICIOS
+             ====================================== -->
 
-        <div
-          class="mt-10 border border-neutral-200">
+        <div class="product-benefits">
 
-          <div
-            class="border-b border-neutral-200 p-5">
+          <div>
 
-            <p
-              class="text-[9px] font-black uppercase tracking-[0.2em]">
+            <span class="benefit-icon">
+              01
+            </span>
 
-              Envíos a todo el Perú
+            <p>
+              <strong>
+                Envíos a todo el Perú
+              </strong>
 
+              <span>
+                Recibe tu pedido de forma segura.
+              </span>
             </p>
 
           </div>
 
-          <div
-            class="border-b border-neutral-200 p-5">
 
-            <p
-              class="text-[9px] font-black uppercase tracking-[0.2em]">
+          <div>
 
-              Pago con Yape o tarjeta
+            <span class="benefit-icon">
+              02
+            </span>
 
+            <p>
+              <strong>
+                Yape o tarjeta
+              </strong>
+
+              <span>
+                Elige tu medio de pago al comprar.
+              </span>
             </p>
 
           </div>
 
-          <div class="p-5">
 
-            <p
-              class="text-[9px] font-black uppercase tracking-[0.2em]">
+          <div>
 
-              Compra protegida
+            <span class="benefit-icon">
+              03
+            </span>
 
+            <p>
+              <strong>
+                Compra protegida
+              </strong>
+
+              <span>
+                Stock validado antes de procesar tu pedido.
+              </span>
             </p>
 
           </div>

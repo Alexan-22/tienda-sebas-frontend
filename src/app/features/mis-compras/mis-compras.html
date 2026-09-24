@@ -8,68 +8,154 @@
   <section
     class="mx-auto max-w-[1200px] px-5 py-16 lg:px-10 lg:py-20">
 
-    <div>
 
-      <p
-        class="text-[10px] font-bold uppercase tracking-[0.35em] text-neutral-400">
+    <!-- CABECERA -->
 
-        Mi cuenta
+    <div
+      class="flex flex-col gap-6 border-b border-neutral-200 pb-10 sm:flex-row sm:items-end sm:justify-between">
 
-      </p>
+      <div>
 
-      <h1
-        class="mt-3 text-4xl font-black uppercase tracking-[-0.05em] sm:text-6xl">
+        <p
+          class="text-[10px] font-bold uppercase tracking-[0.35em] text-neutral-400">
 
-        Mis compras
+          Mi cuenta
 
-      </h1>
+        </p>
+
+        <h1
+          class="mt-3 text-4xl font-black uppercase tracking-[-0.05em] sm:text-6xl">
+
+          Mis compras
+
+        </h1>
+
+        <p
+          class="mt-4 max-w-[520px] text-sm leading-6 text-neutral-500">
+
+          Consulta tus pedidos, revisa el detalle de cada compra
+          y vuelve a imprimir tu boleta cuando lo necesites.
+
+        </p>
+
+      </div>
+
+
+      <a
+        routerLink="/tienda"
+        class="inline-flex h-12 items-center justify-center border border-black px-6 text-[10px] font-black uppercase tracking-[0.18em] transition hover:bg-black hover:text-white">
+
+        Seguir comprando
+
+      </a>
 
     </div>
 
 
+    <!-- CARGANDO -->
+
     @if (cargando) {
 
-      <div class="mt-12 space-y-4">
+      <div class="mt-12">
 
-        @for (item of [1,2,3]; track item) {
+        <div
+          class="grid gap-4 sm:grid-cols-3">
 
-          <div
-            class="h-32 animate-pulse bg-neutral-200">
-          </div>
+          @for (
+            item of [1,2,3];
+            track item
+          ) {
 
-        }
+            <div
+              class="h-28 animate-pulse bg-neutral-200">
+            </div>
+
+          }
+
+        </div>
+
+
+        <div class="mt-8 space-y-4">
+
+          @for (
+            item of [1,2,3];
+            track item
+          ) {
+
+            <div
+              class="h-36 animate-pulse bg-neutral-200">
+            </div>
+
+          }
+
+        </div>
 
       </div>
 
     } @else if (error) {
 
-      <div
-        class="mt-12 border border-red-200 bg-red-50 p-7">
+      <!-- ERROR -->
 
-        <p class="text-sm text-red-700">
-          No pudimos cargar tus compras.
+      <div
+        class="mt-12 border border-red-200 bg-red-50 p-8">
+
+        <p
+          class="text-lg font-black uppercase text-red-700">
+
+          No pudimos cargar tus compras
+
         </p>
+
+        <p
+          class="mt-2 text-sm text-red-600">
+
+          Verifica tu conexión e intenta nuevamente.
+
+        </p>
+
+        <button
+          type="button"
+          (click)="cargarCompras()"
+          class="mt-6 h-12 bg-black px-7 text-[10px] font-black uppercase tracking-[0.18em] text-white">
+
+          Intentar nuevamente
+
+        </button>
 
       </div>
 
     } @else if (ventas.length === 0) {
 
+      <!-- SIN COMPRAS -->
+
       <div
-        class="mt-12 bg-white p-12 text-center">
+        class="mt-12 bg-white px-8 py-20 text-center">
+
+        <div
+          class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100 text-xl">
+
+          🛍
+
+        </div>
 
         <p
-          class="text-2xl font-black uppercase">
+          class="mt-7 text-2xl font-black uppercase">
+
           Todavía no tienes compras
+
         </p>
 
         <p
-          class="mt-3 text-sm text-neutral-500">
-          Cuando realices tu primera compra aparecerá aquí.
+          class="mx-auto mt-3 max-w-[420px] text-sm leading-6 text-neutral-500">
+
+          Cuando realices tu primera compra,
+          aparecerá aquí junto con su detalle y boleta.
+
         </p>
 
         <a
-          routerLink="/"
-          class="mt-7 inline-flex h-14 items-center bg-black px-8 text-[10px] font-black uppercase tracking-[0.2em] text-white">
+          routerLink="/tienda"
+          class="mt-8 inline-flex h-14 items-center bg-black px-8 text-[10px] font-black uppercase tracking-[0.2em] text-white">
 
           Explorar tienda
 
@@ -79,7 +165,125 @@
 
     } @else {
 
-      <div class="mt-12 space-y-4">
+      <!-- RESUMEN -->
+
+      <div
+        class="mt-12 grid gap-px bg-neutral-200 sm:grid-cols-3">
+
+        <article class="bg-white p-7">
+
+          <p
+            class="text-[9px] font-black uppercase tracking-[0.18em] text-neutral-400">
+
+            Compras realizadas
+
+          </p>
+
+          <p
+            class="mt-3 text-3xl font-black">
+
+            {{ cantidadCompras }}
+
+          </p>
+
+        </article>
+
+
+        <article class="bg-white p-7">
+
+          <p
+            class="text-[9px] font-black uppercase tracking-[0.18em] text-neutral-400">
+
+            Total comprado
+
+          </p>
+
+          <p
+            class="mt-3 text-3xl font-black">
+
+            S/
+            {{
+              totalGastado
+                | number:'1.2-2'
+            }}
+
+          </p>
+
+        </article>
+
+
+        <article class="bg-white p-7">
+
+          <p
+            class="text-[9px] font-black uppercase tracking-[0.18em] text-neutral-400">
+
+            Última compra
+
+          </p>
+
+          @if (ultimaCompra) {
+
+            <p
+              class="mt-3 text-lg font-black">
+
+              {{
+                ultimaCompra.fechaVenta
+                  | date:'dd/MM/yyyy'
+              }}
+
+            </p>
+
+            <p
+              class="mt-1 text-[10px] text-neutral-400">
+
+              Pedido #{{ ultimaCompra.idVenta }}
+
+            </p>
+
+          }
+
+        </article>
+
+      </div>
+
+
+      <!-- TITULO HISTORIAL -->
+
+      <div
+        class="mt-14 flex items-end justify-between border-b border-black pb-4">
+
+        <div>
+
+          <p
+            class="text-[9px] font-black uppercase tracking-[0.2em] text-neutral-400">
+
+            Historial
+
+          </p>
+
+          <h2
+            class="mt-2 text-xl font-black uppercase">
+
+            Tus pedidos
+
+          </h2>
+
+        </div>
+
+        <p
+          class="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-400">
+
+          {{ cantidadCompras }}
+          pedidos
+
+        </p>
+
+      </div>
+
+
+      <!-- PEDIDOS -->
+
+      <div class="divide-y divide-neutral-200">
 
         @for (
           venta of ventas;
@@ -87,22 +291,30 @@
         ) {
 
           <article
-            class="grid gap-6 bg-white p-6 sm:grid-cols-[1fr_auto] sm:items-center lg:p-8">
+            class="grid gap-7 bg-white p-6 sm:grid-cols-[1fr_auto] sm:items-center lg:p-8">
+
+
+            <!-- INFORMACIÓN -->
 
             <div>
 
               <div
                 class="flex flex-wrap items-center gap-3">
 
-                <h2
+                <h3
                   class="text-lg font-black uppercase">
 
                   Pedido #{{ venta.idVenta }}
 
-                </h2>
+                </h3>
+
 
                 <span
-                  class="bg-neutral-100 px-3 py-1 text-[9px] font-black uppercase tracking-[0.15em]">
+                  class="estado"
+                  [class]="
+                    'estado ' +
+                    claseEstado(venta.estado)
+                  ">
 
                   {{ venta.estado }}
 
@@ -112,46 +324,121 @@
 
 
               <div
-                class="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-xs text-neutral-500">
+                class="mt-5 grid gap-5 sm:grid-cols-3">
 
-                <span>
+                <!-- FECHA -->
 
-                  {{
-                    venta.fechaVenta
-                      | date:'dd/MM/yyyy HH:mm'
-                  }}
+                <div>
 
-                </span>
+                  <p
+                    class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
 
-                <span>
-                  {{ venta.medioPago }}
-                </span>
+                    Fecha
 
-                <strong class="text-black">
+                  </p>
 
-                  S/
-                  {{
-                    venta.total
-                      | number:'1.2-2'
-                  }}
+                  <p
+                    class="mt-2 text-xs font-bold">
 
-                </strong>
+                    {{
+                      venta.fechaVenta
+                        | date:'dd/MM/yyyy'
+                    }}
+
+                  </p>
+
+                  <p
+                    class="mt-1 text-[10px] text-neutral-400">
+
+                    {{
+                      venta.fechaVenta
+                        | date:'HH:mm'
+                    }}
+
+                  </p>
+
+                </div>
+
+
+                <!-- PAGO -->
+
+                <div>
+
+                  <p
+                    class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+
+                    Medio de pago
+
+                  </p>
+
+                  <p
+                    class="mt-2 text-xs font-bold">
+
+                    {{
+                      textoPago(
+                        venta.medioPago
+                      )
+                    }}
+
+                  </p>
+
+                </div>
+
+
+                <!-- TOTAL -->
+
+                <div>
+
+                  <p
+                    class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+
+                    Total
+
+                  </p>
+
+                  <p
+                    class="mt-2 text-base font-black">
+
+                    S/
+                    {{
+                      venta.total
+                        | number:'1.2-2'
+                    }}
+
+                  </p>
+
+                </div>
 
               </div>
 
             </div>
 
 
-            <a
-              [routerLink]="[
-                '/mis-compras',
-                venta.idVenta
-              ]"
-              class="flex h-12 items-center justify-center border border-black px-6 text-[10px] font-black uppercase tracking-[0.15em] transition hover:bg-black hover:text-white">
+            <!-- ACCIONES -->
 
-              Ver detalle
+            <div
+              class="flex flex-col gap-2 sm:min-w-[170px]">
 
-            </a>
+              <a
+                [routerLink]="[
+                  '/mis-compras',
+                  venta.idVenta
+                ]"
+                class="flex h-12 items-center justify-center bg-black px-6 text-[9px] font-black uppercase tracking-[0.15em] text-white transition hover:bg-neutral-800">
+
+                Ver detalle
+
+              </a>
+
+              <a
+                routerLink="/tienda"
+                class="flex h-11 items-center justify-center border border-neutral-300 px-6 text-[9px] font-black uppercase tracking-[0.15em] transition hover:border-black">
+
+                Comprar nuevamente
+
+              </a>
+
+            </div>
 
           </article>
 
