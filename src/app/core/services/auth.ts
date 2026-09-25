@@ -34,18 +34,32 @@ export class AuthService {
 
   private readonly tokenSignal =
     signal<string | null>(
-      localStorage.getItem(this.tokenKey)
+      this.cargarTokenInicial()
     );
 
 
   readonly autenticado =
-    computed(() => this.tokenSignal() !== null);
+    computed(() => {
+
+      const token =
+        this.tokenSignal();
+
+      if (!token) {
+        return false;
+      }
+
+      return !this.tokenExpirado(token);
+    });
 
 
   constructor(
     private http: HttpClient
   ) {}
 
+
+  // ==========================================
+  // LOGIN
+  // ==========================================
 
   login(
     request: LoginRequest
@@ -73,6 +87,10 @@ export class AuthService {
   }
 
 
+  // ==========================================
+  // REGISTRO
+  // ==========================================
+
   registrar(
     request: RegistroRequest
   ): Observable<string> {
@@ -87,6 +105,10 @@ export class AuthService {
   }
 
 
+  // ==========================================
+  // LOGOUT
+  // ==========================================
+
   logout(): void {
 
     localStorage.removeItem(
@@ -97,20 +119,49 @@ export class AuthService {
   }
 
 
+  // ==========================================
+  // OBTENER TOKEN
+  // ==========================================
+
   obtenerToken(): string | null {
 
-    return this.tokenSignal();
+    const token =
+      this.tokenSignal();
+
+
+    if (!token) {
+      return null;
+    }
+
+
+    if (
+      this.tokenExpirado(token)
+    ) {
+
+      this.logout();
+
+      return null;
+    }
+
+
+    return token;
   }
 
+
+  // ==========================================
+  // OBTENER CORREO
+  // ==========================================
 
   obtenerCorreo(): string | null {
 
     const payload =
       this.obtenerPayload();
 
+
     if (!payload) {
       return null;
     }
+
 
     return (
       payload['sub'] ??
@@ -121,36 +172,130 @@ export class AuthService {
   }
 
 
+  // ==========================================
+  // OBTENER ROL
+  // ==========================================
+
   obtenerRol(): string | null {
 
     const payload =
       this.obtenerPayload();
 
+
     if (!payload) {
       return null;
     }
 
-    return payload['rol'] ?? null;
+
+    return (
+      payload['rol'] ??
+      null
+    );
   }
 
+
+  // ==========================================
+  // COMPROBAR EXPIRACIÓN
+  // ==========================================
+
+  tokenExpirado(
+    token?: string
+  ): boolean {
+
+    const tokenActual =
+      token ??
+      this.tokenSignal();
+
+
+    if (!tokenActual) {
+      return true;
+    }
+
+
+    const payload =
+      this.decodificarPayload(
+        tokenActual
+      );
+
+
+    if (!payload) {
+      return true;
+    }
+
+
+    const expiracion =
+      payload['exp'];
+
+
+    if (
+      typeof expiracion !==
+      'number'
+    ) {
+      return true;
+    }
+
+
+    const ahora =
+      Math.floor(
+        Date.now() / 1000
+      );
+
+
+    return (
+      expiracion <= ahora
+    );
+  }
+
+
+  // ==========================================
+  // OBTENER PAYLOAD
+  // ==========================================
 
   private obtenerPayload():
     Record<string, any> | null {
 
     const token =
-      this.obtenerToken();
+      this.tokenSignal();
+
 
     if (!token) {
       return null;
     }
 
 
+    if (
+      this.tokenExpirado(token)
+    ) {
+
+      this.logout();
+
+      return null;
+    }
+
+
+    return this.decodificarPayload(
+      token
+    );
+  }
+
+
+  // ==========================================
+  // DECODIFICAR JWT
+  // ==========================================
+
+  private decodificarPayload(
+    token: string
+  ): Record<string, any> | null {
+
     try {
 
       const partes =
         token.split('.');
 
-      if (partes.length !== 3) {
+
+      if (
+        partes.length !== 3
+      ) {
         return null;
       }
 
@@ -171,10 +316,14 @@ export class AuthService {
 
       const payloadJson =
         decodeURIComponent(
+
           Array.prototype.map
             .call(
               atob(payloadBase64),
-              (caracter: string) => {
+
+              (
+                caracter: string
+              ) => {
 
                 return (
                   '%' +
@@ -189,6 +338,7 @@ export class AuthService {
               }
             )
             .join('')
+
         );
 
 
@@ -203,7 +353,87 @@ export class AuthService {
         error
       );
 
+
       return null;
     }
+  }
+
+
+  // ==========================================
+  // CARGAR TOKEN AL INICIAR
+  // ==========================================
+
+  private cargarTokenInicial():
+    string | null {
+
+    const token =
+      localStorage.getItem(
+        this.tokenKey
+      );
+
+
+    if (!token) {
+      return null;
+    }
+
+
+    if (
+      this.tokenExpiradoInicial(
+        token
+      )
+    ) {
+
+      localStorage.removeItem(
+        this.tokenKey
+      );
+
+      return null;
+    }
+
+
+    return token;
+  }
+
+
+  // ==========================================
+  // VALIDAR TOKEN DURANTE INICIALIZACIÓN
+  // ==========================================
+
+  private tokenExpiradoInicial(
+    token: string
+  ): boolean {
+
+    const payload =
+      this.decodificarPayload(
+        token
+      );
+
+
+    if (!payload) {
+      return true;
+    }
+
+
+    const expiracion =
+      payload['exp'];
+
+
+    if (
+      typeof expiracion !==
+      'number'
+    ) {
+      return true;
+    }
+
+
+    const ahora =
+      Math.floor(
+        Date.now() / 1000
+      );
+
+
+    return (
+      expiracion <= ahora
+    );
   }
 }

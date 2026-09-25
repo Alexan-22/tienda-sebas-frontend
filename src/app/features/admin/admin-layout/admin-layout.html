@@ -1,6 +1,8 @@
 <div class="admin-shell">
 
-  <!-- SIDEBAR -->
+  <!-- =====================================================
+       SIDEBAR
+       ===================================================== -->
 
   <aside
     class="admin-sidebar"
@@ -29,9 +31,14 @@
     </div>
 
 
-    <!-- NAVEGACIÓN -->
+    <!-- ===================================================
+         NAVEGACIÓN
+         =================================================== -->
 
     <nav class="admin-navigation">
+
+
+      <!-- GENERAL -->
 
       <p class="navigation-title">
         GENERAL
@@ -43,13 +50,39 @@
         routerLinkActive="active"
         (click)="cerrarMenu()"
       >
+
         <span class="nav-icon">
           ◫
         </span>
 
         Dashboard
+
       </a>
 
+
+      <!-- CONTENIDO -->
+
+      <p class="navigation-title">
+        CONTENIDO
+      </p>
+
+
+      <a
+        routerLink="/admin/home"
+        routerLinkActive="active"
+        (click)="cerrarMenu()"
+      >
+
+        <span class="nav-icon">
+          ◈
+        </span>
+
+        Página principal
+
+      </a>
+
+
+      <!-- CATÁLOGO -->
 
       <p class="navigation-title">
         CATÁLOGO
@@ -61,11 +94,13 @@
         routerLinkActive="active"
         (click)="cerrarMenu()"
       >
+
         <span class="nav-icon">
           □
         </span>
 
         Productos
+
       </a>
 
 
@@ -74,13 +109,17 @@
         routerLinkActive="active"
         (click)="cerrarMenu()"
       >
+
         <span class="nav-icon">
           ≡
         </span>
 
         Stock y tallas
+
       </a>
 
+
+      <!-- NEGOCIO -->
 
       <p class="navigation-title">
         NEGOCIO
@@ -92,11 +131,13 @@
         routerLinkActive="active"
         (click)="cerrarMenu()"
       >
+
         <span class="nav-icon">
           $
         </span>
 
         Ventas
+
       </a>
 
 
@@ -105,11 +146,13 @@
         routerLinkActive="active"
         (click)="cerrarMenu()"
       >
+
         <span class="nav-icon">
           ○
         </span>
 
         Usuarios
+
       </a>
 
 
@@ -118,17 +161,21 @@
         routerLinkActive="active"
         (click)="cerrarMenu()"
       >
+
         <span class="nav-icon">
           ↗
         </span>
 
         Reportes
+
       </a>
 
     </nav>
 
 
-    <!-- PARTE INFERIOR -->
+    <!-- ===================================================
+         PARTE INFERIOR
+         =================================================== -->
 
     <div class="sidebar-footer">
 
@@ -152,11 +199,16 @@
   </aside>
 
 
-  <!-- CONTENIDO -->
+  <!-- =====================================================
+       CONTENIDO PRINCIPAL
+       ===================================================== -->
 
   <div class="admin-main">
 
-    <!-- TOPBAR -->
+
+    <!-- ===================================================
+         TOPBAR
+         =================================================== -->
 
     <header class="admin-topbar">
 
@@ -187,6 +239,8 @@
       </div>
 
 
+      <!-- USUARIO -->
+
       <div class="admin-user">
 
         <div class="admin-user-text">
@@ -214,7 +268,9 @@
     </header>
 
 
-    <!-- PÁGINA -->
+    <!-- ===================================================
+         PÁGINA
+         =================================================== -->
 
     <main class="admin-content">
 

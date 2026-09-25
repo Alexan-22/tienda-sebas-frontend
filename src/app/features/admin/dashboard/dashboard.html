@@ -1,76 +1,341 @@
 <section class="page">
 
+  <!-- ==========================================
+       CABECERA
+  =========================================== -->
+
   <header class="page-header">
+
     <div>
-      <p class="eyebrow">RESUMEN</p>
-      <h1>Dashboard</h1>
+
+      <p class="eyebrow">
+        RESUMEN
+      </p>
+
+      <h1>
+        Dashboard
+      </h1>
+
       <p>
         Vista general de Tienda Sebas.
       </p>
+
     </div>
+
   </header>
+
+
+  <!-- ==========================================
+       ESTADÍSTICAS
+  =========================================== -->
 
   <div class="stats">
 
-    <article>
-      <span>PRODUCTOS</span>
-      <strong>—</strong>
-      <small>Catálogo registrado</small>
-    </article>
 
-    <article>
-      <span>VENTAS</span>
-      <strong>—</strong>
-      <small>Ventas realizadas</small>
-    </article>
+    <!-- ======================================
+         PRODUCTOS
+    ======================================= -->
 
-    <article>
-      <span>USUARIOS</span>
-      <strong>—</strong>
-      <small>Clientes registrados</small>
-    </article>
+    <a
+      routerLink="/admin/productos"
+      class="stat-card">
 
-    <article>
-      <span>STOCK</span>
-      <strong>—</strong>
-      <small>Unidades disponibles</small>
-    </article>
+      <span class="stat-label">
+        PRODUCTOS
+      </span>
+
+
+      @if (totalProductos === null) {
+
+        <div class="stat-loader"></div>
+
+      } @else {
+
+        <strong class="stat-number">
+          {{ totalProductos }}
+        </strong>
+
+      }
+
+
+      <small>
+        Catálogo registrado
+      </small>
+
+
+      <span class="stat-arrow">
+        →
+      </span>
+
+    </a>
+
+
+    <!-- ======================================
+         VENTAS
+    ======================================= -->
+
+    <a
+      routerLink="/admin/ventas"
+      class="stat-card">
+
+      <span class="stat-label">
+        VENTAS
+      </span>
+
+
+      @if (totalVentas === null) {
+
+        <div class="stat-loader"></div>
+
+      } @else {
+
+        <strong class="stat-number">
+          {{ totalVentas }}
+        </strong>
+
+      }
+
+
+      <small>
+        Ventas realizadas
+      </small>
+
+
+      <span class="stat-arrow">
+        →
+      </span>
+
+    </a>
+
+
+    <!-- ======================================
+         USUARIOS
+    ======================================= -->
+
+    <a
+      routerLink="/admin/usuarios"
+      class="stat-card">
+
+      <span class="stat-label">
+        USUARIOS
+      </span>
+
+
+      @if (totalClientes === null) {
+
+        <div class="stat-loader"></div>
+
+      } @else {
+
+        <strong class="stat-number">
+          {{ totalClientes }}
+        </strong>
+
+      }
+
+
+      <small>
+        Clientes registrados
+      </small>
+
+
+      <span class="stat-arrow">
+        →
+      </span>
+
+    </a>
+
+
+    <!-- ======================================
+         STOCK
+    ======================================= -->
+
+    <a
+      routerLink="/admin/stock"
+      class="stat-card">
+
+      <span class="stat-label">
+        STOCK
+      </span>
+
+
+      @if (totalStock === null) {
+
+        <div class="stat-loader"></div>
+
+      } @else {
+
+        <strong class="stat-number">
+          {{ totalStock }}
+        </strong>
+
+      }
+
+
+      <small>
+        Unidades disponibles
+      </small>
+
+
+      <span class="stat-arrow">
+        →
+      </span>
+
+    </a>
 
   </div>
 
+
+  <!-- ==========================================
+       ACCESOS RÁPIDOS
+  =========================================== -->
+
   <section class="panel">
 
+
+    <!-- TÍTULO -->
+
     <div class="panel-title">
+
       <div>
-        <p class="eyebrow">ACCESOS RÁPIDOS</p>
-        <h2>Administración</h2>
+
+        <p class="eyebrow">
+          ACCESOS RÁPIDOS
+        </p>
+
+        <h2>
+          Administración
+        </h2>
+
       </div>
+
     </div>
+
+
+    <!-- ======================================
+         GRID
+    ======================================= -->
 
     <div class="quick-grid">
 
-      <a routerLink="/admin/productos">
-        <span>01</span>
-        <strong>Productos</strong>
-        <small>Gestionar catálogo</small>
+
+      <!-- PRODUCTOS -->
+
+      <a
+        routerLink="/admin/productos">
+
+        <span class="quick-number">
+          01
+        </span>
+
+
+        <div class="quick-bottom">
+
+          <strong>
+            Productos
+          </strong>
+
+          <small>
+            Gestionar catálogo
+          </small>
+
+        </div>
+
+
+        <span class="quick-arrow">
+          →
+        </span>
+
       </a>
 
-      <a routerLink="/admin/stock">
-        <span>02</span>
-        <strong>Stock</strong>
-        <small>Tallas y existencias</small>
+
+      <!-- STOCK -->
+
+      <a
+        routerLink="/admin/stock">
+
+        <span class="quick-number">
+          02
+        </span>
+
+
+        <div class="quick-bottom">
+
+          <strong>
+            Stock
+          </strong>
+
+          <small>
+            Tallas y existencias
+          </small>
+
+        </div>
+
+
+        <span class="quick-arrow">
+          →
+        </span>
+
       </a>
 
-      <a routerLink="/admin/ventas">
-        <span>03</span>
-        <strong>Ventas</strong>
-        <small>Revisar pedidos</small>
+
+      <!-- VENTAS -->
+
+      <a
+        routerLink="/admin/ventas">
+
+        <span class="quick-number">
+          03
+        </span>
+
+
+        <div class="quick-bottom">
+
+          <strong>
+            Ventas
+          </strong>
+
+          <small>
+            Revisar pedidos
+          </small>
+
+        </div>
+
+
+        <span class="quick-arrow">
+          →
+        </span>
+
       </a>
 
-      <a routerLink="/admin/reportes">
-        <span>04</span>
-        <strong>Reportes</strong>
-        <small>Indicadores</small>
+
+      <!-- REPORTES -->
+
+      <a
+        routerLink="/admin/reportes">
+
+        <span class="quick-number">
+          04
+        </span>
+
+
+        <div class="quick-bottom">
+
+          <strong>
+            Reportes
+          </strong>
+
+          <small>
+            Indicadores
+          </small>
+
+        </div>
+
+
+        <span class="quick-arrow">
+          →
+        </span>
+
       </a>
 
     </div>

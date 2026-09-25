@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { Home } from './features/home/home';
+
 import { ProductDetail } from './features/product-detail/product-detail';
 import { Cart } from './features/cart/cart';
 import { Login } from './features/login/login';
@@ -14,6 +15,7 @@ import { Tienda } from './features/tienda/tienda';
 import { authGuard } from './core/guards/auth-guard';
 import { adminGuard } from './core/guards/admin-guard';
 
+
 /* =========================================
    ADMIN
    ========================================= */
@@ -26,6 +28,7 @@ import { Stock } from './features/admin/stock/stock';
 import { Ventas } from './features/admin/ventas/ventas';
 import { Usuarios } from './features/admin/usuarios/usuarios';
 import { Reportes } from './features/admin/reportes/reportes';
+import { HomeAdmin } from './features/admin/home-admin/home-admin';
 
 
 export const routes: Routes = [
@@ -161,6 +164,11 @@ export const routes: Routes = [
       {
         path: 'reportes',
         component: Reportes
+      },
+
+      {
+        path: 'home',
+        component: HomeAdmin
       }
 
     ]

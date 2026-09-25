@@ -5,65 +5,347 @@
 
 <main>
 
-  <!-- HERO -->
+  <!-- ===================================================== -->
+  <!-- HERO / CARRUSEL DINÁMICO -->
+  <!-- ===================================================== -->
 
   <section
-    class="relative overflow-hidden bg-black text-white">
+    class="hero-carousel relative overflow-hidden bg-black text-white">
 
-    <div
-      class="mx-auto grid min-h-[680px] max-w-[1500px] items-center px-5 py-20 lg:grid-cols-2 lg:px-10">
 
+    <!-- =================================================== -->
+    <!-- CARGANDO BANNERS -->
+    <!-- =================================================== -->
+
+    @if (cargandoBanners) {
 
       <div
-        class="relative z-10 max-w-[800px]">
+        class="mx-auto flex min-h-[680px] max-w-[1500px] items-center justify-center px-5 lg:px-10">
 
-        <p
-          class="text-[10px] font-black uppercase tracking-[0.35em] text-neutral-400">
+        <div class="text-center">
 
-          Nueva colección 2026
+          <div
+            class="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-neutral-700 border-t-white">
+          </div>
 
-        </p>
+          <p
+            class="mt-5 text-[9px] font-black uppercase tracking-[0.25em] text-neutral-500">
+
+            Cargando colección
+
+          </p>
+
+        </div>
+
+      </div>
+
+    }
 
 
-        <h1
-          class="mt-6 text-[55px] font-black uppercase leading-[0.83] tracking-[-0.07em] sm:text-[80px] lg:text-[95px]">
+    <!-- =================================================== -->
+    <!-- BANNER DINÁMICO -->
+    <!-- =================================================== -->
 
-          Viste tu
-          <br>
-          propio
-          <br>
-          estilo.
+    @else if (
+      obtenerBannerActual();
+      as banner
+    ) {
 
-        </h1>
+      <div
+        class="hero-slide relative min-h-[680px]">
 
 
-        <p
-          class="mt-8 max-w-md text-sm leading-7 text-neutral-400">
+        <!-- =============================================== -->
+        <!-- IMAGEN -->
+        <!-- =============================================== -->
 
-          Moda para hombres, mujeres y niños.
-          Descubre prendas pensadas para tu estilo
-          y compra desde cualquier lugar del Perú.
+        @if (imagenBannerUrl(banner)) {
 
-        </p>
+          <img
+            [src]="imagenBannerUrl(banner)"
+            [alt]="banner.titulo"
+            class="hero-image absolute inset-0 h-full w-full object-cover">
 
+        }
+
+
+        <!-- =============================================== -->
+        <!-- CAPAS OSCURAS -->
+        <!-- =============================================== -->
 
         <div
-          class="mt-9 flex flex-wrap gap-3">
+          class="absolute inset-0 bg-black/35">
+        </div>
+
+        <div
+          class="hero-gradient absolute inset-0">
+        </div>
+
+
+        <!-- =============================================== -->
+        <!-- CONTENIDO -->
+        <!-- =============================================== -->
+
+        <div
+          class="relative z-10 mx-auto grid min-h-[680px] max-w-[1500px] items-center px-5 py-20 lg:grid-cols-2 lg:px-10">
+
+
+          <div
+            class="hero-content max-w-[800px]">
+
+
+            @if (banner.etiqueta) {
+
+              <p
+                class="text-[10px] font-black uppercase tracking-[0.35em] text-neutral-300">
+
+                {{ banner.etiqueta }}
+
+              </p>
+
+            }
+
+
+            <h1
+              class="mt-6 max-w-[850px] text-[52px] font-black uppercase leading-[0.86] tracking-[-0.065em] sm:text-[76px] lg:text-[88px]">
+
+              {{ banner.titulo }}
+
+            </h1>
+
+
+            @if (banner.descripcion) {
+
+              <p
+                class="mt-8 max-w-lg text-sm leading-7 text-neutral-300">
+
+                {{ banner.descripcion }}
+
+              </p>
+
+            }
+
+
+            <div
+              class="mt-9 flex flex-wrap gap-3">
+
+
+              @if (banner.textoBoton) {
+
+                <a
+                  [href]="enlaceBanner(banner)"
+                  class="flex h-14 items-center justify-center bg-white px-8 text-[10px] font-black uppercase tracking-[0.2em] text-black transition hover:bg-neutral-200">
+
+                  {{ banner.textoBoton }}
+
+                </a>
+
+              }
+
+
+              <a
+                href="#categorias"
+                class="flex h-14 items-center justify-center border border-white/50 px-8 text-[10px] font-black uppercase tracking-[0.2em] text-white transition hover:border-white hover:bg-white hover:text-black">
+
+                Explorar colección
+
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <!-- ============================================= -->
+          <!-- MARCA VISUAL -->
+          <!-- ============================================= -->
+
+          <div
+            class="relative hidden h-full min-h-[500px] lg:block">
+
+            <div
+              class="absolute bottom-0 right-0 top-0 w-[75%] border-l border-white/20">
+
+              <div
+                class="absolute left-10 top-16 text-[180px] font-black leading-none text-white/[0.07]">
+
+                TS
+
+              </div>
+
+
+              <div
+                class="absolute bottom-16 left-10">
+
+                <p
+                  class="text-[10px] font-black uppercase tracking-[0.35em] text-neutral-300">
+
+                  Tienda Sebas
+
+                </p>
+
+                <p
+                  class="mt-3 text-3xl font-black uppercase">
+
+                  Fashion
+                  <br>
+                  Store
+
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =============================================== -->
+        <!-- FLECHA ANTERIOR -->
+        <!-- =============================================== -->
+
+        @if (banners.length > 1) {
+
+          <button
+            type="button"
+            class="carousel-arrow carousel-arrow-left"
+            aria-label="Banner anterior"
+            (click)="bannerAnterior()">
+
+            ‹
+
+          </button>
+
+
+          <!-- ============================================= -->
+          <!-- FLECHA SIGUIENTE -->
+          <!-- ============================================= -->
+
+          <button
+            type="button"
+            class="carousel-arrow carousel-arrow-right"
+            aria-label="Siguiente banner"
+            (click)="siguienteBanner()">
+
+            ›
+
+          </button>
+
+        }
+
+
+        <!-- =============================================== -->
+        <!-- INDICADORES -->
+        <!-- =============================================== -->
+
+        @if (banners.length > 1) {
+
+          <div
+            class="carousel-dots"
+            aria-label="Seleccionar banner">
+
+            @for (
+              item of banners;
+              track item.idBanner;
+              let indice = $index
+            ) {
+
+              <button
+                type="button"
+                class="carousel-dot"
+                [class.active]="indice === bannerActual"
+                [attr.aria-label]="'Ir al banner ' + (indice + 1)"
+                (click)="irABanner(indice)">
+              </button>
+
+            }
+
+          </div>
+
+        }
+
+
+        <!-- =============================================== -->
+        <!-- CONTADOR -->
+        <!-- =============================================== -->
+
+        @if (banners.length > 1) {
+
+          <div class="carousel-counter">
+
+            <strong>
+              {{
+                (bannerActual + 1)
+                  .toString()
+                  .padStart(2, '0')
+              }}
+            </strong>
+
+            <span>
+              /
+            </span>
+
+            <span>
+              {{
+                banners.length
+                  .toString()
+                  .padStart(2, '0')
+              }}
+            </span>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+
+    <!-- =================================================== -->
+    <!-- SIN BANNERS -->
+    <!-- =================================================== -->
+
+    @else {
+
+      <div
+        class="mx-auto grid min-h-[680px] max-w-[1500px] items-center px-5 py-20 lg:grid-cols-2 lg:px-10">
+
+        <div class="max-w-[800px]">
+
+          <p
+            class="text-[10px] font-black uppercase tracking-[0.35em] text-neutral-500">
+
+            Tienda Sebas
+
+          </p>
+
+          <h1
+            class="mt-6 text-[55px] font-black uppercase leading-[0.83] tracking-[-0.07em] sm:text-[80px] lg:text-[95px]">
+
+            Viste tu
+            <br>
+            propio
+            <br>
+            estilo.
+
+          </h1>
+
+          <p
+            class="mt-8 max-w-md text-sm leading-7 text-neutral-400">
+
+            Descubre nuestra selección de prendas
+            y encuentra tu próximo estilo.
+
+          </p>
 
           <a
             href="#productos"
-            class="flex h-14 items-center justify-center bg-white px-8 text-[10px] font-black uppercase tracking-[0.2em] text-black transition hover:bg-neutral-200">
+            class="mt-9 inline-flex h-14 items-center justify-center bg-white px-8 text-[10px] font-black uppercase tracking-[0.2em] text-black">
 
-            Comprar ahora
-
-          </a>
-
-
-          <a
-            href="#categorias"
-            class="flex h-14 items-center justify-center border border-neutral-600 px-8 text-[10px] font-black uppercase tracking-[0.2em] text-white transition hover:border-white">
-
-            Explorar colección
+            Ver productos
 
           </a>
 
@@ -71,58 +353,19 @@
 
       </div>
 
-
-      <!-- ELEMENTO VISUAL -->
-
-      <div
-        class="relative hidden h-full min-h-[500px] lg:block">
-
-        <div
-          class="absolute bottom-0 right-0 top-0 w-[75%] border-l border-neutral-800">
-
-          <div
-            class="absolute left-10 top-16 text-[180px] font-black leading-none text-white/[0.03]">
-
-            TS
-
-          </div>
+    }
 
 
-          <div
-            class="absolute bottom-16 left-10">
-
-            <p
-              class="text-[10px] font-black uppercase tracking-[0.35em] text-neutral-500">
-
-              Tienda Sebas
-
-            </p>
-
-            <p
-              class="mt-3 text-3xl font-black uppercase">
-
-              Fashion
-              <br>
-              Store
-
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
+    <!-- =================================================== -->
     <!-- BENEFICIOS -->
+    <!-- =================================================== -->
 
     <div
-      class="border-t border-neutral-800">
+      class="relative z-20 border-t border-neutral-800 bg-black">
 
       <div
         class="mx-auto grid max-w-[1500px] grid-cols-1 divide-y divide-neutral-800 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+
 
         <div class="p-6 lg:px-10">
 
@@ -187,118 +430,247 @@
   </section>
 
 
-  <!-- CATEGORÍAS -->
+  <!-- ===================================================== -->
+  <!-- COLECCIONES DINÁMICAS -->
+  <!-- ===================================================== -->
 
   <section
     id="categorias"
     class="mx-auto max-w-[1500px] px-5 py-20 lg:px-10 lg:py-28">
 
-    <div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+
+    <div
+      class="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+
       <div>
-        <p class="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
+
+        <p
+          class="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
+
           Colecciones
+
         </p>
 
-        <h2 class="mt-3 text-4xl font-black uppercase tracking-[-0.05em] sm:text-6xl">
+        <h2
+          class="mt-3 text-4xl font-black uppercase tracking-[-0.05em] sm:text-6xl">
+
           Compra por estilo
+
         </h2>
+
       </div>
-    </div>
 
-    <div class="mt-12 grid gap-4 md:grid-cols-3">
 
-      <!-- HOMBRES -->
-      <article
-        id="hombres"
-        class="group relative min-h-[500px] overflow-hidden bg-black">
+      @if (
+        !cargandoColecciones &&
+        colecciones.length > 0
+      ) {
 
-        <img
-          src="/images/home/hombres.jpg"
-          alt="Colección de ropa para hombres"
-          class="absolute inset-0 h-full w-full object-cover object-top transition duration-700 group-hover:scale-105">
+        <p
+          class="text-[9px] font-black uppercase tracking-[0.2em] text-neutral-400">
 
-        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
+          {{ colecciones.length }}
 
-        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
-          <p class="text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-300">
-            Colección
-          </p>
+          {{
+            colecciones.length === 1
+              ? 'colección'
+              : 'colecciones'
+          }}
 
-          <h3 class="mt-2 text-4xl font-black uppercase">
-            Hombres
-          </h3>
+        </p>
 
-          <a
-            href="#productos"
-            class="mt-5 inline-block border-b border-white pb-1 text-[9px] font-black uppercase tracking-[0.2em] transition-opacity hover:opacity-60">
-            Ver productos
-          </a>
-        </div>
-      </article>
-
-      <!-- MUJERES -->
-      <article
-        id="mujeres"
-        class="group relative min-h-[500px] overflow-hidden bg-black">
-
-        <img
-          src="/images/home/mujeres.jpg"
-          alt="Colección de ropa para mujeres"
-          class="absolute inset-0 h-full w-full object-cover object-top transition duration-700 group-hover:scale-105">
-
-        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
-
-        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
-          <p class="text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-300">
-            Colección
-          </p>
-
-          <h3 class="mt-2 text-4xl font-black uppercase">
-            Mujeres
-          </h3>
-
-          <a
-            href="#productos"
-            class="mt-5 inline-block border-b border-white pb-1 text-[9px] font-black uppercase tracking-[0.2em] transition-opacity hover:opacity-60">
-            Ver productos
-          </a>
-        </div>
-      </article>
-
-      <!-- NIÑOS -->
-      <article
-        id="ninos"
-        class="group relative min-h-[500px] overflow-hidden bg-black">
-
-        <img
-          src="/images/home/ninos.jpg"
-          alt="Colección de ropa para niños"
-          class="absolute inset-0 h-full w-full object-cover object-top transition duration-700 group-hover:scale-105">
-
-        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
-
-        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
-          <p class="text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-300">
-            Colección
-          </p>
-
-          <h3 class="mt-2 text-4xl font-black uppercase">
-            Niños
-          </h3>
-
-          <a
-            href="#productos"
-            class="mt-5 inline-block border-b border-white pb-1 text-[9px] font-black uppercase tracking-[0.2em] transition-opacity hover:opacity-60">
-            Ver productos
-          </a>
-        </div>
-      </article>
+      }
 
     </div>
+
+
+    <!-- =================================================== -->
+    <!-- CARGANDO COLECCIONES -->
+    <!-- =================================================== -->
+
+    @if (cargandoColecciones) {
+
+      <div
+        class="mt-12 grid gap-4 md:grid-cols-3">
+
+        @for (
+          item of [1, 2, 3];
+          track item
+        ) {
+
+          <div
+            class="min-h-[500px] animate-pulse bg-neutral-200">
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+
+    <!-- =================================================== -->
+    <!-- ERROR COLECCIONES -->
+    <!-- =================================================== -->
+
+    @else if (errorColecciones) {
+
+      <div
+        class="mt-12 border border-red-200 bg-red-50 p-8">
+
+        <p
+          class="text-sm text-red-700">
+
+          No pudimos cargar las colecciones.
+
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- =================================================== -->
+    <!-- SIN COLECCIONES -->
+    <!-- =================================================== -->
+
+    @else if (
+      colecciones.length === 0
+    ) {
+
+      <div
+        class="mt-12 bg-neutral-50 p-12 text-center">
+
+        <p class="font-bold">
+
+          No hay colecciones disponibles.
+
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- =================================================== -->
+    <!-- COLECCIONES -->
+    <!-- =================================================== -->
+
+    @else {
+
+      <div
+        class="collections-public-grid mt-12">
+
+        @for (
+          coleccion of colecciones;
+          track coleccion.idColeccion
+        ) {
+
+          <article
+            class="collection-public-card group relative min-h-[500px] overflow-hidden bg-black">
+
+
+            <!-- ========================================= -->
+            <!-- IMAGEN -->
+            <!-- ========================================= -->
+
+            @if (
+              imagenColeccionUrl(
+                coleccion
+              )
+            ) {
+
+              <img
+                [src]="
+                  imagenColeccionUrl(
+                    coleccion
+                  )
+                "
+                [alt]="coleccion.titulo"
+                class="absolute inset-0 h-full w-full object-cover object-top transition duration-700 group-hover:scale-105">
+
+            } @else {
+
+              <div
+                class="absolute inset-0 flex items-center justify-center bg-neutral-950">
+
+                <strong
+                  class="text-7xl font-black text-white/[0.05]">
+
+                  TS
+
+                </strong>
+
+              </div>
+
+            }
+
+
+            <!-- ========================================= -->
+            <!-- GRADIENTE -->
+            <!-- ========================================= -->
+
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent">
+            </div>
+
+
+            <!-- ========================================= -->
+            <!-- INFORMACIÓN -->
+            <!-- ========================================= -->
+
+            <div
+              class="absolute bottom-0 left-0 right-0 p-8 text-white">
+
+
+              @if (coleccion.etiqueta) {
+
+                <p
+                  class="text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-300">
+
+                  {{ coleccion.etiqueta }}
+
+                </p>
+
+              }
+
+
+              <h3
+                class="mt-2 text-4xl font-black uppercase">
+
+                {{ coleccion.titulo }}
+
+              </h3>
+
+
+              @if (coleccion.textoBoton) {
+
+                <a
+                  [href]="enlaceColeccion(coleccion)"
+                  class="mt-5 inline-block border-b border-white pb-1 text-[9px] font-black uppercase tracking-[0.2em] transition-opacity hover:opacity-60">
+
+                  {{ coleccion.textoBoton }}
+
+                </a>
+
+              }
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
   </section>
 
 
+  <!-- ===================================================== -->
   <!-- PRODUCTOS -->
+  <!-- ===================================================== -->
 
   <section
     id="productos"
@@ -333,7 +705,7 @@
           class="mt-12 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4">
 
           @for (
-            item of [1,2,3,4];
+            item of [1, 2, 3, 4];
             track item
           ) {
 
@@ -362,7 +734,8 @@
         <div
           class="mt-12 border border-red-200 bg-red-50 p-8">
 
-          <p class="text-sm text-red-700">
+          <p
+            class="text-sm text-red-700">
 
             No pudimos cargar los productos.
 
@@ -410,7 +783,9 @@
   </section>
 
 
+  <!-- ===================================================== -->
   <!-- OFERTAS -->
+  <!-- ===================================================== -->
 
   <section
     id="ofertas"

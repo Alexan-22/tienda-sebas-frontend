@@ -3,69 +3,60 @@
 <app-navbar></app-navbar>
 
 
-<main
-  class="min-h-[700px] bg-neutral-50">
+<main class="cart-page">
 
-  <section
-    class="mx-auto max-w-[1400px] px-5 py-16 lg:px-10 lg:py-20">
+  <section class="cart-container">
 
 
-    <div>
+    <!-- =========================================
+         ENCABEZADO
+    ========================================== -->
 
-      <p
-        class="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
+    <div class="cart-header">
 
+      <p class="cart-eyebrow">
         Tu selección
-
       </p>
 
-      <h1
-        class="mt-3 text-5xl font-black uppercase tracking-[-0.06em] sm:text-6xl">
-
+      <h1 class="cart-title">
         Carrito
-
       </h1>
+
+      @if (items().length > 0) {
+
+        <p class="cart-description">
+          Revisa tus productos antes de continuar con la compra.
+        </p>
+
+      }
 
     </div>
 
 
-    @if (
-      items().length === 0
-    ) {
+    <!-- =========================================
+         CARRITO VACÍO
+    ========================================== -->
 
-      <div
-        class="mt-12 bg-white p-12 text-center">
+    @if (items().length === 0) {
 
-        <div
-          class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100">
+      <div class="empty-cart">
 
-          <span class="text-2xl">
-            🛍
-          </span>
-
+        <div class="empty-cart-icon">
+          🛍
         </div>
 
-
-        <h2
-          class="mt-6 text-2xl font-black uppercase">
-
+        <h2>
           Tu carrito está vacío
-
         </h2>
 
-
-        <p
-          class="mt-3 text-sm text-neutral-500">
-
+        <p>
           Descubre nuestros productos
           y encuentra tu próximo look.
-
         </p>
-
 
         <a
           routerLink="/"
-          class="mt-7 inline-flex h-14 items-center bg-black px-8 text-[10px] font-black uppercase tracking-[0.2em] text-white">
+          class="btn-shop">
 
           Seguir comprando
 
@@ -75,15 +66,47 @@
 
     } @else {
 
-      <div
-        class="mt-12 grid gap-10 lg:grid-cols-[1fr_380px]">
+
+      <!-- =========================================
+           SINCRONIZANDO STOCK
+      ========================================== -->
+
+      @if (sincronizandoStock) {
+
+        <div class="stock-sync">
+
+          <span class="stock-sync-spinner"></span>
+
+          <div>
+
+            <strong>
+              Verificando disponibilidad
+            </strong>
+
+            <p>
+              Estamos consultando el stock actual
+              de tus productos.
+            </p>
+
+          </div>
+
+        </div>
+
+      }
 
 
-        <!-- PRODUCTOS -->
+      <!-- =========================================
+           CONTENIDO
+      ========================================== -->
 
-        <div
-          class="bg-white">
+      <div class="cart-grid">
 
+
+        <!-- =========================================
+             PRODUCTOS
+        ========================================== -->
+
+        <div class="cart-products">
 
           @for (
             item of items();
@@ -91,7 +114,8 @@
           ) {
 
             <article
-              class="grid grid-cols-[100px_1fr] gap-5 border-b border-neutral-200 p-5 sm:grid-cols-[140px_1fr_auto] sm:p-7">
+              class="cart-item"
+              [class.cart-item-out]="item.stock <= 0">
 
 
               <!-- IMAGEN -->
@@ -101,27 +125,33 @@
                   '/producto',
                   item.idProducto
                 ]"
-                class="aspect-[3/4] overflow-hidden bg-neutral-100">
+                class="product-image">
 
-                @if (
-                  imagenUrl(item.imagen)
-                ) {
+                @if (imagenUrl(item.imagen)) {
 
                   <img
                     [src]="imagenUrl(item.imagen)"
-                    [alt]="item.nombre"
-                    class="h-full w-full object-cover">
+                    [alt]="item.nombre">
 
                 } @else {
 
-                  <div
-                    class="flex h-full items-center justify-center">
+                  <div class="image-placeholder">
 
-                    <span
-                      class="text-2xl font-black text-neutral-200">
-
+                    <span>
                       TS
+                    </span>
 
+                  </div>
+
+                }
+
+
+                @if (item.stock <= 0) {
+
+                  <div class="image-out-overlay">
+
+                    <span>
+                      Agotado
                     </span>
 
                   </div>
@@ -131,36 +161,55 @@
               </a>
 
 
-              <!-- INFO -->
+              <!-- INFORMACIÓN -->
 
-              <div>
+              <div class="product-info">
 
-                <p
-                  class="text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-400">
+                <div class="product-meta">
 
-                  Talla {{ item.talla }}
+                  <span class="size-label">
+                    Talla {{ item.talla }}
+                  </span>
 
-                </p>
+
+                  @if (item.stock <= 0) {
+
+                    <span class="stock-badge stock-out">
+                      Agotado
+                    </span>
+
+                  } @else if (item.stock <= 3) {
+
+                    <span class="stock-badge stock-low">
+                      Últimas {{ item.stock }}
+                    </span>
+
+                  } @else {
+
+                    <span class="stock-badge stock-available">
+                      {{ item.stock }} disponibles
+                    </span>
+
+                  }
+
+                </div>
 
 
                 <a
                   [routerLink]="[
                     '/producto',
                     item.idProducto
-                  ]">
+                  ]"
+                  class="product-name-link">
 
-                  <h2
-                    class="mt-2 text-lg font-black uppercase">
-
+                  <h2 class="product-name">
                     {{ item.nombre }}
-
                   </h2>
 
                 </a>
 
 
-                <p
-                  class="mt-3 text-sm font-bold">
+                <p class="product-price">
 
                   S/
                   {{
@@ -173,44 +222,94 @@
 
                 <!-- CANTIDAD -->
 
-                <div
-                  class="mt-5 flex h-11 w-32 border border-neutral-300">
+                @if (item.stock > 0) {
 
-                  <button
-                    type="button"
-                    (click)="disminuir(item.idProductoTalla, item.cantidad)"
-                    class="w-10">
+                  <div class="quantity-section">
 
-                    −
-
-                  </button>
+                    <p class="quantity-label">
+                      Cantidad
+                    </p>
 
 
-                  <div
-                    class="flex flex-1 items-center justify-center text-xs font-bold">
+                    <div class="quantity-control">
 
-                    {{ item.cantidad }}
+                      <button
+                        type="button"
+                        (click)="
+                          disminuir(
+                            item.idProductoTalla,
+                            item.cantidad
+                          )
+                        "
+                        [disabled]="
+                          item.cantidad <= 1 ||
+                          sincronizandoStock
+                        "
+                        aria-label="Disminuir cantidad">
+
+                        −
+
+                      </button>
+
+
+                      <div class="quantity-value">
+
+                        {{ item.cantidad }}
+
+                      </div>
+
+
+                      <button
+                        type="button"
+                        (click)="
+                          aumentar(
+                            item.idProductoTalla,
+                            item.cantidad
+                          )
+                        "
+                        [disabled]="
+                          item.cantidad >= item.stock ||
+                          sincronizandoStock
+                        "
+                        aria-label="Aumentar cantidad">
+
+                        +
+
+                      </button>
+
+                    </div>
+
+
+                    @if (item.cantidad >= item.stock) {
+
+                      <p class="quantity-limit">
+                        Cantidad máxima disponible
+                      </p>
+
+                    }
 
                   </div>
 
+                } @else {
 
-                  <button
-                    type="button"
-                    (click)="aumentar(item.idProductoTalla, item.cantidad)"
-                    [disabled]="item.cantidad >= item.stock"
-                    class="w-10 disabled:text-neutral-300">
+                  <div class="out-message">
 
-                    +
+                    Este producto ya no tiene
+                    stock en la talla seleccionada.
 
-                  </button>
+                  </div>
 
-                </div>
+                }
 
 
                 <button
                   type="button"
-                  (click)="eliminar(item.idProductoTalla)"
-                  class="mt-5 text-[9px] font-black uppercase tracking-[0.15em] text-neutral-400 underline">
+                  (click)="
+                    eliminar(
+                      item.idProductoTalla
+                    )
+                  "
+                  class="remove-button">
 
                   Eliminar
 
@@ -219,13 +318,15 @@
               </div>
 
 
-              <!-- SUBTOTAL -->
+              <!-- SUBTOTAL DEL PRODUCTO -->
 
-              <div
-                class="col-span-2 text-right sm:col-span-1">
+              <div class="item-total">
 
-                <p
-                  class="text-sm font-black">
+                <p class="item-total-label">
+                  Subtotal
+                </p>
+
+                <p class="item-total-price">
 
                   S/
                   {{
@@ -245,33 +346,42 @@
         </div>
 
 
-        <!-- RESUMEN -->
+        <!-- =========================================
+             RESUMEN
+        ========================================== -->
 
-        <aside>
+        <aside class="summary-column">
 
-          <div
-            class="sticky top-[110px] bg-white p-7">
+          <div class="summary-card">
 
-            <p
-              class="text-[10px] font-black uppercase tracking-[0.25em]">
-
-              Resumen
-
+            <p class="summary-eyebrow">
+              Tu pedido
             </p>
 
+            <h2 class="summary-title">
+              Resumen
+            </h2>
 
-            <div
-              class="mt-7 space-y-5">
+
+            <div class="summary-lines">
+
+              <div class="summary-row">
+
+                <span>
+                  Productos
+                </span>
+
+                <strong>
+                  {{ items().length }}
+                </strong>
+
+              </div>
 
 
-              <div
-                class="flex justify-between text-sm">
+              <div class="summary-row">
 
-                <span
-                  class="text-neutral-500">
-
+                <span>
                   Subtotal
-
                 </span>
 
                 <strong>
@@ -287,20 +397,14 @@
               </div>
 
 
-              <div
-                class="flex justify-between text-sm">
+              <div class="summary-row">
 
-                <span
-                  class="text-neutral-500">
-
+                <span>
                   Envío
-
                 </span>
 
                 <span>
-
                   Se calcula después
-
                 </span>
 
               </div>
@@ -308,18 +412,13 @@
             </div>
 
 
-            <div
-              class="mt-7 flex justify-between border-t border-neutral-200 pt-6">
+            <div class="summary-total">
 
-              <span
-                class="font-black uppercase">
-
+              <span>
                 Total
-
               </span>
 
-              <strong
-                class="text-xl">
+              <strong>
 
                 S/
                 {{
@@ -332,19 +431,40 @@
             </div>
 
 
+            <!-- BOTÓN CHECKOUT -->
+
             <button
               type="button"
               (click)="continuarCompra()"
-              class="mt-7 h-16 w-full bg-black text-[10px] font-black uppercase tracking-[0.2em] text-white">
+              [disabled]="sincronizandoStock"
+              class="checkout-button">
 
-              Continuar compra
+              @if (sincronizandoStock) {
+
+                <span class="button-spinner"></span>
+
+                Verificando stock...
+
+              } @else {
+
+                Continuar compra
+
+              }
 
             </button>
 
 
+            <p class="checkout-note">
+
+              El stock será validado nuevamente
+              antes de registrar tu compra.
+
+            </p>
+
+
             <a
               routerLink="/"
-              class="mt-5 block text-center text-[9px] font-black uppercase tracking-[0.15em] underline">
+              class="continue-shopping">
 
               Seguir comprando
 

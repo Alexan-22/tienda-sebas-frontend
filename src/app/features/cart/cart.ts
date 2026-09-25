@@ -1,5 +1,6 @@
 import {
-  Component
+  Component,
+  OnInit
 } from '@angular/core';
 
 import {
@@ -12,12 +13,25 @@ import {
 } from '@angular/router';
 
 import {
+  forkJoin,
+  of
+} from 'rxjs';
+
+import {
+  catchError
+} from 'rxjs/operators';
+
+import {
   CarritoService
 } from '../../core/services/carrito';
 
 import {
   AuthService
 } from '../../core/services/auth';
+
+import {
+  ProductoTallaService
+} from '../../core/services/producto-talla';
 
 import {
   PromoBar
@@ -49,11 +63,14 @@ import {
 
   styleUrl: './cart.css'
 })
-export class Cart {
+export class Cart implements OnInit {
 
   readonly items;
 
   readonly subtotal;
+
+
+  sincronizandoStock = false;
 
 
   private readonly uploadsUrl =
@@ -67,6 +84,9 @@ export class Cart {
     private authService:
       AuthService,
 
+    private productoTallaService:
+      ProductoTallaService,
+
     private router:
       Router
   ) {
@@ -76,6 +96,118 @@ export class Cart {
 
     this.subtotal =
       carritoService.subtotal;
+  }
+
+
+  ngOnInit(): void {
+
+    this.sincronizarStock();
+  }
+
+
+  sincronizarStock(): void {
+
+    const itemsActuales =
+      this.carritoService.items();
+
+
+    if (
+      itemsActuales.length === 0
+    ) {
+      return;
+    }
+
+
+    this.sincronizandoStock = true;
+
+
+    const productosUnicos = [
+      ...new Set(
+        itemsActuales.map(
+          item => item.idProducto
+        )
+      )
+    ];
+
+
+    const consultas =
+      productosUnicos.map(
+        idProducto =>
+
+          this.productoTallaService
+            .listarPorProducto(
+              idProducto
+            )
+            .pipe(
+
+              catchError(error => {
+
+                console.error(
+                  'Error consultando stock del producto:',
+                  idProducto,
+                  error
+                );
+
+                return of([]);
+
+              })
+
+            )
+      );
+
+
+    forkJoin(consultas)
+      .subscribe({
+
+        next: respuestas => {
+
+          const tallas =
+            respuestas.flat();
+
+
+          for (
+            const item
+            of itemsActuales
+          ) {
+
+            const productoTalla =
+              tallas.find(
+                talla =>
+                  talla.idProductoTalla ===
+                  item.idProductoTalla
+              );
+
+
+            if (!productoTalla) {
+              continue;
+            }
+
+
+            this.carritoService
+              .actualizarStock(
+                item.idProductoTalla,
+                productoTalla.stock
+              );
+          }
+
+
+          this.sincronizandoStock =
+            false;
+        },
+
+        error: error => {
+
+          console.error(
+            'Error sincronizando stock:',
+            error
+          );
+
+
+          this.sincronizandoStock =
+            false;
+        }
+
+      });
   }
 
 
@@ -139,11 +271,25 @@ export class Cart {
 
   continuarCompra(): void {
 
+    const itemsActuales =
+      this.carritoService.items();
+
+
     if (
-      this.carritoService
-        .items()
-        .length === 0
+      itemsActuales.length === 0
     ) {
+      return;
+    }
+
+
+    const existeAgotado =
+      itemsActuales.some(
+        item =>
+          item.stock <= 0
+      );
+
+
+    if (existeAgotado) {
       return;
     }
 
@@ -162,6 +308,7 @@ export class Cart {
           }
         }
       );
+
 
       return;
     }

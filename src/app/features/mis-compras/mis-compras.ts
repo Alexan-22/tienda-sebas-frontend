@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   OnInit
 } from '@angular/core';
@@ -58,7 +59,8 @@ export class MisCompras implements OnInit {
 
 
   constructor(
-    private ventaService: VentaService
+    private ventaService: VentaService,
+    private cdr: ChangeDetectorRef
   ) {}
 
 
@@ -86,6 +88,9 @@ export class MisCompras implements OnInit {
             );
 
           this.cargando = false;
+          this.error = false;
+
+          this.cdr.detectChanges();
         },
 
         error: (error) => {
@@ -95,9 +100,11 @@ export class MisCompras implements OnInit {
             error
           );
 
+          this.ventas = [];
           this.error = true;
-
           this.cargando = false;
+
+          this.cdr.detectChanges();
         }
 
       });

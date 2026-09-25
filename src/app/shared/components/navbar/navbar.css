@@ -2,6 +2,11 @@
   display: block;
 }
 
+
+/* =========================================
+   HEADER
+========================================= */
+
 .site-header {
   position: sticky;
   top: 0;
@@ -13,6 +18,7 @@
 
   border-bottom: 1px solid #eeeeee;
 }
+
 
 .navbar-container {
   width: min(100% - 40px, 1440px);
@@ -30,7 +36,7 @@
 
 /* =========================================
    LOGO
-   ========================================= */
+========================================= */
 
 .brand {
   display: flex;
@@ -44,12 +50,14 @@
   line-height: 1;
 }
 
+
 .brand-main {
   font-size: 19px;
   font-weight: 900;
 
   letter-spacing: 0.08em;
 }
+
 
 .brand-sub {
   margin-top: 5px;
@@ -65,7 +73,7 @@
 
 /* =========================================
    NAVEGACIÓN DESKTOP
-   ========================================= */
+========================================= */
 
 .desktop-nav {
   display: flex;
@@ -76,6 +84,7 @@
 
   flex: 1;
 }
+
 
 .nav-link {
   position: relative;
@@ -92,6 +101,7 @@
 
   white-space: nowrap;
 }
+
 
 .nav-link::after {
   content: '';
@@ -110,6 +120,7 @@
   transition: right 180ms ease;
 }
 
+
 .nav-link:hover::after {
   right: 0;
 }
@@ -117,14 +128,17 @@
 
 /* =========================================
    ACCIONES
-   ========================================= */
+========================================= */
 
 .navbar-actions {
   display: flex;
   align-items: center;
 
+  gap: 4px;
+
   flex-shrink: 0;
 }
+
 
 .icon-button {
   position: relative;
@@ -144,14 +158,18 @@
 
   text-decoration: none;
 
+  cursor: pointer;
+
   transition:
     background-color 160ms ease,
     transform 160ms ease;
 }
 
+
 .icon-button:hover {
   background: #f5f5f5;
 }
+
 
 .icon-button:active {
   transform: scale(0.95);
@@ -159,12 +177,331 @@
 
 
 /* =========================================
+   LOGIN
+========================================= */
+
+.login-button {
+  display: flex;
+
+  min-height: 42px;
+
+  padding: 0 13px;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: 0;
+
+  background: transparent;
+  color: #111111;
+
+  cursor: pointer;
+
+  transition: background 160ms ease;
+}
+
+
+.login-button:hover {
+  background: #f5f5f5;
+}
+
+
+.login-button span {
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   CUENTA DESKTOP
+========================================= */
+
+.account-wrapper {
+  position: relative;
+}
+
+
+.account-button {
+  display: flex;
+
+  min-height: 48px;
+
+  padding: 5px 8px 5px 12px;
+
+  align-items: center;
+
+  gap: 11px;
+
+  border: 0;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition: background 160ms ease;
+}
+
+
+.account-button:hover {
+  background: #f5f5f5;
+}
+
+
+.account-info {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  line-height: 1.2;
+}
+
+
+.account-role {
+  color: #a3a3a3;
+
+  font-size: 7px;
+  font-weight: 900;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+}
+
+
+.account-email {
+  max-width: 180px;
+
+  margin-top: 4px;
+
+  overflow: hidden;
+
+  color: #171717;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.account-avatar {
+  display: flex;
+
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #000000;
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+
+/* =========================================
+   DROPDOWN CUENTA
+========================================= */
+
+.account-dropdown {
+  position: absolute;
+
+  top: calc(100% + 10px);
+  right: 0;
+
+  width: 285px;
+
+  padding: 12px;
+
+  border: 1px solid #e5e5e5;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 18px 45px
+    rgba(0, 0, 0, 0.10);
+}
+
+
+.account-dropdown::before {
+  content: '';
+
+  position: absolute;
+
+  top: -7px;
+  right: 20px;
+
+  width: 12px;
+  height: 12px;
+
+  border-top: 1px solid #e5e5e5;
+  border-left: 1px solid #e5e5e5;
+
+  background: #ffffff;
+
+  transform: rotate(45deg);
+}
+
+
+.dropdown-user {
+  display: flex;
+
+  padding: 12px;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+.dropdown-avatar {
+  display: flex;
+
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #000000;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 900;
+}
+
+
+.dropdown-user-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+.dropdown-user-info span {
+  color: #a3a3a3;
+
+  font-size: 7px;
+  font-weight: 900;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+}
+
+
+.dropdown-user-info strong {
+  margin-top: 5px;
+
+  overflow: hidden;
+
+  color: #171717;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.dropdown-divider {
+  height: 1px;
+
+  margin: 6px 0;
+
+  background: #eeeeee;
+}
+
+
+.dropdown-option {
+  display: flex;
+
+  width: 100%;
+
+  min-height: 46px;
+
+  padding: 0 12px;
+
+  align-items: center;
+
+  gap: 12px;
+
+  border: 0;
+
+  background: transparent;
+  color: #171717;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 0.12em;
+
+  text-align: left;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition: background 160ms ease;
+}
+
+
+.dropdown-option:hover {
+  background: #f5f5f5;
+}
+
+
+.dropdown-icon {
+  display: flex;
+
+  width: 22px;
+
+  align-items: center;
+  justify-content: center;
+}
+
+
+.logout-option {
+  color: #b91c1c;
+}
+
+
+.logout-option:hover {
+  background: #fef2f2;
+}
+
+
+/* =========================================
    CARRITO
-   ========================================= */
+========================================= */
 
 .cart-button {
   position: relative;
 }
+
 
 .cart-count {
   position: absolute;
@@ -194,7 +531,7 @@
 
 /* =========================================
    BOTÓN MENÚ
-   ========================================= */
+========================================= */
 
 .menu-button {
   display: none;
@@ -203,16 +540,18 @@
 
 /* =========================================
    MENÚ MÓVIL
-   ========================================= */
+========================================= */
 
 .mobile-menu {
   display: none;
 }
 
+
 .mobile-nav {
   display: flex;
   flex-direction: column;
 }
+
 
 .mobile-link {
   width: 100%;
@@ -238,31 +577,107 @@
   text-transform: uppercase;
 }
 
+
 .mobile-link:hover {
   color: #777777;
 }
 
+
 .mobile-button {
   cursor: pointer;
 }
+
 
 .logout-button {
   color: #b91c1c;
 }
 
 
+.mobile-user {
+  display: flex;
+
+  padding: 20px 0;
+
+  align-items: center;
+
+  gap: 12px;
+
+  border-bottom: 1px solid #e5e5e5;
+}
+
+
+.mobile-avatar {
+  display: flex;
+
+  width: 40px;
+  height: 40px;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #000000;
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+
+.mobile-user > div:last-child {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+.mobile-user span {
+  color: #a3a3a3;
+
+  font-size: 8px;
+  font-weight: 900;
+
+  letter-spacing: 0.15em;
+
+  text-transform: uppercase;
+}
+
+
+.mobile-user strong {
+  margin-top: 4px;
+
+  overflow: hidden;
+
+  color: #171717;
+
+  font-size: 11px;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
 /* =========================================
    TABLET
-   ========================================= */
+========================================= */
 
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
 
   .desktop-nav {
     gap: 18px;
   }
 
+
   .nav-link {
-    font-size: 10px;
+    font-size: 9px;
+  }
+
+
+  .account-email {
+    max-width: 125px;
   }
 
 }
@@ -270,7 +685,7 @@
 
 /* =========================================
    MÓVIL
-   ========================================= */
+========================================= */
 
 @media (max-width: 820px) {
 
@@ -280,13 +695,22 @@
     min-height: 66px;
   }
 
+
   .desktop-nav {
     display: none;
   }
 
+
+  .account-wrapper,
+  .login-button {
+    display: none;
+  }
+
+
   .menu-button {
     display: flex;
   }
+
 
   .mobile-menu {
     display: block;
@@ -303,7 +727,7 @@
 
 /* =========================================
    MÓVIL PEQUEÑO
-   ========================================= */
+========================================= */
 
 @media (max-width: 480px) {
 
@@ -311,13 +735,16 @@
     width: calc(100% - 20px);
   }
 
+
   .brand-main {
     font-size: 16px;
   }
 
+
   .brand-sub {
     font-size: 8px;
   }
+
 
   .icon-button {
     width: 38px;
