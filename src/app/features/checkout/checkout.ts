@@ -16,12 +16,25 @@ import {
 } from '@angular/router';
 
 import {
+  forkJoin,
+  of
+} from 'rxjs';
+
+import {
+  catchError
+} from 'rxjs/operators';
+
+import {
   CarritoService
 } from '../../core/services/carrito';
 
 import {
   VentaService
 } from '../../core/services/venta';
+
+import {
+  ProductoTallaService
+} from '../../core/services/producto-talla';
 
 import {
   CompraRequest,
@@ -32,6 +45,10 @@ import {
   DatosCheckout,
   MetodoPago
 } from '../../core/models/checkout';
+
+import {
+  ProductoTalla
+} from '../../core/models/producto-talla';
 
 import {
   PromoBar
@@ -101,6 +118,9 @@ export class Checkout {
 
     private ventaService:
       VentaService,
+
+    private productoTallaService:
+      ProductoTallaService,
 
     private router:
       Router
@@ -177,11 +197,257 @@ export class Checkout {
     }
 
 
+    this.validarStockAntesDeComprar();
+  }
+
+
+  private validarStockAntesDeComprar(): void {
+
+    const itemsActuales =
+      this.carritoService.items();
+
+
+    if (
+      itemsActuales.length === 0
+    ) {
+
+      this.error =
+        'El carrito está vacío.';
+
+      return;
+    }
+
+
+    this.procesando = true;
+
+    this.error = '';
+
+
+    const productosUnicos = [
+      ...new Set(
+        itemsActuales.map(
+          item => item.idProducto
+        )
+      )
+    ];
+
+
+    const consultas =
+      productosUnicos.map(
+        idProducto =>
+
+          this.productoTallaService
+            .listarPorProducto(
+              idProducto
+            )
+            .pipe(
+
+              catchError(error => {
+
+                console.error(
+                  'Error consultando stock del producto:',
+                  idProducto,
+                  error
+                );
+
+                return of(
+                  null as
+                    ProductoTalla[] |
+                    null
+                );
+
+              })
+
+            )
+      );
+
+
+    forkJoin(consultas)
+      .subscribe({
+
+        next: respuestas => {
+
+          const consultaFallida =
+            respuestas.some(
+              respuesta =>
+                respuesta === null
+            );
+
+
+          if (consultaFallida) {
+
+            this.procesando =
+              false;
+
+            this.error =
+              'No se pudo verificar el stock. Intenta nuevamente.';
+
+            return;
+          }
+
+
+          const tallas =
+            respuestas
+              .filter(
+                (
+                  respuesta
+                ): respuesta is
+                  ProductoTalla[] =>
+                    respuesta !== null
+              )
+              .flat();
+
+
+          let stockModificado =
+            false;
+
+
+          let productoNoDisponible =
+            false;
+
+
+          for (
+            const item
+            of itemsActuales
+          ) {
+
+            const productoTalla =
+              tallas.find(
+                talla =>
+                  talla.idProductoTalla ===
+                  item.idProductoTalla
+              );
+
+
+            if (!productoTalla) {
+
+              productoNoDisponible =
+                true;
+
+              continue;
+            }
+
+
+            const stockActual =
+              Math.max(
+                0,
+                productoTalla.stock
+              );
+
+
+            if (
+              stockActual !==
+              item.stock
+            ) {
+
+              stockModificado =
+                true;
+            }
+
+
+            if (
+              stockActual <= 0
+            ) {
+
+              productoNoDisponible =
+                true;
+            }
+
+
+            if (
+              item.cantidad >
+              stockActual
+            ) {
+
+              stockModificado =
+                true;
+            }
+
+
+            this.carritoService
+              .actualizarStock(
+                item.idProductoTalla,
+                stockActual
+              );
+          }
+
+
+          if (
+            productoNoDisponible
+          ) {
+
+            this.procesando =
+              false;
+
+            this.error =
+              'Uno o más productos ya no tienen stock disponible. Regresa al carrito para actualizar tu pedido.';
+
+            return;
+          }
+
+
+          if (
+            stockModificado
+          ) {
+
+            this.procesando =
+              false;
+
+            this.error =
+              'El stock de tu carrito cambió. Hemos actualizado las cantidades disponibles. Revisa tu pedido antes de continuar.';
+
+            return;
+          }
+
+
+          this.registrarCompra();
+        },
+
+
+        error: error => {
+
+          console.error(
+            'Error verificando stock:',
+            error
+          );
+
+
+          this.procesando =
+            false;
+
+          this.error =
+            'No se pudo verificar el stock. Intenta nuevamente.';
+        }
+
+      });
+  }
+
+
+  private registrarCompra(): void {
+
+    const itemsActuales =
+      this.carritoService.items();
+
+
+    if (
+      itemsActuales.length === 0
+    ) {
+
+      this.procesando =
+        false;
+
+      this.error =
+        'El carrito está vacío.';
+
+      return;
+    }
+
+
     const request:
       CompraRequest = {
 
       items:
-        this.items().map(
+        itemsActuales.map(
           item => ({
 
             idProductoTalla:
@@ -196,9 +462,6 @@ export class Checkout {
       medioPago:
         this.datos.metodoPago
     };
-
-
-    this.procesando = true;
 
 
     this.ventaService
@@ -227,18 +490,20 @@ export class Checkout {
             ['/compra-exitosa'],
             {
               state: {
+
                 compra:
                   response,
 
                 cliente:
                   cliente
+
               }
             }
           );
         },
 
 
-        error: (error) => {
+        error: error => {
 
           console.error(
             'Error realizando compra:',
