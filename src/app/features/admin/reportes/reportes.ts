@@ -17,7 +17,8 @@ import {
 } from 'rxjs';
 
 import {
-  catchError
+  catchError,
+  map
 } from 'rxjs/operators';
 
 import {
@@ -266,14 +267,29 @@ export class Reportes implements OnInit {
 
   private cargarInformacionSecundaria(): void {
 
+    /*
+     * Cada consulta administrativa devuelve ahora
+     * DetalleCompraResponse.
+     *
+     * Aquí extraemos solamente "detalles" para conservar
+     * toda la lógica existente de Reportes trabajando
+     * con DetalleVenta[].
+     */
+
     const consultasDetalle = this.ventas.map(
       venta =>
 
         this.ventaService
-          .detalleVenta(
+          .detalleVentaAdmin(
             venta.idVenta
           )
           .pipe(
+
+            map(
+              respuesta =>
+                respuesta.detalles ?? []
+            ),
+
             catchError(error => {
 
               console.error(
@@ -286,6 +302,7 @@ export class Reportes implements OnInit {
               );
 
             })
+
           )
     );
 
@@ -629,6 +646,7 @@ export class Reportes implements OnInit {
 
       }
 
+
       else {
 
         mapa.set(
@@ -746,6 +764,7 @@ export class Reportes implements OnInit {
 
       }
 
+
       else {
 
         mapa.set(
@@ -858,6 +877,7 @@ export class Reportes implements OnInit {
           );
 
       }
+
 
       else {
 
@@ -1015,12 +1035,12 @@ export class Reportes implements OnInit {
 
   get totalClientes(): number {
 
-  return this.usuarios.filter(
-    usuario =>
-      usuario.rol
-        ?.toUpperCase() ===
-      'CLIENTE'
-  ).length;
+    return this.usuarios.filter(
+      usuario =>
+        usuario.rol
+          ?.toUpperCase() ===
+        'CLIENTE'
+    ).length;
 
   }
 

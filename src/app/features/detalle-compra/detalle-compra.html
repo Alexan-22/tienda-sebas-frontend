@@ -62,7 +62,7 @@
         </p>
 
         <p class="mt-3 text-sm text-neutral-500">
-          Intenta nuevamente o vuelve a Mis compras.
+          La compra no existe, no te pertenece o no pudo ser cargada.
         </p>
 
         <a
@@ -75,7 +75,7 @@
 
       </div>
 
-    } @else if (detalles.length === 0) {
+    } @else if (!compra || detalles.length === 0) {
 
       <!-- SIN DETALLES -->
 
@@ -129,6 +129,7 @@
 
           </div>
 
+
           <div class="sm:text-right">
 
             <p
@@ -137,11 +138,14 @@
             </p>
 
             <p class="mt-2 text-4xl font-black">
-              #{{ idVenta }}
+              #{{ compra.idVenta }}
             </p>
 
-            <p class="mt-3 text-[10px] uppercase text-neutral-400">
-              Venta registrada
+            <p
+              class="mt-3 text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-400">
+
+              {{ estadoTexto }}
+
             </p>
 
           </div>
@@ -149,7 +153,7 @@
         </header>
 
 
-        <!-- INFORMACIÓN -->
+        <!-- DATOS DE LA VENTA -->
 
         <section
           class="grid gap-6 border-b border-neutral-200 py-7 sm:grid-cols-3">
@@ -162,10 +166,109 @@
             </p>
 
             <p class="mt-2 text-sm font-black">
-              #{{ idVenta }}
+              #{{ compra.idVenta }}
             </p>
 
           </div>
+
+
+          <div>
+
+            <p
+              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+              Fecha
+            </p>
+
+            <p class="mt-2 text-sm font-black">
+
+              {{
+                compra.fechaVenta
+                  | date:'dd/MM/yyyy'
+              }}
+
+            </p>
+
+            <p class="mt-1 text-[10px] text-neutral-400">
+
+              {{
+                compra.fechaVenta
+                  | date:'HH:mm'
+              }}
+
+            </p>
+
+          </div>
+
+
+          <div>
+
+            <p
+              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+              Medio de pago
+            </p>
+
+            <p class="mt-2 text-sm font-black">
+              {{ medioPagoTexto }}
+            </p>
+
+          </div>
+
+        </section>
+
+
+        <!-- DATOS DEL CLIENTE -->
+
+        <section
+          class="grid gap-6 border-b border-neutral-200 py-7 sm:grid-cols-2">
+
+          <div>
+
+            <p
+              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+              Cliente
+            </p>
+
+            <p class="mt-2 text-sm font-black uppercase">
+              {{ nombreCompletoCliente }}
+            </p>
+
+          </div>
+
+
+          <div>
+
+            <p
+              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+              Correo
+            </p>
+
+            <p class="mt-2 break-all text-sm">
+              {{ compra.correoCliente }}
+            </p>
+
+          </div>
+
+        </section>
+
+
+        <!-- INFORMACIÓN ADICIONAL -->
+
+        <section
+          class="grid gap-6 border-b border-neutral-200 py-7 sm:grid-cols-3">
+
+          <div>
+
+            <p
+              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+              Estado
+            </p>
+
+            <p class="mt-2 text-sm font-black uppercase">
+              {{ estadoTexto }}
+            </p>
+
+          </div>
+
 
           <div>
 
@@ -179,6 +282,7 @@
             </p>
 
           </div>
+
 
           <div>
 
@@ -203,7 +307,9 @@
           <div
             class="hidden grid-cols-[1fr_80px_110px_110px] border-b border-neutral-300 pb-3 text-[9px] font-black uppercase tracking-[0.15em] text-neutral-400 sm:grid">
 
-            <span>Producto</span>
+            <span>
+              Producto
+            </span>
 
             <span class="text-center">
               Cant.
@@ -227,6 +333,7 @@
 
             <div
               class="grid gap-3 border-b border-neutral-100 py-6 sm:grid-cols-[1fr_80px_110px_110px] sm:items-center">
+
 
               <!-- PRODUCTO -->
 
@@ -342,6 +449,7 @@
             </span>
 
           </div>
+
 
           <div
             class="flex items-center justify-between border-t-2 border-black pt-5">

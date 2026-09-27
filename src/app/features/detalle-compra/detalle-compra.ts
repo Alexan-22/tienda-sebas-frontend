@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 
 import {
+  DatePipe,
   DecimalPipe
 } from '@angular/common';
 
@@ -18,6 +19,7 @@ import {
 } from '../../core/services/venta';
 
 import {
+  DetalleCompraResponse,
   DetalleVenta
 } from '../../core/models/venta-detalle';
 
@@ -40,6 +42,7 @@ import {
   standalone: true,
 
   imports: [
+    DatePipe,
     DecimalPipe,
     RouterLink,
     PromoBar,
@@ -56,6 +59,8 @@ import {
 export class DetalleCompra implements OnInit {
 
   idVenta = 0;
+
+  compra: DetalleCompraResponse | null = null;
 
   detalles: DetalleVenta[] = [];
 
@@ -109,7 +114,7 @@ export class DetalleCompra implements OnInit {
 
 
   // ==========================================
-  // CARGAR DETALLE DE LA VENTA
+  // CARGAR DETALLE COMPLETO DE LA COMPRA
   // ==========================================
 
   cargarDetalle(): void {
@@ -126,17 +131,21 @@ export class DetalleCompra implements OnInit {
       .subscribe({
 
         next: (
-          detalles: DetalleVenta[]
+          compra: DetalleCompraResponse
         ) => {
 
           console.log(
-            'DETALLE DE VENTA:',
-            detalles
+            'DETALLE COMPLETO DE COMPRA:',
+            compra
           );
 
 
+          this.compra =
+            compra;
+
+
           this.detalles =
-            detalles ?? [];
+            compra?.detalles ?? [];
 
 
           this.cargando =
@@ -161,6 +170,8 @@ export class DetalleCompra implements OnInit {
           );
 
 
+          this.compra = null;
+
           this.detalles = [];
 
           this.error = true;
@@ -176,26 +187,13 @@ export class DetalleCompra implements OnInit {
 
 
   // ==========================================
-  // TOTAL
+  // TOTAL OFICIAL DE LA VENTA
   // ==========================================
 
   get total(): number {
 
-    return this.detalles.reduce(
-      (
-        total,
-        detalle
-      ) => {
-
-        return (
-          total +
-          Number(
-            detalle.subtotal ?? 0
-          )
-        );
-
-      },
-      0
+    return Number(
+      this.compra?.total ?? 0
     );
   }
 
@@ -221,6 +219,66 @@ export class DetalleCompra implements OnInit {
 
       },
       0
+    );
+  }
+
+
+  // ==========================================
+  // NOMBRE COMPLETO DEL CLIENTE
+  // ==========================================
+
+  get nombreCompletoCliente(): string {
+
+    if (!this.compra) {
+      return '';
+    }
+
+    return [
+      this.compra.nombreCliente,
+      this.compra.apellidoCliente
+    ]
+      .filter(Boolean)
+      .join(' ');
+  }
+
+
+  // ==========================================
+  // MEDIO DE PAGO
+  // ==========================================
+
+  get medioPagoTexto(): string {
+
+    const medio =
+      this.compra?.medioPago
+        ?.toUpperCase();
+
+
+    if (medio === 'YAPE') {
+      return 'Yape';
+    }
+
+
+    if (medio === 'TARJETA') {
+      return 'Tarjeta';
+    }
+
+
+    return (
+      this.compra?.medioPago ||
+      'No especificado'
+    );
+  }
+
+
+  // ==========================================
+  // ESTADO
+  // ==========================================
+
+  get estadoTexto(): string {
+
+    return (
+      this.compra?.estado ||
+      'REGISTRADA'
     );
   }
 

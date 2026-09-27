@@ -15,7 +15,7 @@ import {
 
 import {
   Venta,
-  DetalleVenta
+  DetalleCompraResponse
 } from '../models/venta-detalle';
 
 
@@ -45,12 +45,11 @@ export class VentaService {
       this.apiUrl,
       request
     );
-
   }
 
 
   // =========================================================
-  // COMPRAS DEL CLIENTE LOGUEADO
+  // CLIENTE - MIS COMPRAS
   // =========================================================
 
   misCompras(): Observable<Venta[]> {
@@ -58,12 +57,11 @@ export class VentaService {
     return this.http.get<Venta[]>(
       `${this.apiUrl}/mis-compras`
     );
-
   }
 
 
   // =========================================================
-  // ADMIN - LISTAR TODAS LAS VENTAS
+  // ADMIN - TODAS LAS VENTAS
   // =========================================================
 
   listarTodas(): Observable<Venta[]> {
@@ -71,22 +69,34 @@ export class VentaService {
     return this.http.get<Venta[]>(
       `${this.apiUrl}/admin`
     );
-
   }
 
 
   // =========================================================
-  // DETALLE DE UNA VENTA
+  // CLIENTE - DETALLE DE SU COMPRA
   // =========================================================
 
   detalleVenta(
     idVenta: number
-  ): Observable<DetalleVenta[]> {
+  ): Observable<DetalleCompraResponse> {
 
-    return this.http.get<DetalleVenta[]>(
+    return this.http.get<DetalleCompraResponse>(
       `${this.apiUrl}/${idVenta}/detalle`
     );
+  }
 
+
+  // =========================================================
+  // ADMIN - DETALLE DE CUALQUIER VENTA
+  // =========================================================
+
+  detalleVentaAdmin(
+    idVenta: number
+  ): Observable<DetalleCompraResponse> {
+
+    return this.http.get<DetalleCompraResponse>(
+      `${this.apiUrl}/admin/${idVenta}/detalle`
+    );
   }
 
 }

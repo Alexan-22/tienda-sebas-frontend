@@ -14,7 +14,8 @@ import {
 
 import {
   Venta,
-  DetalleVenta
+  DetalleVenta,
+  DetalleCompraResponse
 } from '../../../core/models/venta-detalle';
 
 import {
@@ -110,6 +111,7 @@ export class Ventas implements OnInit {
 
           // Ordenar:
           // ventas más recientes primero
+
           this.ventas.sort(
             (
               a: Venta,
@@ -143,6 +145,7 @@ export class Ventas implements OnInit {
 
 
           // Forzar actualización visual
+
           this.cdr.detectChanges();
 
         },
@@ -166,6 +169,7 @@ export class Ventas implements OnInit {
 
 
           // Forzar actualización visual
+
           this.cdr.detectChanges();
 
         }
@@ -297,11 +301,13 @@ export class Ventas implements OnInit {
   ): void {
 
     // Guardar venta seleccionada
+
     this.ventaSeleccionada =
       venta;
 
 
     // Limpiar detalle anterior
+
     this.detalles = [];
 
     this.errorDetalle = '';
@@ -311,35 +317,40 @@ export class Ventas implements OnInit {
 
     // Mostrar inmediatamente
     // el estado "Cargando detalle..."
+
     this.cdr.detectChanges();
 
 
+    // IMPORTANTE:
+    // El administrador utiliza el endpoint
+    // /api/ventas/admin/{idVenta}/detalle
+
     this.ventaService
-      .detalleVenta(
+      .detalleVentaAdmin(
         venta.idVenta
       )
       .subscribe({
 
         next: (
-          detalles: DetalleVenta[]
+          respuesta: DetalleCompraResponse
         ) => {
 
           console.log(
-            'Detalle recibido:',
-            detalles
+            'Detalle de venta recibido:',
+            respuesta
           );
 
 
           this.detalles =
-            detalles ?? [];
+            respuesta.detalles ?? [];
 
 
           this.cargandoDetalle =
             false;
 
 
-          // IMPORTANTE:
-          // actualizar inmediatamente el modal
+          // Actualizar inmediatamente el modal
+
           this.cdr.detectChanges();
 
         },
@@ -367,6 +378,7 @@ export class Ventas implements OnInit {
 
 
           // Actualizar modal
+
           this.cdr.detectChanges();
 
         },
@@ -377,6 +389,7 @@ export class Ventas implements OnInit {
           // Seguridad adicional:
           // garantizar que nunca quede
           // permanentemente en "Cargando..."
+
           this.cargandoDetalle =
             false;
 

@@ -48,3 +48,28 @@ export interface DetalleVenta {
   subtotal: number;
 
 }
+
+
+export interface DetalleCompraResponse {
+
+  idVenta: number;
+
+  fechaVenta: string;
+
+  total: number;
+
+  estado: string;
+
+  medioPago: string;
+
+  idUsuario: number;
+
+  nombreCliente: string;
+
+  apellidoCliente: string;
+
+  correoCliente: string;
+
+  detalles: DetalleVenta[];
+
+}
