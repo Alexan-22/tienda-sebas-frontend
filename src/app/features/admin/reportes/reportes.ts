@@ -17,8 +17,7 @@ import {
 } from 'rxjs';
 
 import {
-  catchError,
-  map
+  catchError
 } from 'rxjs/operators';
 
 import {
@@ -161,7 +160,7 @@ export class Reportes implements OnInit {
 
 
   // =========================================================
-  // CARGAR DATOS
+  // CARGAR DATOS PRINCIPALES
   // =========================================================
 
   cargarReportes(): void {
@@ -268,73 +267,64 @@ export class Reportes implements OnInit {
   private cargarInformacionSecundaria(): void {
 
     /*
-     * Cada consulta administrativa devuelve ahora
-     * DetalleCompraResponse.
+     * Los detalles de todas las ventas administrativas
+     * se obtienen ahora mediante UNA sola petición:
      *
-     * Aquí extraemos solamente "detalles" para conservar
-     * toda la lógica existente de Reportes trabajando
-     * con DetalleVenta[].
+     * GET /api/ventas/admin/reportes/detalles
+     *
+     * Ya no se realiza una petición /detalle por cada venta.
      */
 
-    const consultasDetalle = this.ventas.map(
-      venta =>
-
-        this.ventaService
-          .detalleVentaAdmin(
-            venta.idVenta
-          )
-          .pipe(
-
-            map(
-              respuesta =>
-                respuesta.detalles ?? []
-            ),
-
-            catchError(error => {
-
-              console.error(
-                `Error detalle venta ${venta.idVenta}:`,
-                error
-              );
-
-              return of(
-                [] as DetalleVenta[]
-              );
-
-            })
-
-          )
-    );
-
-
-    const consultasStock = this.productos.map(
-      producto =>
-
-        this.productoTallaService
-          .listarPorProducto(
-            producto.idProducto
-          )
-          .pipe(
-            catchError(error => {
-
-              console.error(
-                `Error stock producto ${producto.idProducto}:`,
-                error
-              );
-
-              return of(
-                [] as ProductoTalla[]
-              );
-
-            })
-          )
-    );
-
-
     const detalles$ =
-      consultasDetalle.length > 0
-        ? forkJoin(consultasDetalle)
-        : of([] as DetalleVenta[][]);
+      this.ventaService
+        .listarDetallesParaReportes()
+        .pipe(
+          catchError(error => {
+
+            console.error(
+              'Error cargando detalles para reportes:',
+              error
+            );
+
+            return of(
+              [] as DetalleVenta[]
+            );
+
+          })
+        );
+
+
+    /*
+     * Esta parte todavía realiza una consulta de inventario
+     * por cada producto.
+     *
+     * La optimizaremos en el siguiente paso una vez
+     * comprobada la optimización de detalles.
+     */
+
+    const consultasStock =
+      this.productos.map(
+        producto =>
+
+          this.productoTallaService
+            .listarPorProducto(
+              producto.idProducto
+            )
+            .pipe(
+              catchError(error => {
+
+                console.error(
+                  `Error stock producto ${producto.idProducto}:`,
+                  error
+                );
+
+                return of(
+                  [] as ProductoTalla[]
+                );
+
+              })
+            )
+      );
 
 
     const stock$ =
@@ -354,7 +344,7 @@ export class Reportes implements OnInit {
       next: respuesta => {
 
         this.detalles =
-          respuesta.detalles.flat();
+          respuesta.detalles ?? [];
 
         this.inventario =
           respuesta.stock.flat();
@@ -552,10 +542,10 @@ export class Reportes implements OnInit {
     detalle: DetalleVenta
   ): number | null {
 
-  return (
-    detalle.idVenta ??
-    null
-  );
+    return (
+      detalle.idVenta ??
+      null
+    );
 
   }
 

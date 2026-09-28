@@ -15,7 +15,8 @@ import {
 
 import {
   Venta,
-  DetalleCompraResponse
+  DetalleCompraResponse,
+  DetalleVenta
 } from '../models/venta-detalle';
 
 
@@ -68,6 +69,19 @@ export class VentaService {
 
     return this.http.get<Venta[]>(
       `${this.apiUrl}/admin`
+    );
+  }
+
+
+  // =========================================================
+  // ADMIN - DETALLES PARA REPORTES
+  // =========================================================
+
+  listarDetallesParaReportes():
+    Observable<DetalleVenta[]> {
+
+    return this.http.get<DetalleVenta[]>(
+      `${this.apiUrl}/admin/reportes/detalles`
     );
   }
 
