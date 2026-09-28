@@ -1,28 +1,16 @@
-import {
-  ProductoTalla
-} from './producto-talla';
-
-
-export interface UsuarioVenta {
-
-  idUsuario: number;
-
-  nombre: string;
-
-  apellido: string;
-
-  correo: string;
-
-  estado: boolean;
-
-}
-
+import { ProductoTalla } from './producto-talla';
 
 export interface Venta {
 
   idVenta: number;
 
-  usuario: UsuarioVenta;
+  idUsuario: number;
+
+  nombreCliente: string;
+
+  apellidoCliente: string;
+
+  correoCliente: string;
 
   fechaVenta: string;
 
@@ -34,10 +22,11 @@ export interface Venta {
 
 }
 
-
 export interface DetalleVenta {
 
   idDetalleVenta: number;
+
+  idVenta: number;
 
   productoTalla: ProductoTalla;
 
@@ -48,7 +37,6 @@ export interface DetalleVenta {
   subtotal: number;
 
 }
-
 
 export interface DetalleCompraResponse {
 

@@ -552,35 +552,10 @@ export class Reportes implements OnInit {
     detalle: DetalleVenta
   ): number | null {
 
-    const objeto =
-      detalle as DetalleVenta & {
-        venta?: {
-          idVenta?: number;
-        };
-
-        idVenta?: number;
-      };
-
-
-    if (
-      objeto.venta?.idVenta != null
-    ) {
-
-      return objeto.venta.idVenta;
-
-    }
-
-
-    if (
-      objeto.idVenta != null
-    ) {
-
-      return objeto.idVenta;
-
-    }
-
-
-    return null;
+  return (
+    detalle.idVenta ??
+    null
+  );
 
   }
 

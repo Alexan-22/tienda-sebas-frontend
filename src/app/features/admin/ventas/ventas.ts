@@ -212,14 +212,12 @@ export class Ventas implements OnInit {
           // -------------------------
 
           const nombre =
-            venta.usuario
-              ? (
-                  `${venta.usuario.nombre ?? ''} ` +
-                  `${venta.usuario.apellido ?? ''}`
-                )
-                  .trim()
-                  .toLowerCase()
-              : '';
+            (
+              `${venta.nombreCliente ?? ''} ` +
+              `${venta.apellidoCliente ?? ''}`
+            )
+              .trim()
+              .toLowerCase();
 
 
           // -------------------------
@@ -227,8 +225,7 @@ export class Ventas implements OnInit {
           // -------------------------
 
           const correo =
-            venta.usuario
-              ?.correo
+            venta.correoCliente
               ?.toLowerCase() ?? '';
 
 
@@ -321,8 +318,7 @@ export class Ventas implements OnInit {
     this.cdr.detectChanges();
 
 
-    // IMPORTANTE:
-    // El administrador utiliza el endpoint
+    // El administrador utiliza:
     // /api/ventas/admin/{idVenta}/detalle
 
     this.ventaService
@@ -348,8 +344,6 @@ export class Ventas implements OnInit {
           this.cargandoDetalle =
             false;
 
-
-          // Actualizar inmediatamente el modal
 
           this.cdr.detectChanges();
 
@@ -377,18 +371,12 @@ export class Ventas implements OnInit {
             false;
 
 
-          // Actualizar modal
-
           this.cdr.detectChanges();
 
         },
 
 
         complete: () => {
-
-          // Seguridad adicional:
-          // garantizar que nunca quede
-          // permanentemente en "Cargando..."
 
           this.cargandoDetalle =
             false;
@@ -570,19 +558,10 @@ export class Ventas implements OnInit {
     venta: Venta
   ): string {
 
-    if (
-      !venta.usuario
-    ) {
-
-      return 'Sin cliente';
-
-    }
-
-
     const nombre =
       (
-        `${venta.usuario.nombre ?? ''} ` +
-        `${venta.usuario.apellido ?? ''}`
+        `${venta.nombreCliente ?? ''} ` +
+        `${venta.apellidoCliente ?? ''}`
       ).trim();
 
 
@@ -603,8 +582,7 @@ export class Ventas implements OnInit {
   ): string {
 
     return (
-      venta.usuario
-        ?.correo ??
+      venta.correoCliente ??
       'Sin correo'
     );
 

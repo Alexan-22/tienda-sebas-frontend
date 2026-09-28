@@ -287,7 +287,9 @@
                     <span>
 
                       {{
-                        venta.usuario?.correo
+                        correoCliente(
+                          venta
+                        )
                       }}
 
                     </span>
@@ -443,9 +445,9 @@
           <small>
 
             {{
-              ventaSeleccionada
-                .usuario
-                ?.correo
+              correoCliente(
+                ventaSeleccionada
+              )
             }}
 
           </small>
