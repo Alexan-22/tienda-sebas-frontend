@@ -1,0 +1,1231 @@
+<section class="page">
+
+  <!-- =====================================================
+       ENCABEZADO
+       ===================================================== -->
+
+  <header class="page-header">
+
+    <div>
+      <p class="eyebrow">
+        PUNTO DE VENTA
+      </p>
+
+      <h1>
+        Vender
+      </h1>
+
+      <p class="page-description">
+        Registra ventas presenciales, administra clientes
+        y descuenta el stock automáticamente.
+      </p>
+    </div>
+
+    <div class="header-badge">
+      <span class="status-dot"></span>
+      POS ACTIVO
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       ERROR
+       ===================================================== -->
+
+  @if (mensajeError) {
+
+    <div class="alert alert-error">
+
+      <div class="alert-icon">
+        !
+      </div>
+
+      <div>
+        <strong>
+          Atención
+        </strong>
+
+        <p>
+          {{ mensajeError }}
+        </p>
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       VENTA REALIZADA
+       ===================================================== -->
+
+  @if (ventaRealizada) {
+
+    <section class="success-panel">
+
+      <div class="success-heading">
+
+        <div class="success-icon">
+          ✓
+        </div>
+
+        <div>
+          <p class="eyebrow">
+            VENTA REGISTRADA
+          </p>
+
+          <h2>
+            Venta #{{ ventaRealizada.idVenta }}
+          </h2>
+
+          <p>
+            La venta presencial se registró correctamente.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="receipt-grid">
+
+        <div class="receipt-data">
+          <span>
+            Cliente
+          </span>
+
+          <strong>
+            {{ ventaRealizada.nombreCliente }}
+            {{ ventaRealizada.apellidoCliente || '' }}
+          </strong>
+        </div>
+
+
+        <div class="receipt-data">
+          <span>
+            Documento
+          </span>
+
+          <strong>
+            {{ ventaRealizada.tipoDocumento }}
+            {{ ventaRealizada.numeroDocumento }}
+          </strong>
+        </div>
+
+
+        <div class="receipt-data">
+          <span>
+            Tipo de venta
+          </span>
+
+          <strong>
+            {{ ventaRealizada.tipoVenta }}
+          </strong>
+        </div>
+
+
+        <div class="receipt-data">
+          <span>
+            Medio de pago
+          </span>
+
+          <strong>
+            {{ ventaRealizada.medioPago }}
+          </strong>
+        </div>
+
+
+        <div class="receipt-data">
+          <span>
+            Estado
+          </span>
+
+          <strong>
+            {{ ventaRealizada.estadoPedido }}
+          </strong>
+        </div>
+
+
+        <div class="receipt-data">
+          <span>
+            Fecha
+          </span>
+
+          <strong>
+            {{
+              ventaRealizada.fechaVenta
+                | date:'dd/MM/yyyy HH:mm'
+            }}
+          </strong>
+        </div>
+
+      </div>
+
+
+      <div class="receipt-totals">
+
+        <div>
+          <span>
+            Subtotal
+          </span>
+
+          <strong>
+            S/
+            {{
+              ventaRealizada.subtotal
+                | number:'1.2-2'
+            }}
+          </strong>
+        </div>
+
+
+        <div>
+          <span>
+            Delivery
+          </span>
+
+          <strong>
+            S/
+            {{
+              ventaRealizada.costoDelivery
+                | number:'1.2-2'
+            }}
+          </strong>
+        </div>
+
+
+        <div class="receipt-total-main">
+          <span>
+            TOTAL
+          </span>
+
+          <strong>
+            S/
+            {{
+              ventaRealizada.total
+                | number:'1.2-2'
+            }}
+          </strong>
+        </div>
+
+      </div>
+
+
+      <div class="success-actions">
+
+        <button
+          type="button"
+          class="button-secondary"
+          onclick="window.print()"
+        >
+          Imprimir
+        </button>
+
+        <button
+          type="button"
+          class="button-primary"
+          (click)="nuevaVenta()"
+        >
+          Nueva venta
+        </button>
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- =====================================================
+       POS
+       ===================================================== -->
+
+  <div class="pos-grid">
+
+    <div class="pos-main">
+
+
+      <!-- =================================================
+           PASO 01 - CLIENTE PRESENCIAL
+           ================================================= -->
+
+      <section class="panel">
+
+        <div class="panel-header">
+
+          <div>
+            <p class="eyebrow">
+              PASO 01
+            </p>
+
+            <h2>
+              Cliente presencial
+            </h2>
+
+            <p>
+              Busca un cliente existente o registra uno nuevo.
+            </p>
+          </div>
+
+
+          @if (
+            !clienteSeleccionado &&
+            !mostrarFormularioCliente
+          ) {
+
+            <button
+              type="button"
+              class="button-outline"
+              (click)="abrirFormularioCliente()"
+            >
+              + Nuevo cliente
+            </button>
+
+          }
+
+        </div>
+
+
+        <!-- CLIENTE SELECCIONADO -->
+
+        @if (clienteSeleccionado) {
+
+          <div class="selected-client">
+
+            <div class="selected-icon">
+              {{ clienteSeleccionado.nombre.charAt(0) }}
+            </div>
+
+
+            <div class="selected-content">
+
+              <span>
+                CLIENTE SELECCIONADO
+              </span>
+
+              <strong>
+                {{ clienteSeleccionado.nombre }}
+                {{ clienteSeleccionado.apellido || '' }}
+              </strong>
+
+              <small>
+                {{ clienteSeleccionado.tipoDocumento }}
+                {{ clienteSeleccionado.numeroDocumento }}
+
+                @if (clienteSeleccionado.telefono) {
+                  · {{ clienteSeleccionado.telefono }}
+                }
+              </small>
+
+              @if (clienteSeleccionado.correo) {
+
+                <small>
+                  {{ clienteSeleccionado.correo }}
+                </small>
+
+              }
+
+            </div>
+
+
+            <button
+              type="button"
+              class="change-button"
+              (click)="quitarCliente()"
+            >
+              Cambiar
+            </button>
+
+          </div>
+
+        }
+
+
+        <!-- FORMULARIO NUEVO CLIENTE -->
+
+        @else if (mostrarFormularioCliente) {
+
+          <div class="new-client-form">
+
+            <div class="form-heading">
+
+              <div>
+                <span class="form-kicker">
+                  NUEVO CLIENTE
+                </span>
+
+                <h3>
+                  Registrar cliente presencial
+                </h3>
+              </div>
+
+
+              <button
+                type="button"
+                class="close-button"
+                (click)="cancelarNuevoCliente()"
+              >
+                ×
+              </button>
+
+            </div>
+
+
+            <div class="form-grid">
+
+              <div class="form-field">
+
+                <label for="nombreCliente">
+                  Nombre *
+                </label>
+
+                <input
+                  id="nombreCliente"
+                  type="text"
+                  [(ngModel)]="nuevoCliente.nombre"
+                  placeholder="Ej. Carlos"
+                  maxlength="100"
+                  autocomplete="off"
+                >
+
+              </div>
+
+
+              <div class="form-field">
+
+                <label for="apellidoCliente">
+                  Apellido
+                </label>
+
+                <input
+                  id="apellidoCliente"
+                  type="text"
+                  [(ngModel)]="nuevoCliente.apellido"
+                  placeholder="Ej. Pérez"
+                  maxlength="100"
+                  autocomplete="off"
+                >
+
+              </div>
+
+
+              <div class="form-field">
+
+                <label for="tipoDocumento">
+                  Tipo de documento *
+                </label>
+
+                <select
+                  id="tipoDocumento"
+                  [(ngModel)]="nuevoCliente.tipoDocumento"
+                >
+                  <option value="DNI">
+                    DNI
+                  </option>
+
+                  <option value="CE">
+                    Carné de extranjería
+                  </option>
+
+                  <option value="RUC">
+                    RUC
+                  </option>
+
+                  <option value="PASAPORTE">
+                    Pasaporte
+                  </option>
+                </select>
+
+              </div>
+
+
+              <div class="form-field">
+
+                <label for="numeroDocumento">
+                  Número de documento *
+                </label>
+
+                <input
+                  id="numeroDocumento"
+                  type="text"
+                  [(ngModel)]="nuevoCliente.numeroDocumento"
+                  placeholder="Número de documento"
+                  maxlength="20"
+                  autocomplete="off"
+                >
+
+              </div>
+
+
+              <div class="form-field">
+
+                <label for="telefonoCliente">
+                  Teléfono
+                </label>
+
+                <input
+                  id="telefonoCliente"
+                  type="tel"
+                  [(ngModel)]="nuevoCliente.telefono"
+                  placeholder="Ej. 999 999 999"
+                  maxlength="20"
+                  autocomplete="off"
+                >
+
+              </div>
+
+
+              <div class="form-field">
+
+                <label for="correoCliente">
+                  Correo
+                </label>
+
+                <input
+                  id="correoCliente"
+                  type="email"
+                  [(ngModel)]="nuevoCliente.correo"
+                  placeholder="cliente@correo.com"
+                  maxlength="150"
+                  autocomplete="off"
+                >
+
+              </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+              <button
+                type="button"
+                class="button-secondary"
+                [disabled]="registrandoCliente"
+                (click)="cancelarNuevoCliente()"
+              >
+                Cancelar
+              </button>
+
+
+              <button
+                type="button"
+                class="button-primary"
+                [disabled]="registrandoCliente"
+                (click)="registrarCliente()"
+              >
+
+                @if (registrandoCliente) {
+                  Registrando...
+                } @else {
+                  Registrar cliente
+                }
+
+              </button>
+
+            </div>
+
+          </div>
+
+        }
+
+
+        <!-- BUSCADOR -->
+
+        @else {
+
+          <div class="search-box">
+
+            <label for="buscarCliente">
+              Buscar cliente
+            </label>
+
+            <div class="input-with-icon">
+
+              <span class="search-icon">
+                ⌕
+              </span>
+
+              <input
+                id="buscarCliente"
+                type="text"
+                [(ngModel)]="busquedaCliente"
+                placeholder="Nombre, DNI, teléfono o correo"
+                autocomplete="off"
+              >
+
+            </div>
+
+          </div>
+
+
+          <div class="result-list">
+
+            @for (
+              cliente of clientesFiltrados;
+              track cliente.idClientePresencial
+            ) {
+
+              <button
+                type="button"
+                class="result-item"
+                (click)="seleccionarCliente(cliente)"
+              >
+
+                <div class="client-avatar">
+                  {{ cliente.nombre.charAt(0) }}
+                </div>
+
+
+                <div class="result-info">
+
+                  <strong>
+                    {{ cliente.nombre }}
+                    {{ cliente.apellido || '' }}
+                  </strong>
+
+                  <small>
+                    {{ cliente.tipoDocumento }}
+                    {{ cliente.numeroDocumento }}
+
+                    @if (cliente.telefono) {
+                      · {{ cliente.telefono }}
+                    }
+                  </small>
+
+                </div>
+
+
+                <span class="select-label">
+                  Seleccionar
+                </span>
+
+              </button>
+
+            } @empty {
+
+              <div class="empty-state">
+
+                <strong>
+                  No se encontraron clientes.
+                </strong>
+
+                <p>
+                  Puedes registrar un nuevo cliente presencial.
+                </p>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+      </section>
+
+
+      <!-- =================================================
+           PASO 02 - PRODUCTO
+           ================================================= -->
+
+      <section class="panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <p class="eyebrow">
+              PASO 02
+            </p>
+
+            <h2>
+              Producto
+            </h2>
+
+            <p>
+              Selecciona el producto, talla y cantidad.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        @if (!productoSeleccionado) {
+
+          <div class="search-box">
+
+            <label for="buscarProducto">
+              Buscar producto
+            </label>
+
+            <div class="input-with-icon">
+
+              <span class="search-icon">
+                ⌕
+              </span>
+
+              <input
+                id="buscarProducto"
+                type="text"
+                [(ngModel)]="busquedaProducto"
+                placeholder="Nombre, categoría o género"
+                autocomplete="off"
+              >
+
+            </div>
+
+          </div>
+
+
+          <div class="product-list">
+
+            @for (
+              producto of productosFiltrados;
+              track producto.idProducto
+            ) {
+
+              <button
+                type="button"
+                class="product-item"
+                (click)="seleccionarProducto(producto)"
+              >
+
+                <div class="product-info">
+
+                  <strong>
+                    {{ producto.nombre }}
+                  </strong>
+
+                  <small>
+                    {{ producto.categoria.nombreCategoria }}
+                    ·
+                    {{ producto.genero.nombreGenero }}
+                  </small>
+
+                </div>
+
+
+                <div class="product-price">
+
+                  @if (
+                    producto.precioOferta &&
+                    producto.precioOferta > 0 &&
+                    producto.precioOferta < producto.precio
+                  ) {
+
+                    <small class="old-price">
+                      S/
+                      {{
+                        producto.precio
+                          | number:'1.2-2'
+                      }}
+                    </small>
+
+                  }
+
+                  <strong>
+                    S/
+                    {{
+                      obtenerPrecio(producto)
+                        | number:'1.2-2'
+                    }}
+                  </strong>
+
+                </div>
+
+              </button>
+
+            } @empty {
+
+              <div class="empty-state">
+
+                <strong>
+                  No se encontraron productos.
+                </strong>
+
+              </div>
+
+            }
+
+          </div>
+
+        } @else {
+
+          <div class="selected-product">
+
+            <div>
+
+              <span>
+                PRODUCTO SELECCIONADO
+              </span>
+
+              <strong>
+                {{ productoSeleccionado.nombre }}
+              </strong>
+
+              <small>
+                Precio:
+                S/
+                {{
+                  obtenerPrecio(productoSeleccionado)
+                    | number:'1.2-2'
+                }}
+              </small>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="change-button"
+              (click)="quitarProducto()"
+            >
+              Cambiar
+            </button>
+
+          </div>
+
+
+          <div class="variant-section">
+
+            <label>
+              Talla
+            </label>
+
+
+            @if (cargandoTallas) {
+
+              <div class="empty-state">
+                Cargando tallas...
+              </div>
+
+            } @else {
+
+              <div class="sizes">
+
+                @for (
+                  productoTalla of tallasProducto;
+                  track productoTalla.idProductoTalla
+                ) {
+
+                  <button
+                    type="button"
+                    class="size-button"
+
+                    [class.selected]="
+                      productoTallaSeleccionado
+                        ?.idProductoTalla ===
+                      productoTalla.idProductoTalla
+                    "
+
+                    [class.no-stock]="
+                      productoTalla.stock <= 0
+                    "
+
+                    [disabled]="
+                      productoTalla.stock <= 0
+                    "
+
+                    (click)="
+                      seleccionarTalla(
+                        productoTalla
+                      )
+                    "
+                  >
+
+                    <strong>
+                      {{
+                        productoTalla
+                          .talla
+                          .nombreTalla
+                      }}
+                    </strong>
+
+                    <small>
+                      Stock:
+                      {{ productoTalla.stock }}
+                    </small>
+
+                  </button>
+
+                } @empty {
+
+                  <div class="empty-state">
+                    Este producto no tiene tallas registradas.
+                  </div>
+
+                }
+
+              </div>
+
+            }
+
+          </div>
+
+
+          <div class="quantity-row">
+
+            <div class="form-field">
+
+              <label for="cantidad">
+                Cantidad
+              </label>
+
+              <input
+                id="cantidad"
+                type="number"
+                min="1"
+                [(ngModel)]="cantidad"
+              >
+
+            </div>
+
+
+            @if (productoTallaSeleccionado) {
+
+              <div class="stock-indicator">
+
+                <span>
+                  DISPONIBLE
+                </span>
+
+                <strong>
+                  {{ productoTallaSeleccionado.stock }}
+                  unidades
+                </strong>
+
+              </div>
+
+            }
+
+          </div>
+
+
+          <button
+            type="button"
+            class="button-primary full"
+            (click)="agregarAlCarrito()"
+          >
+            Agregar a la venta
+          </button>
+
+        }
+
+      </section>
+
+    </div>
+
+
+    <!-- =====================================================
+         RESUMEN
+         ===================================================== -->
+
+    <aside class="sale-summary">
+
+      <section class="panel sticky-panel">
+
+        <div class="panel-header">
+
+          <div>
+            <p class="eyebrow">
+              VENTA ACTUAL
+            </p>
+
+            <h2>
+              Resumen
+            </h2>
+          </div>
+
+
+          <span class="item-count">
+            {{ carrito.length }}
+          </span>
+
+        </div>
+
+
+        @if (clienteSeleccionado) {
+
+          <div class="summary-client">
+
+            <span>
+              CLIENTE
+            </span>
+
+            <strong>
+              {{ clienteSeleccionado.nombre }}
+              {{ clienteSeleccionado.apellido || '' }}
+            </strong>
+
+            <small>
+              {{ clienteSeleccionado.tipoDocumento }}
+              {{ clienteSeleccionado.numeroDocumento }}
+            </small>
+
+          </div>
+
+        }
+
+
+        <div class="cart-items">
+
+          @for (
+            item of carrito;
+            track item.idProductoTalla
+          ) {
+
+            <article class="cart-item">
+
+              <div class="cart-item-top">
+
+                <div>
+                  <strong>
+                    {{ item.nombre }}
+                  </strong>
+
+                  <small>
+                    Talla {{ item.talla }}
+                  </small>
+                </div>
+
+
+                <button
+                  type="button"
+                  class="remove-button"
+                  (click)="eliminarItem(item)"
+                  aria-label="Eliminar producto"
+                >
+                  ×
+                </button>
+
+              </div>
+
+
+              <div class="cart-item-bottom">
+
+                <div class="quantity-control">
+
+                  <button
+                    type="button"
+                    (click)="disminuirCantidad(item)"
+                  >
+                    −
+                  </button>
+
+                  <span>
+                    {{ item.cantidad }}
+                  </span>
+
+                  <button
+                    type="button"
+                    (click)="aumentarCantidad(item)"
+                  >
+                    +
+                  </button>
+
+                </div>
+
+
+                <div class="line-price">
+
+                  <small>
+                    S/
+                    {{
+                      item.precio
+                        | number:'1.2-2'
+                    }}
+                    c/u
+                  </small>
+
+                  <strong>
+                    S/
+                    {{
+                      item.subtotal
+                        | number:'1.2-2'
+                    }}
+                  </strong>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          } @empty {
+
+            <div class="empty-cart">
+
+              <div class="empty-cart-icon">
+                +
+              </div>
+
+              <strong>
+                Venta vacía
+              </strong>
+
+              <p>
+                Selecciona productos para comenzar.
+              </p>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- PAGO -->
+
+        <div class="payment-section">
+
+          <label>
+            Medio de pago
+          </label>
+
+
+          <div class="payment-options three">
+
+            <button
+              type="button"
+              [class.selected]="
+                medioPago === 'EFECTIVO'
+              "
+              (click)="medioPago = 'EFECTIVO'"
+            >
+              <span>
+                $
+              </span>
+
+              Efectivo
+            </button>
+
+
+            <button
+              type="button"
+              [class.selected]="
+                medioPago === 'YAPE'
+              "
+              (click)="medioPago = 'YAPE'"
+            >
+              <span>
+                Y
+              </span>
+
+              Yape
+            </button>
+
+
+            <button
+              type="button"
+              [class.selected]="
+                medioPago === 'TARJETA'
+              "
+              (click)="medioPago = 'TARJETA'"
+            >
+              <span>
+                ▣
+              </span>
+
+              Tarjeta
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- TOTALES -->
+
+        <div class="totals">
+
+          <div>
+
+            <span>
+              Subtotal
+            </span>
+
+            <strong>
+              S/
+              {{
+                totalVenta
+                  | number:'1.2-2'
+              }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Delivery
+            </span>
+
+            <strong>
+              S/ 0.00
+            </strong>
+
+          </div>
+
+
+          <div class="grand-total">
+
+            <span>
+              TOTAL
+            </span>
+
+            <strong>
+              S/
+              {{
+                totalVenta
+                  | number:'1.2-2'
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="button-sale"
+
+          [disabled]="
+            procesandoVenta ||
+            carrito.length === 0 ||
+            !clienteSeleccionado
+          "
+
+          (click)="registrarVenta()"
+        >
+
+          @if (procesandoVenta) {
+
+            Registrando venta...
+
+          } @else {
+
+            Registrar venta
+
+          }
+
+        </button>
+
+
+        @if (!clienteSeleccionado) {
+
+          <p class="sale-hint">
+            Selecciona un cliente para habilitar la venta.
+          </p>
+
+        }
+
+      </section>
+
+    </aside>
+
+  </div>
+
+</section>

@@ -1,16 +1,12 @@
-import { Injectable } from '@angular/core';
-
-import {
-  HttpClient
-} from '@angular/common/http';
-
-import {
-  Observable
-} from 'rxjs';
+﻿import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 import {
   CompraRequest,
-  CompraResponse
+  CompraResponse,
+  VentaPosRequest,
+  VentaPosResponse
 } from '../models/venta';
 
 import {
@@ -35,7 +31,7 @@ export class VentaService {
 
 
   // =========================================================
-  // REALIZAR COMPRA
+  // CLIENTE - REALIZAR COMPRA ONLINE
   // =========================================================
 
   comprar(
@@ -110,6 +106,21 @@ export class VentaService {
 
     return this.http.get<DetalleCompraResponse>(
       `${this.apiUrl}/admin/${idVenta}/detalle`
+    );
+  }
+
+
+  // =========================================================
+  // ADMIN - VENTA PRESENCIAL / POS
+  // =========================================================
+
+  realizarVentaPos(
+    request: VentaPosRequest
+  ): Observable<VentaPosResponse> {
+
+    return this.http.post<VentaPosResponse>(
+      `${this.apiUrl}/admin/pos`,
+      request
     );
   }
 

@@ -4,9 +4,11 @@
   <app-navbar></app-navbar>
 </div>
 
+
 <main class="boleta-page min-h-screen bg-neutral-100 px-5 py-16">
 
   <section class="mx-auto max-w-[850px]">
+
 
     <!-- ACCIONES -->
 
@@ -20,13 +22,14 @@
 
       </a>
 
+
       <button
         type="button"
         (click)="imprimir()"
         [disabled]="cargando || error || detalles.length === 0"
         class="h-12 bg-black px-6 text-[10px] font-black uppercase tracking-[0.18em] text-white disabled:cursor-not-allowed disabled:bg-neutral-300">
 
-        Imprimir boleta
+        Imprimir comprobante
 
       </button>
 
@@ -53,6 +56,7 @@
 
     } @else if (error) {
 
+
       <!-- ERROR -->
 
       <div class="bg-white p-12 text-center">
@@ -77,6 +81,7 @@
 
     } @else if (!compra || detalles.length === 0) {
 
+
       <!-- SIN DETALLES -->
 
       <div class="bg-white p-12 text-center">
@@ -93,7 +98,8 @@
 
     } @else {
 
-      <!-- BOLETA -->
+
+      <!-- COMPROBANTE -->
 
       <article
         id="boleta"
@@ -134,7 +140,7 @@
 
             <p
               class="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
-              Boleta de venta
+              Comprobante de compra
             </p>
 
             <p class="mt-2 text-4xl font-black">
@@ -180,21 +186,17 @@
             </p>
 
             <p class="mt-2 text-sm font-black">
-
               {{
                 compra.fechaVenta
                   | date:'dd/MM/yyyy'
               }}
-
             </p>
 
             <p class="mt-1 text-[10px] text-neutral-400">
-
               {{
                 compra.fechaVenta
                   | date:'HH:mm'
               }}
-
             </p>
 
           </div>
@@ -216,7 +218,7 @@
         </section>
 
 
-        <!-- DATOS DEL CLIENTE -->
+        <!-- CLIENTE -->
 
         <section
           class="grid gap-6 border-b border-neutral-200 py-7 sm:grid-cols-2">
@@ -249,6 +251,58 @@
           </div>
 
         </section>
+
+
+        <!-- DIRECCIÓN DE ENTREGA -->
+
+        @if (tieneDireccionEnvio && compra.direccionEnvio) {
+
+          <section
+            class="border-b border-neutral-200 py-7">
+
+            <p
+              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+              Dirección de entrega
+            </p>
+
+
+            <div class="mt-4 grid gap-6 sm:grid-cols-2">
+
+              <div>
+
+                <p class="text-sm font-black">
+                  {{ compra.direccionEnvio.direccionExacta }}
+                </p>
+
+                <p class="mt-2 text-xs text-neutral-500">
+                  {{ ubicacionEnvio }}
+                </p>
+
+              </div>
+
+
+              <div>
+
+                @if (compra.direccionEnvio.referencia) {
+
+                  <p
+                    class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+                    Referencia
+                  </p>
+
+                  <p class="mt-2 text-xs text-neutral-600">
+                    {{ compra.direccionEnvio.referencia }}
+                  </p>
+
+                }
+
+              </div>
+
+            </div>
+
+          </section>
+
+        }
 
 
         <!-- INFORMACIÓN ADICIONAL -->
@@ -300,7 +354,7 @@
         </section>
 
 
-        <!-- DETALLE DE PRODUCTOS -->
+        <!-- PRODUCTOS -->
 
         <section class="mt-10">
 
@@ -446,6 +500,48 @@
 
             <span class="text-sm font-bold">
               {{ totalProductos }}
+            </span>
+
+          </div>
+
+
+          <div
+            class="flex items-center justify-between border-b border-neutral-200 py-3">
+
+            <span
+              class="text-[10px] font-bold uppercase text-neutral-500">
+              Subtotal
+            </span>
+
+            <span class="text-sm font-bold">
+
+              S/
+              {{
+                subtotal
+                  | number:'1.2-2'
+              }}
+
+            </span>
+
+          </div>
+
+
+          <div
+            class="flex items-center justify-between border-b border-neutral-200 py-3">
+
+            <span
+              class="text-[10px] font-bold uppercase text-neutral-500">
+              Delivery
+            </span>
+
+            <span class="text-sm font-bold">
+
+              S/
+              {{
+                costoDelivery
+                  | number:'1.2-2'
+              }}
+
             </span>
 
           </div>

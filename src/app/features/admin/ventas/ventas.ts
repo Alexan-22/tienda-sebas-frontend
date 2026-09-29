@@ -62,6 +62,8 @@ export class Ventas implements OnInit {
 
   ventaSeleccionada: Venta | null = null;
 
+  detalleSeleccionado: DetalleCompraResponse | null = null;
+
   detalles: DetalleVenta[] = [];
 
   cargandoDetalle = false;
@@ -82,7 +84,6 @@ export class Ventas implements OnInit {
   ngOnInit(): void {
 
     this.cargarVentas();
-
   }
 
 
@@ -96,7 +97,6 @@ export class Ventas implements OnInit {
 
     this.error = '';
 
-
     this.ventaService
       .listarTodas()
       .subscribe({
@@ -107,10 +107,6 @@ export class Ventas implements OnInit {
 
           this.ventas =
             ventas ?? [];
-
-
-          // Ordenar:
-          // ventas más recientes primero
 
           this.ventas.sort(
             (
@@ -123,31 +119,23 @@ export class Ventas implements OnInit {
                   a.fechaVenta
                 ).getTime();
 
-
               const fechaB =
                 new Date(
                   b.fechaVenta
                 ).getTime();
 
-
               return (
                 fechaB -
                 fechaA
               );
-
             }
           );
-
 
           this.aplicarFiltros();
 
           this.cargando = false;
 
-
-          // Forzar actualización visual
-
           this.cdr.detectChanges();
-
         },
 
 
@@ -160,22 +148,15 @@ export class Ventas implements OnInit {
             error
           );
 
-
           this.error =
             'No se pudieron cargar las ventas.';
 
-
           this.cargando = false;
 
-
-          // Forzar actualización visual
-
           this.cdr.detectChanges();
-
         }
 
       });
-
   }
 
 
@@ -190,26 +171,16 @@ export class Ventas implements OnInit {
         .trim()
         .toLowerCase();
 
-
     this.ventasFiltradas =
       this.ventas.filter(
         (
           venta: Venta
         ) => {
 
-          // -------------------------
-          // ID DE VENTA
-          // -------------------------
-
           const id =
             String(
               venta.idVenta
             );
-
-
-          // -------------------------
-          // NOMBRE DEL CLIENTE
-          // -------------------------
 
           const nombre =
             (
@@ -219,19 +190,9 @@ export class Ventas implements OnInit {
               .trim()
               .toLowerCase();
 
-
-          // -------------------------
-          // CORREO
-          // -------------------------
-
           const correo =
             venta.correoCliente
               ?.toLowerCase() ?? '';
-
-
-          // -------------------------
-          // BUSCADOR
-          // -------------------------
 
           const coincideBusqueda =
             !texto ||
@@ -239,36 +200,23 @@ export class Ventas implements OnInit {
             nombre.includes(texto) ||
             correo.includes(texto);
 
-
-          // -------------------------
-          // MEDIO DE PAGO
-          // -------------------------
-
           const coincidePago =
             !this.filtroPago ||
             venta.medioPago ===
               this.filtroPago;
-
-
-          // -------------------------
-          // ESTADO
-          // -------------------------
 
           const coincideEstado =
             !this.filtroEstado ||
             venta.estado ===
               this.filtroEstado;
 
-
           return (
             coincideBusqueda &&
             coincidePago &&
             coincideEstado
           );
-
         }
       );
-
   }
 
 
@@ -285,7 +233,6 @@ export class Ventas implements OnInit {
     this.filtroEstado = '';
 
     this.aplicarFiltros();
-
   }
 
 
@@ -297,13 +244,11 @@ export class Ventas implements OnInit {
     venta: Venta
   ): void {
 
-    // Guardar venta seleccionada
-
     this.ventaSeleccionada =
       venta;
 
-
-    // Limpiar detalle anterior
+    this.detalleSeleccionado =
+      null;
 
     this.detalles = [];
 
@@ -311,15 +256,7 @@ export class Ventas implements OnInit {
 
     this.cargandoDetalle = true;
 
-
-    // Mostrar inmediatamente
-    // el estado "Cargando detalle..."
-
     this.cdr.detectChanges();
-
-
-    // El administrador utiliza:
-    // /api/ventas/admin/{idVenta}/detalle
 
     this.ventaService
       .detalleVentaAdmin(
@@ -336,17 +273,17 @@ export class Ventas implements OnInit {
             respuesta
           );
 
+          // Guardamos toda la respuesta.
+          this.detalleSeleccionado =
+            respuesta;
 
           this.detalles =
             respuesta.detalles ?? [];
 
-
           this.cargandoDetalle =
             false;
 
-
           this.cdr.detectChanges();
-
         },
 
 
@@ -359,20 +296,18 @@ export class Ventas implements OnInit {
             error
           );
 
+          this.detalleSeleccionado =
+            null;
 
           this.detalles = [];
-
 
           this.errorDetalle =
             'No se pudo cargar el detalle de la venta.';
 
-
           this.cargandoDetalle =
             false;
 
-
           this.cdr.detectChanges();
-
         },
 
 
@@ -381,13 +316,10 @@ export class Ventas implements OnInit {
           this.cargandoDetalle =
             false;
 
-
           this.cdr.detectChanges();
-
         }
 
       });
-
   }
 
 
@@ -400,19 +332,17 @@ export class Ventas implements OnInit {
     this.ventaSeleccionada =
       null;
 
+    this.detalleSeleccionado =
+      null;
 
     this.detalles = [];
 
-
     this.errorDetalle = '';
-
 
     this.cargandoDetalle =
       false;
 
-
     this.cdr.detectChanges();
-
   }
 
 
@@ -423,7 +353,6 @@ export class Ventas implements OnInit {
   get totalVentas(): number {
 
     return this.ventas.length;
-
   }
 
 
@@ -434,7 +363,6 @@ export class Ventas implements OnInit {
   get ingresosTotales(): number {
 
     return this.ventas.reduce(
-
       (
         total: number,
         venta: Venta
@@ -446,13 +374,9 @@ export class Ventas implements OnInit {
             venta.total ?? 0
           )
         );
-
       },
-
       0
-
     );
-
   }
 
 
@@ -467,15 +391,12 @@ export class Ventas implements OnInit {
     ) {
 
       return 0;
-
     }
-
 
     return (
       this.ingresosTotales /
       this.totalVentas
     );
-
   }
 
 
@@ -495,7 +416,6 @@ export class Ventas implements OnInit {
         'YAPE'
 
     ).length;
-
   }
 
 
@@ -515,7 +435,6 @@ export class Ventas implements OnInit {
         'TARJETA'
 
     ).length;
-
   }
 
 
@@ -527,7 +446,6 @@ export class Ventas implements OnInit {
 
     return [
       ...new Set(
-
         this.ventas
           .map(
             (
@@ -543,10 +461,8 @@ export class Ventas implements OnInit {
                 estado
               )
           )
-
       )
     ];
-
   }
 
 
@@ -564,12 +480,10 @@ export class Ventas implements OnInit {
         `${venta.apellidoCliente ?? ''}`
       ).trim();
 
-
     return (
       nombre ||
       'Sin cliente'
     );
-
   }
 
 
@@ -585,7 +499,6 @@ export class Ventas implements OnInit {
       venta.correoCliente ??
       'Sin correo'
     );
-
   }
 
 
@@ -596,7 +509,6 @@ export class Ventas implements OnInit {
   get cantidadProductosDetalle(): number {
 
     return this.detalles.reduce(
-
       (
         total: number,
         detalle: DetalleVenta
@@ -608,13 +520,96 @@ export class Ventas implements OnInit {
             detalle.cantidad ?? 0
           )
         );
-
       },
-
       0
-
     );
+  }
 
+
+  // =========================================================
+  // SUBTOTAL
+  // =========================================================
+
+  get subtotalDetalle(): number {
+
+    if (
+      this.detalleSeleccionado?.subtotal !== null &&
+      this.detalleSeleccionado?.subtotal !== undefined
+    ) {
+
+      return Number(
+        this.detalleSeleccionado.subtotal
+      );
+    }
+
+    return this.detalles.reduce(
+      (
+        total: number,
+        detalle: DetalleVenta
+      ) => {
+
+        return (
+          total +
+          Number(
+            detalle.subtotal ?? 0
+          )
+        );
+      },
+      0
+    );
+  }
+
+
+  // =========================================================
+  // DELIVERY
+  // =========================================================
+
+  get costoDeliveryDetalle(): number {
+
+    return Number(
+      this.detalleSeleccionado
+        ?.costoDelivery ?? 0
+    );
+  }
+
+
+  // =========================================================
+  // TOTAL
+  // =========================================================
+
+  get totalDetalle(): number {
+
+    return Number(
+      this.detalleSeleccionado
+        ?.total ??
+      this.ventaSeleccionada
+        ?.total ??
+      0
+    );
+  }
+
+
+  // =========================================================
+  // UBICACIÓN DE ENTREGA
+  // =========================================================
+
+  get ubicacionEntrega(): string {
+
+    const direccion =
+      this.detalleSeleccionado
+        ?.direccionEnvio;
+
+    if (!direccion) {
+      return '';
+    }
+
+    return [
+      direccion.distrito,
+      direccion.provincia,
+      direccion.departamento
+    ]
+      .filter(Boolean)
+      .join(', ');
   }
 
 }

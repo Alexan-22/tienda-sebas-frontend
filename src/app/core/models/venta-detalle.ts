@@ -1,5 +1,6 @@
 import { ProductoTalla } from './producto-talla';
 
+
 export interface Venta {
 
   idVenta: number;
@@ -19,8 +20,8 @@ export interface Venta {
   estado: string;
 
   medioPago: string;
-
 }
+
 
 export interface DetalleVenta {
 
@@ -35,14 +36,36 @@ export interface DetalleVenta {
   precioUnitario: number;
 
   subtotal: number;
-
 }
+
+
+export interface DireccionEnvioResponse {
+
+  id: number;
+
+  departamento: string;
+
+  provincia: string;
+
+  distrito: string;
+
+  direccionExacta: string;
+
+  referencia: string | null;
+
+  costoDelivery: number;
+}
+
 
 export interface DetalleCompraResponse {
 
   idVenta: number;
 
   fechaVenta: string;
+
+  subtotal: number;
+
+  costoDelivery: number;
 
   total: number;
 
@@ -58,6 +81,7 @@ export interface DetalleCompraResponse {
 
   correoCliente: string;
 
-  detalles: DetalleVenta[];
+  direccionEnvio: DireccionEnvioResponse | null;
 
+  detalles: DetalleVenta[];
 }

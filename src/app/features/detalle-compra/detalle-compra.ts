@@ -114,7 +114,7 @@ export class DetalleCompra implements OnInit {
 
 
   // ==========================================
-  // CARGAR DETALLE COMPLETO DE LA COMPRA
+  // CARGAR DETALLE
   // ==========================================
 
   cargarDetalle(): void {
@@ -187,7 +187,55 @@ export class DetalleCompra implements OnInit {
 
 
   // ==========================================
-  // TOTAL OFICIAL DE LA VENTA
+  // SUBTOTAL DE PRODUCTOS
+  // ==========================================
+
+  get subtotal(): number {
+
+    if (
+      this.compra?.subtotal !== null &&
+      this.compra?.subtotal !== undefined
+    ) {
+
+      return Number(
+        this.compra.subtotal
+      );
+    }
+
+
+    return this.detalles.reduce(
+      (
+        total,
+        detalle
+      ) => {
+
+        return (
+          total +
+          Number(
+            detalle.subtotal ?? 0
+          )
+        );
+
+      },
+      0
+    );
+  }
+
+
+  // ==========================================
+  // COSTO DELIVERY
+  // ==========================================
+
+  get costoDelivery(): number {
+
+    return Number(
+      this.compra?.costoDelivery ?? 0
+    );
+  }
+
+
+  // ==========================================
+  // TOTAL OFICIAL
   // ==========================================
 
   get total(): number {
@@ -224,7 +272,7 @@ export class DetalleCompra implements OnInit {
 
 
   // ==========================================
-  // NOMBRE COMPLETO DEL CLIENTE
+  // NOMBRE COMPLETO
   // ==========================================
 
   get nombreCompletoCliente(): string {
@@ -233,12 +281,44 @@ export class DetalleCompra implements OnInit {
       return '';
     }
 
+
     return [
       this.compra.nombreCliente,
       this.compra.apellidoCliente
     ]
       .filter(Boolean)
       .join(' ');
+  }
+
+
+  // ==========================================
+  // DIRECCIÓN DE ENVÍO
+  // ==========================================
+
+  get tieneDireccionEnvio(): boolean {
+
+    return !!this.compra?.direccionEnvio;
+  }
+
+
+  get ubicacionEnvio(): string {
+
+    const direccion =
+      this.compra?.direccionEnvio;
+
+
+    if (!direccion) {
+      return '';
+    }
+
+
+    return [
+      direccion.distrito,
+      direccion.provincia,
+      direccion.departamento
+    ]
+      .filter(Boolean)
+      .join(', ');
   }
 
 

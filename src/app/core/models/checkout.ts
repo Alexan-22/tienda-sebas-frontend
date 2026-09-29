@@ -1,4 +1,4 @@
-export type MetodoPago =
+﻿export type MetodoPago =
   | 'YAPE'
   | 'TARJETA';
 
@@ -11,9 +11,13 @@ export interface DatosCheckout {
 
   telefono: string;
 
-  direccion: string;
+  departamento: string;
+
+  provincia: string;
 
   distrito: string;
+
+  direccion: string;
 
   referencia: string;
 

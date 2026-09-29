@@ -102,9 +102,13 @@ export class Checkout {
 
     telefono: '',
 
-    direccion: '',
+    departamento: 'Lima',
+
+    provincia: 'Lima',
 
     distrito: '',
+
+    direccion: '',
 
     referencia: '',
 
@@ -144,6 +148,54 @@ export class Checkout {
   }
 
 
+  // =========================================================
+  // DELIVERY ESTIMADO
+  // =========================================================
+
+  get costoDeliveryEstimado(): number {
+
+    const departamento =
+      this.normalizarTexto(
+        this.datos.departamento
+      );
+
+    const provincia =
+      this.normalizarTexto(
+        this.datos.provincia
+      );
+
+
+    if (
+      !departamento ||
+      !provincia
+    ) {
+
+      return 0;
+    }
+
+
+    if (
+      departamento === 'lima' &&
+      provincia === 'lima'
+    ) {
+
+      return 10;
+    }
+
+
+    return 20;
+  }
+
+
+  get totalEstimado(): number {
+
+    return (
+      this.subtotal() +
+      this.costoDeliveryEstimado
+    );
+  }
+
+
   seleccionarPago(
     metodo: MetodoPago
   ): void {
@@ -162,8 +214,10 @@ export class Checkout {
       !this.datos.nombres.trim() ||
       !this.datos.apellidos.trim() ||
       !this.datos.telefono.trim() ||
-      !this.datos.direccion.trim() ||
-      !this.datos.distrito.trim()
+      !this.datos.departamento.trim() ||
+      !this.datos.provincia.trim() ||
+      !this.datos.distrito.trim() ||
+      !this.datos.direccion.trim()
     ) {
 
       this.error =
@@ -200,6 +254,10 @@ export class Checkout {
     this.validarStockAntesDeComprar();
   }
 
+
+  // =========================================================
+  // REVALIDAR STOCK ANTES DE COMPRAR
+  // =========================================================
 
   private validarStockAntesDeComprar(): void {
 
@@ -255,7 +313,6 @@ export class Checkout {
                     ProductoTalla[] |
                     null
                 );
-
               })
 
             )
@@ -423,6 +480,10 @@ export class Checkout {
   }
 
 
+  // =========================================================
+  // REGISTRAR COMPRA
+  // =========================================================
+
   private registrarCompra(): void {
 
     const itemsActuales =
@@ -460,7 +521,35 @@ export class Checkout {
         ),
 
       medioPago:
-        this.datos.metodoPago
+        this.datos.metodoPago,
+
+      direccionEnvio: {
+
+        departamento:
+          this.datos
+            .departamento
+            .trim(),
+
+        provincia:
+          this.datos
+            .provincia
+            .trim(),
+
+        distrito:
+          this.datos
+            .distrito
+            .trim(),
+
+        direccionExacta:
+          this.datos
+            .direccion
+            .trim(),
+
+        referencia:
+          this.datos
+            .referencia
+            .trim()
+      }
     };
 
 
@@ -537,6 +626,18 @@ export class Checkout {
           }
 
 
+          if (
+            error.status === 409
+          ) {
+
+            this.error =
+              error?.error?.message ??
+              'El stock o los datos de la compra cambiaron. Revisa tu pedido.';
+
+            return;
+          }
+
+
           this.error =
             typeof error.error ===
               'string'
@@ -549,5 +650,24 @@ export class Checkout {
         }
 
       });
+  }
+
+
+  // =========================================================
+  // NORMALIZAR TEXTO PARA ESTIMAR DELIVERY
+  // =========================================================
+
+  private normalizarTexto(
+    valor: string
+  ): string {
+
+    return valor
+      .trim()
+      .toLocaleLowerCase('es-PE')
+      .normalize('NFD')
+      .replace(
+        /[\u0300-\u036f]/g,
+        ''
+      );
   }
 }

@@ -600,3 +600,165 @@ tbody tr:hover {
   }
 
 }
+
+/* ==========================================
+   DELIVERY
+========================================== */
+
+.delivery-info {
+  padding: 22px 25px;
+
+  background: #fafafa;
+
+  border-bottom: 1px solid #eee;
+}
+
+.delivery-title {
+  margin-bottom: 18px;
+}
+
+.delivery-title span,
+.delivery-grid span,
+.sale-summary span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #999;
+
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+
+.delivery-title strong {
+  color: #111;
+
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.delivery-grid {
+  display: grid;
+
+  grid-template-columns:
+    2fr 1fr;
+
+  gap: 12px;
+}
+
+.delivery-grid > div {
+  padding: 16px;
+
+  background: white;
+
+  border: 1px solid #e5e5e5;
+}
+
+.delivery-grid strong {
+  display: block;
+
+  color: #111;
+
+  font-size: 10px;
+}
+
+.delivery-grid small {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #888;
+
+  font-size: 8px;
+}
+
+
+/* ==========================================
+   RESUMEN DE VENTA
+========================================== */
+
+.sale-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  background: #fafafa;
+
+  border-top: 1px solid #eee;
+}
+
+.sale-summary > div {
+  min-height: 80px;
+
+  padding: 18px 20px;
+
+  border-right: 1px solid #eee;
+}
+
+.sale-summary > div:last-child {
+  border-right: 0;
+}
+
+.sale-summary strong {
+  display: block;
+
+  color: #111;
+
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.sale-summary .summary-total {
+  background: #111;
+}
+
+.sale-summary .summary-total span {
+  color: #aaa;
+}
+
+.sale-summary .summary-total strong {
+  color: white;
+
+  font-size: 19px;
+}
+
+
+/* ==========================================
+   RESPONSIVE DELIVERY
+========================================== */
+
+@media (
+  max-width: 700px
+) {
+
+  .delivery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sale-summary {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+}
+
+
+@media (
+  max-width: 480px
+) {
+
+  .sale-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .sale-summary > div {
+    border-right: 0;
+
+    border-bottom:
+      1px solid #eee;
+  }
+
+}

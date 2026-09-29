@@ -34,7 +34,7 @@
       class="grid gap-10 lg:grid-cols-[1fr_420px]">
 
 
-      <!-- DATOS -->
+      <!-- DATOS DE ENTREGA -->
 
       <div class="space-y-7">
 
@@ -67,6 +67,7 @@
                 type="text"
                 name="nombres"
                 [(ngModel)]="datos.nombres"
+                autocomplete="given-name"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
 
             </div>
@@ -85,6 +86,7 @@
                 type="text"
                 name="apellidos"
                 [(ngModel)]="datos.apellidos"
+                autocomplete="family-name"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
 
             </div>
@@ -102,9 +104,51 @@
               <input
                 type="tel"
                 maxlength="9"
+                inputmode="numeric"
                 name="telefono"
                 [(ngModel)]="datos.telefono"
                 placeholder="999999999"
+                autocomplete="tel"
+                class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
+
+            </div>
+
+
+            <div>
+
+              <label
+                class="text-[9px] font-black uppercase tracking-[0.15em]">
+
+                Departamento *
+
+              </label>
+
+              <input
+                type="text"
+                name="departamento"
+                [(ngModel)]="datos.departamento"
+                placeholder="Lima"
+                autocomplete="address-level1"
+                class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
+
+            </div>
+
+
+            <div>
+
+              <label
+                class="text-[9px] font-black uppercase tracking-[0.15em]">
+
+                Provincia *
+
+              </label>
+
+              <input
+                type="text"
+                name="provincia"
+                [(ngModel)]="datos.provincia"
+                placeholder="Lima"
+                autocomplete="address-level2"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
 
             </div>
@@ -123,6 +167,8 @@
                 type="text"
                 name="distrito"
                 [(ngModel)]="datos.distrito"
+                placeholder="San Juan de Lurigancho"
+                autocomplete="address-level3"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
 
             </div>
@@ -134,7 +180,7 @@
               <label
                 class="text-[9px] font-black uppercase tracking-[0.15em]">
 
-                Dirección *
+                Dirección exacta *
 
               </label>
 
@@ -142,6 +188,8 @@
                 type="text"
                 name="direccion"
                 [(ngModel)]="datos.direccion"
+                placeholder="Av. / Jr. / Calle, número, interior"
+                autocomplete="street-address"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
 
             </div>
@@ -161,10 +209,46 @@
                 name="referencia"
                 [(ngModel)]="datos.referencia"
                 rows="3"
+                placeholder="Ej. Frente al parque, puerta negra..."
                 class="mt-3 w-full resize-none border border-neutral-300 p-4 text-sm outline-none focus:border-black">
               </textarea>
 
             </div>
+
+          </div>
+
+
+          <div
+            class="mt-6 border border-neutral-200 bg-neutral-50 p-5">
+
+            <p
+              class="text-[9px] font-black uppercase tracking-[0.15em] text-neutral-500">
+
+              Tarifa de envío estimada
+
+            </p>
+
+            <p
+              class="mt-2 text-sm text-neutral-600">
+
+              Lima / Lima:
+              <strong class="text-black">
+                S/ 10.00
+              </strong>
+
+              · Otras provincias:
+              <strong class="text-black">
+                S/ 20.00
+              </strong>
+
+            </p>
+
+            <p
+              class="mt-2 text-[10px] text-neutral-400">
+
+              El monto definitivo es calculado y validado por el servidor al registrar la compra.
+
+            </p>
 
           </div>
 
@@ -360,13 +444,30 @@
             <span
               class="text-neutral-500">
 
-              Envío
+              Delivery
 
             </span>
 
-            <span>
-              Por calcular
-            </span>
+            <strong>
+
+              @if (
+                datos.departamento.trim() &&
+                datos.provincia.trim()
+              ) {
+
+                S/
+                {{
+                  costoDeliveryEstimado
+                    | number:'1.2-2'
+                }}
+
+              } @else {
+
+                Por calcular
+
+              }
+
+            </strong>
 
           </div>
 
@@ -386,13 +487,21 @@
 
               S/
               {{
-                subtotal()
+                totalEstimado
                   | number:'1.2-2'
               }}
 
             </strong>
 
           </div>
+
+
+          <p
+            class="mt-3 text-[9px] leading-4 text-neutral-400">
+
+            El total final será confirmado por el servidor al procesar tu compra.
+
+          </p>
 
 
           <button
