@@ -5,19 +5,29 @@ export interface Venta {
 
   idVenta: number;
 
-  idUsuario: number;
+  tipoVenta: 'ONLINE' | 'PRESENCIAL';
+
+  idUsuario: number | null;
+
+  idClientePresencial: number | null;
 
   nombreCliente: string;
 
-  apellidoCliente: string;
+  apellidoCliente: string | null;
 
-  correoCliente: string;
+  correoCliente: string | null;
+
+  tipoDocumento: string | null;
+
+  numeroDocumento: string | null;
 
   fechaVenta: string;
 
   total: number;
 
   estado: string;
+
+  estadoPedido: string;
 
   medioPago: string;
 }
@@ -63,6 +73,8 @@ export interface DetalleCompraResponse {
 
   fechaVenta: string;
 
+  tipoVenta: 'ONLINE' | 'PRESENCIAL';
+
   subtotal: number;
 
   costoDelivery: number;
@@ -71,15 +83,25 @@ export interface DetalleCompraResponse {
 
   estado: string;
 
+  estadoPedido: string;
+
   medioPago: string;
 
-  idUsuario: number;
+  idUsuario: number | null;
+
+  idClientePresencial: number | null;
 
   nombreCliente: string;
 
-  apellidoCliente: string;
+  apellidoCliente: string | null;
 
-  correoCliente: string;
+  correoCliente: string | null;
+
+  tipoDocumento: string | null;
+
+  numeroDocumento: string | null;
+
+  telefonoCliente: string | null;
 
   direccionEnvio: DireccionEnvioResponse | null;
 

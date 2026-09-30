@@ -47,6 +47,8 @@ export class Ventas implements OnInit {
 
   busqueda = '';
 
+  filtroTipoVenta = '';
+
   filtroPago = '';
 
   filtroEstado = '';
@@ -57,12 +59,13 @@ export class Ventas implements OnInit {
 
 
   // =========================================================
-  // DETALLE DE VENTA
+  // DETALLE
   // =========================================================
 
   ventaSeleccionada: Venta | null = null;
 
-  detalleSeleccionado: DetalleCompraResponse | null = null;
+  detalleSeleccionado:
+    DetalleCompraResponse | null = null;
 
   detalles: DetalleVenta[] = [];
 
@@ -88,7 +91,7 @@ export class Ventas implements OnInit {
 
 
   // =========================================================
-  // CARGAR TODAS LAS VENTAS
+  // CARGAR VENTAS
   // =========================================================
 
   cargarVentas(): void {
@@ -124,10 +127,7 @@ export class Ventas implements OnInit {
                   b.fechaVenta
                 ).getTime();
 
-              return (
-                fechaB -
-                fechaA
-              );
+              return fechaB - fechaA;
             }
           );
 
@@ -161,7 +161,7 @@ export class Ventas implements OnInit {
 
 
   // =========================================================
-  // FILTRAR VENTAS
+  // FILTROS
   // =========================================================
 
   aplicarFiltros(): void {
@@ -194,24 +194,51 @@ export class Ventas implements OnInit {
             venta.correoCliente
               ?.toLowerCase() ?? '';
 
+          const documento =
+            (
+              `${venta.tipoDocumento ?? ''} ` +
+              `${venta.numeroDocumento ?? ''}`
+            )
+              .trim()
+              .toLowerCase();
+
+          const tipoVenta =
+            venta.tipoVenta
+              ?.toUpperCase() ?? '';
+
+          const medioPago =
+            venta.medioPago
+              ?.toUpperCase() ?? '';
+
+          const estado =
+            venta.estado
+              ?.toUpperCase() ?? '';
+
           const coincideBusqueda =
             !texto ||
             id.includes(texto) ||
             nombre.includes(texto) ||
-            correo.includes(texto);
+            correo.includes(texto) ||
+            documento.includes(texto);
+
+          const coincideTipo =
+            !this.filtroTipoVenta ||
+            tipoVenta ===
+              this.filtroTipoVenta;
 
           const coincidePago =
             !this.filtroPago ||
-            venta.medioPago ===
+            medioPago ===
               this.filtroPago;
 
           const coincideEstado =
             !this.filtroEstado ||
-            venta.estado ===
+            estado ===
               this.filtroEstado;
 
           return (
             coincideBusqueda &&
+            coincideTipo &&
             coincidePago &&
             coincideEstado
           );
@@ -228,6 +255,8 @@ export class Ventas implements OnInit {
 
     this.busqueda = '';
 
+    this.filtroTipoVenta = '';
+
     this.filtroPago = '';
 
     this.filtroEstado = '';
@@ -237,7 +266,7 @@ export class Ventas implements OnInit {
 
 
   // =========================================================
-  // VER DETALLE DE VENTA
+  // DETALLE
   // =========================================================
 
   verDetalle(
@@ -265,15 +294,10 @@ export class Ventas implements OnInit {
       .subscribe({
 
         next: (
-          respuesta: DetalleCompraResponse
+          respuesta:
+            DetalleCompraResponse
         ) => {
 
-          console.log(
-            'Detalle de venta recibido:',
-            respuesta
-          );
-
-          // Guardamos toda la respuesta.
           this.detalleSeleccionado =
             respuesta;
 
@@ -323,10 +347,6 @@ export class Ventas implements OnInit {
   }
 
 
-  // =========================================================
-  // CERRAR DETALLE
-  // =========================================================
-
   cerrarDetalle(): void {
 
     this.ventaSeleccionada =
@@ -347,7 +367,7 @@ export class Ventas implements OnInit {
 
 
   // =========================================================
-  // TOTAL DE VENTAS
+  // ESTADÍSTICAS
   // =========================================================
 
   get totalVentas(): number {
@@ -355,10 +375,6 @@ export class Ventas implements OnInit {
     return this.ventas.length;
   }
 
-
-  // =========================================================
-  // INGRESOS TOTALES
-  // =========================================================
 
   get ingresosTotales(): number {
 
@@ -380,10 +396,6 @@ export class Ventas implements OnInit {
   }
 
 
-  // =========================================================
-  // VENTA PROMEDIO
-  // =========================================================
-
   get ventaPromedio(): number {
 
     if (
@@ -400,9 +412,44 @@ export class Ventas implements OnInit {
   }
 
 
-  // =========================================================
-  // VENTAS YAPE
-  // =========================================================
+  get ventasOnline(): number {
+
+    return this.ventas.filter(
+      (
+        venta: Venta
+      ) =>
+        venta.tipoVenta
+          ?.toUpperCase() ===
+        'ONLINE'
+    ).length;
+  }
+
+
+  get ventasPresenciales(): number {
+
+    return this.ventas.filter(
+      (
+        venta: Venta
+      ) =>
+        venta.tipoVenta
+          ?.toUpperCase() ===
+        'PRESENCIAL'
+    ).length;
+  }
+
+
+  get ventasEfectivo(): number {
+
+    return this.ventas.filter(
+      (
+        venta: Venta
+      ) =>
+        venta.medioPago
+          ?.toUpperCase() ===
+        'EFECTIVO'
+    ).length;
+  }
+
 
   get ventasYape(): number {
 
@@ -410,18 +457,12 @@ export class Ventas implements OnInit {
       (
         venta: Venta
       ) =>
-
         venta.medioPago
           ?.toUpperCase() ===
         'YAPE'
-
     ).length;
   }
 
-
-  // =========================================================
-  // VENTAS TARJETA
-  // =========================================================
 
   get ventasTarjeta(): number {
 
@@ -429,17 +470,15 @@ export class Ventas implements OnInit {
       (
         venta: Venta
       ) =>
-
         venta.medioPago
           ?.toUpperCase() ===
         'TARJETA'
-
     ).length;
   }
 
 
   // =========================================================
-  // ESTADOS DISPONIBLES
+  // ESTADOS
   // =========================================================
 
   get estados(): string[] {
@@ -467,7 +506,7 @@ export class Ventas implements OnInit {
 
 
   // =========================================================
-  // NOMBRE DEL CLIENTE
+  // CLIENTE
   // =========================================================
 
   nombreCliente(
@@ -487,13 +526,33 @@ export class Ventas implements OnInit {
   }
 
 
-  // =========================================================
-  // CORREO DEL CLIENTE
-  // =========================================================
-
-  correoCliente(
+  informacionCliente(
     venta: Venta
   ): string {
+
+    if (
+      venta.tipoVenta ===
+        'PRESENCIAL'
+    ) {
+
+      const documento =
+        (
+          `${venta.tipoDocumento ?? ''} ` +
+          `${venta.numeroDocumento ?? ''}`
+        ).trim();
+
+      if (documento) {
+
+        return documento;
+      }
+
+      if (venta.correoCliente) {
+
+        return venta.correoCliente;
+      }
+
+      return 'Cliente presencial';
+    }
 
     return (
       venta.correoCliente ??
@@ -503,7 +562,24 @@ export class Ventas implements OnInit {
 
 
   // =========================================================
-  // CANTIDAD DE PRODUCTOS DEL DETALLE
+  // ETIQUETA TIPO DE VENTA
+  // =========================================================
+
+  tipoVentaTexto(
+    venta: Venta
+  ): string {
+
+    return (
+      venta.tipoVenta ===
+        'PRESENCIAL'
+        ? 'Presencial'
+        : 'Online'
+    );
+  }
+
+
+  // =========================================================
+  // DETALLE
   // =========================================================
 
   get cantidadProductosDetalle(): number {
@@ -526,19 +602,18 @@ export class Ventas implements OnInit {
   }
 
 
-  // =========================================================
-  // SUBTOTAL
-  // =========================================================
-
   get subtotalDetalle(): number {
 
     if (
-      this.detalleSeleccionado?.subtotal !== null &&
-      this.detalleSeleccionado?.subtotal !== undefined
+      this.detalleSeleccionado
+        ?.subtotal !== null &&
+      this.detalleSeleccionado
+        ?.subtotal !== undefined
     ) {
 
       return Number(
-        this.detalleSeleccionado.subtotal
+        this.detalleSeleccionado
+          .subtotal
       );
     }
 
@@ -560,10 +635,6 @@ export class Ventas implements OnInit {
   }
 
 
-  // =========================================================
-  // DELIVERY
-  // =========================================================
-
   get costoDeliveryDetalle(): number {
 
     return Number(
@@ -572,10 +643,6 @@ export class Ventas implements OnInit {
     );
   }
 
-
-  // =========================================================
-  // TOTAL
-  // =========================================================
 
   get totalDetalle(): number {
 
@@ -590,7 +657,7 @@ export class Ventas implements OnInit {
 
 
   // =========================================================
-  // UBICACIÓN DE ENTREGA
+  // DIRECCIÓN
   // =========================================================
 
   get ubicacionEntrega(): string {
@@ -600,6 +667,7 @@ export class Ventas implements OnInit {
         ?.direccionEnvio;
 
     if (!direccion) {
+
       return '';
     }
 
@@ -611,5 +679,4 @@ export class Ventas implements OnInit {
       .filter(Boolean)
       .join(', ');
   }
-
 }

@@ -9,8 +9,8 @@
       <h1>Ventas</h1>
 
       <span>
-        Consulta y administra las ventas
-        realizadas en Tienda Sebas.
+        Consulta y administra las ventas online
+        y presenciales de Tienda Sebas.
       </span>
 
     </div>
@@ -77,6 +77,87 @@
   </section>
 
 
+  <!-- RESUMEN DE CANALES -->
+
+  <section class="channel-stats">
+
+    <article>
+
+      <span>ONLINE</span>
+
+      <strong>
+        {{ ventasOnline }}
+      </strong>
+
+      <small>
+        Ventas por la tienda web
+      </small>
+
+    </article>
+
+
+    <article>
+
+      <span>PRESENCIAL</span>
+
+      <strong>
+        {{ ventasPresenciales }}
+      </strong>
+
+      <small>
+        Ventas realizadas en POS
+      </small>
+
+    </article>
+
+
+    <article>
+
+      <span>EFECTIVO</span>
+
+      <strong>
+        {{ ventasEfectivo }}
+      </strong>
+
+      <small>
+        Operaciones en efectivo
+      </small>
+
+    </article>
+
+
+    <article>
+
+      <span>YAPE</span>
+
+      <strong>
+        {{ ventasYape }}
+      </strong>
+
+      <small>
+        Operaciones con Yape
+      </small>
+
+    </article>
+
+
+    <article>
+
+      <span>TARJETA</span>
+
+      <strong>
+        {{ ventasTarjeta }}
+      </strong>
+
+      <small>
+        Operaciones con tarjeta
+      </small>
+
+    </article>
+
+  </section>
+
+
   <!-- PANEL -->
 
   <section class="panel">
@@ -100,8 +181,28 @@
           type="text"
           [(ngModel)]="busqueda"
           (ngModelChange)="aplicarFiltros()"
-          placeholder="Buscar cliente, correo o venta..."
+          placeholder="Buscar venta, cliente, correo o documento..."
         >
+
+
+        <select
+          [(ngModel)]="filtroTipoVenta"
+          (ngModelChange)="aplicarFiltros()"
+        >
+
+          <option value="">
+            Todos los canales
+          </option>
+
+          <option value="ONLINE">
+            Online
+          </option>
+
+          <option value="PRESENCIAL">
+            Presencial
+          </option>
+
+        </select>
 
 
         <select
@@ -111,6 +212,10 @@
 
           <option value="">
             Todos los pagos
+          </option>
+
+          <option value="EFECTIVO">
+            Efectivo
           </option>
 
           <option value="YAPE">
@@ -147,6 +252,15 @@
           }
 
         </select>
+
+
+        <button
+          type="button"
+          class="clear-button"
+          (click)="limpiarFiltros()"
+        >
+          LIMPIAR
+        </button>
 
       </div>
 
@@ -192,6 +306,8 @@
               <th>VENTA</th>
 
               <th>FECHA</th>
+
+              <th>TIPO</th>
 
               <th>CLIENTE</th>
 
@@ -247,6 +363,29 @@
 
                 <td>
 
+                  <span
+                    class="sale-type"
+                    [class.presencial]="
+                      venta.tipoVenta ===
+                      'PRESENCIAL'
+                    "
+                    [class.online]="
+                      venta.tipoVenta ===
+                      'ONLINE'
+                    "
+                  >
+                    {{
+                      tipoVentaTexto(
+                        venta
+                      )
+                    }}
+                  </span>
+
+                </td>
+
+
+                <td>
+
                   <div class="customer">
 
                     <strong>
@@ -262,7 +401,7 @@
                     <span>
 
                       {{
-                        correoCliente(
+                        informacionCliente(
                           venta
                         )
                       }}
@@ -276,7 +415,13 @@
 
                 <td>
 
-                  <span class="payment">
+                  <span
+                    class="payment"
+                    [class.cash]="
+                      venta.medioPago ===
+                      'EFECTIVO'
+                    "
+                  >
                     {{ venta.medioPago }}
                   </span>
 
@@ -312,15 +457,9 @@
                   <button
                     type="button"
                     class="detail-button"
-                    (click)="
-                      verDetalle(
-                        venta
-                      )
-                    "
+                    (click)="verDetalle(venta)"
                   >
-
                     VER DETALLE
-
                   </button>
 
                 </td>
@@ -382,6 +521,38 @@
       </header>
 
 
+      <div class="sale-channel">
+
+        <span
+          class="sale-type"
+          [class.presencial]="
+            ventaSeleccionada.tipoVenta ===
+            'PRESENCIAL'
+          "
+          [class.online]="
+            ventaSeleccionada.tipoVenta ===
+            'ONLINE'
+          "
+        >
+          {{
+            tipoVentaTexto(
+              ventaSeleccionada
+            )
+          }}
+        </span>
+
+        <small>
+          {{
+            ventaSeleccionada.tipoVenta ===
+              'PRESENCIAL'
+              ? 'Venta realizada en tienda'
+              : 'Venta realizada por la web'
+          }}
+        </small>
+
+      </div>
+
+
       <div class="sale-info">
 
         <div>
@@ -398,7 +569,7 @@
 
           <small>
             {{
-              correoCliente(
+              informacionCliente(
                 ventaSeleccionada
               )
             }}
@@ -438,7 +609,10 @@
           <span>ESTADO</span>
 
           <strong>
-            {{ ventaSeleccionada.estado }}
+            {{
+              ventaSeleccionada.estadoPedido ||
+              ventaSeleccionada.estado
+            }}
           </strong>
 
         </div>
@@ -465,7 +639,7 @@
       @else if (detalleSeleccionado) {
 
 
-        <!-- ENTREGA -->
+        <!-- ENTREGA ONLINE -->
 
         @if (detalleSeleccionado.direccionEnvio) {
 
@@ -521,6 +695,27 @@
               </div>
 
             </div>
+
+          </section>
+
+        }
+
+        @else if (
+          detalleSeleccionado.tipoVenta ===
+          'PRESENCIAL'
+        ) {
+
+          <section class="pos-info">
+
+            <span>VENTA PRESENCIAL</span>
+
+            <strong>
+              Entrega inmediata en tienda
+            </strong>
+
+            <small>
+              Esta venta no genera costo de delivery.
+            </small>
 
           </section>
 

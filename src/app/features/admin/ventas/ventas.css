@@ -762,3 +762,241 @@ tbody tr:hover {
   }
 
 }
+
+/* ==========================================
+   CANALES DE VENTA
+========================================== */
+
+.channel-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, 1fr);
+
+  gap: 10px;
+
+  margin-bottom: 18px;
+}
+
+.channel-stats article {
+  padding: 16px 18px;
+
+  background: white;
+
+  border: 1px solid #e5e5e5;
+}
+
+.channel-stats span {
+  display: block;
+
+  color: #999;
+
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+
+.channel-stats strong {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #111;
+
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.channel-stats small {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #aaa;
+
+  font-size: 7px;
+}
+
+
+/* ==========================================
+   TIPO DE VENTA
+========================================== */
+
+.sale-type {
+  display: inline-block;
+
+  padding: 6px 9px;
+
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.sale-type.online {
+  background: #eef4ff;
+
+  color: #2457a7;
+}
+
+.sale-type.presencial {
+  background: #fff4e5;
+
+  color: #9a5a00;
+}
+
+
+/* ==========================================
+   EFECTIVO
+========================================== */
+
+.payment.cash {
+  background: #eef8ee;
+
+  color: #28752d;
+}
+
+
+/* ==========================================
+   LIMPIAR FILTROS
+========================================== */
+
+.clear-button {
+  height: 42px;
+
+  padding: 0 15px;
+
+  background: #111;
+
+  border: 1px solid #111;
+
+  color: white;
+
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .08em;
+
+  cursor: pointer;
+}
+
+.clear-button:hover {
+  background: #333;
+}
+
+
+/* ==========================================
+   CANAL EN MODAL
+========================================== */
+
+.sale-channel {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px 25px;
+
+  background: #fafafa;
+
+  border-bottom: 1px solid #eee;
+}
+
+.sale-channel small {
+  color: #888;
+
+  font-size: 8px;
+}
+
+
+/* ==========================================
+   INFORMACIÓN POS
+========================================== */
+
+.pos-info {
+  padding: 22px 25px;
+
+  background: #fafafa;
+
+  border-bottom: 1px solid #eee;
+}
+
+.pos-info span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #999;
+
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+
+.pos-info strong {
+  display: block;
+
+  color: #111;
+
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.pos-info small {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #888;
+
+  font-size: 8px;
+}
+
+
+/* ==========================================
+   RESPONSIVE CANALES
+========================================== */
+
+@media (
+  max-width: 1000px
+) {
+
+  .channel-stats {
+    grid-template-columns:
+      repeat(3, 1fr);
+  }
+
+}
+
+
+@media (
+  max-width: 700px
+) {
+
+  .channel-stats {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+  .clear-button {
+    width: 100%;
+  }
+
+}
+
+
+@media (
+  max-width: 480px
+) {
+
+  .channel-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .sale-channel {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
