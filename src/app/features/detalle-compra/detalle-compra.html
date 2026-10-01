@@ -4,63 +4,42 @@
   <app-navbar></app-navbar>
 </div>
 
-
 <main class="boleta-page min-h-screen bg-neutral-100 px-5 py-16">
-
   <section class="mx-auto max-w-[850px]">
-
 
     <!-- ACCIONES -->
 
     <div class="no-print mb-7 flex items-center justify-between">
-
       <a
         routerLink="/mis-compras"
         class="text-[10px] font-black uppercase tracking-[0.18em]">
-
         ← Mis compras
-
       </a>
-
 
       <button
         type="button"
         (click)="imprimir()"
         [disabled]="cargando || error || detalles.length === 0"
         class="h-12 bg-black px-6 text-[10px] font-black uppercase tracking-[0.18em] text-white disabled:cursor-not-allowed disabled:bg-neutral-300">
-
         Imprimir comprobante
-
       </button>
-
     </div>
-
 
     <!-- CARGANDO -->
 
     @if (cargando) {
-
       <div class="min-h-[600px] animate-pulse bg-white p-12">
-
         <div class="h-12 w-12 bg-neutral-100"></div>
-
         <div class="mt-5 h-8 w-52 bg-neutral-100"></div>
-
         <div class="mt-16 h-10 bg-neutral-100"></div>
-
         <div class="mt-4 h-20 bg-neutral-100"></div>
-
         <div class="mt-4 h-20 bg-neutral-100"></div>
-
       </div>
-
     } @else if (error) {
-
 
       <!-- ERROR -->
 
       <div class="bg-white p-12 text-center">
-
         <p class="text-lg font-black uppercase">
           No pudimos cargar esta compra
         </p>
@@ -72,20 +51,14 @@
         <a
           routerLink="/mis-compras"
           class="mt-8 inline-flex h-12 items-center bg-black px-7 text-[10px] font-black uppercase tracking-[0.18em] text-white">
-
           Volver a mis compras
-
         </a>
-
       </div>
-
     } @else if (!compra || detalles.length === 0) {
-
 
       <!-- SIN DETALLES -->
 
       <div class="bg-white p-12 text-center">
-
         <p class="text-lg font-black uppercase">
           Esta venta no tiene productos
         </p>
@@ -93,11 +66,8 @@
         <p class="mt-3 text-sm text-neutral-500">
           No encontramos detalles para la venta #{{ idVenta }}.
         </p>
-
       </div>
-
     } @else {
-
 
       <!-- COMPROBANTE -->
 
@@ -105,16 +75,11 @@
         id="boleta"
         class="boleta bg-white p-8 sm:p-12">
 
-
         <!-- CABECERA -->
 
-        <header
-          class="flex flex-col justify-between gap-8 border-b-2 border-black pb-8 sm:flex-row">
-
+        <header class="flex flex-col justify-between gap-8 border-b-2 border-black pb-8 sm:flex-row">
           <div>
-
-            <div
-              class="flex h-14 w-14 items-center justify-center bg-black text-sm font-black text-white">
+            <div class="flex h-14 w-14 items-center justify-center bg-black text-sm font-black text-white">
               TS
             </div>
 
@@ -122,8 +87,7 @@
               Tienda Sebas
             </h1>
 
-            <p
-              class="mt-1 text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-400">
+            <p class="mt-1 text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-400">
               Polvos · Fashion Store
             </p>
 
@@ -132,14 +96,10 @@
               <br>
               Comprobante de compra
             </p>
-
           </div>
 
-
           <div class="sm:text-right">
-
-            <p
-              class="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
+            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
               Comprobante de compra
             </p>
 
@@ -147,129 +107,84 @@
               #{{ compra.idVenta }}
             </p>
 
-            <p
-              class="mt-3 text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-400">
-
+            <p class="mt-3 text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-400">
               {{ estadoTexto }}
-
             </p>
-
           </div>
-
         </header>
-
 
         <!-- DATOS DE LA VENTA -->
 
-        <section
-          class="grid gap-6 border-b border-neutral-200 py-7 sm:grid-cols-3">
-
+        <section class="grid gap-6 border-b border-neutral-200 py-7 sm:grid-cols-3">
           <div>
-
-            <p
-              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+            <p class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
               N° de venta
             </p>
 
             <p class="mt-2 text-sm font-black">
               #{{ compra.idVenta }}
             </p>
-
           </div>
 
-
           <div>
-
-            <p
-              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+            <p class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
               Fecha
             </p>
 
             <p class="mt-2 text-sm font-black">
-              {{
-                compra.fechaVenta
-                  | date:'dd/MM/yyyy'
-              }}
+              {{ compra.fechaVenta | date:'dd/MM/yyyy' }}
             </p>
 
             <p class="mt-1 text-[10px] text-neutral-400">
-              {{
-                compra.fechaVenta
-                  | date:'HH:mm'
-              }}
+              {{ compra.fechaVenta | date:'HH:mm' }}
             </p>
-
           </div>
 
-
           <div>
-
-            <p
-              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+            <p class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
               Medio de pago
             </p>
 
             <p class="mt-2 text-sm font-black">
               {{ medioPagoTexto }}
             </p>
-
           </div>
-
         </section>
-
 
         <!-- CLIENTE -->
 
-        <section
-          class="grid gap-6 border-b border-neutral-200 py-7 sm:grid-cols-2">
-
+        <section class="grid gap-6 border-b border-neutral-200 py-7 sm:grid-cols-2">
           <div>
-
-            <p
-              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+            <p class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
               Cliente
             </p>
 
             <p class="mt-2 text-sm font-black uppercase">
               {{ nombreCompletoCliente }}
             </p>
-
           </div>
 
-
           <div>
-
-            <p
-              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+            <p class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
               Correo
             </p>
 
             <p class="mt-2 break-all text-sm">
               {{ compra.correoCliente }}
             </p>
-
           </div>
-
         </section>
-
 
         <!-- DIRECCIÓN DE ENTREGA -->
 
         @if (tieneDireccionEnvio && compra.direccionEnvio) {
-
-          <section
-            class="border-b border-neutral-200 py-7">
-
-            <p
-              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+          <section class="border-b border-neutral-200 py-7">
+            <p class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
               Dirección de entrega
             </p>
 
-
             <div class="mt-4 grid gap-6 sm:grid-cols-2">
-
               <div>
-
                 <p class="text-sm font-black">
                   {{ compra.direccionEnvio.direccionExacta }}
                 </p>
@@ -277,305 +192,169 @@
                 <p class="mt-2 text-xs text-neutral-500">
                   {{ ubicacionEnvio }}
                 </p>
-
               </div>
 
-
               <div>
-
                 @if (compra.direccionEnvio.referencia) {
-
-                  <p
-                    class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+                  <p class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
                     Referencia
                   </p>
 
                   <p class="mt-2 text-xs text-neutral-600">
                     {{ compra.direccionEnvio.referencia }}
                   </p>
-
                 }
-
               </div>
-
             </div>
-
           </section>
-
         }
-
 
         <!-- INFORMACIÓN ADICIONAL -->
 
-        <section
-          class="grid gap-6 border-b border-neutral-200 py-7 sm:grid-cols-3">
-
+        <section class="grid gap-6 border-b border-neutral-200 py-7 sm:grid-cols-3">
           <div>
-
-            <p
-              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+            <p class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
               Estado
             </p>
 
             <p class="mt-2 text-sm font-black uppercase">
               {{ estadoTexto }}
             </p>
-
           </div>
 
-
           <div>
-
-            <p
-              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+            <p class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
               Productos
             </p>
 
             <p class="mt-2 text-sm font-black">
               {{ totalProductos }}
             </p>
-
           </div>
 
-
           <div>
-
-            <p
-              class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
+            <p class="text-[8px] font-black uppercase tracking-[0.18em] text-neutral-400">
               Moneda
             </p>
 
             <p class="mt-2 text-sm font-black">
               PEN · Soles
             </p>
-
           </div>
-
         </section>
-
 
         <!-- PRODUCTOS -->
 
         <section class="mt-10">
-
-          <div
-            class="hidden grid-cols-[1fr_80px_110px_110px] border-b border-neutral-300 pb-3 text-[9px] font-black uppercase tracking-[0.15em] text-neutral-400 sm:grid">
-
-            <span>
-              Producto
-            </span>
-
-            <span class="text-center">
-              Cant.
-            </span>
-
-            <span class="text-right">
-              Precio
-            </span>
-
-            <span class="text-right">
-              Subtotal
-            </span>
-
+          <div class="hidden grid-cols-[1fr_80px_110px_110px] border-b border-neutral-300 pb-3 text-[9px] font-black uppercase tracking-[0.15em] text-neutral-400 sm:grid">
+            <span>Producto</span>
+            <span class="text-center">Cant.</span>
+            <span class="text-right">Precio</span>
+            <span class="text-right">Subtotal</span>
           </div>
 
-
-          @for (
-            detalle of detalles;
-            track detalle.idDetalleVenta
-          ) {
-
-            <div
-              class="grid gap-3 border-b border-neutral-100 py-6 sm:grid-cols-[1fr_80px_110px_110px] sm:items-center">
-
+          @for (detalle of detalles; track detalle.idDetalleVenta) {
+            <div class="grid gap-3 border-b border-neutral-100 py-6 sm:grid-cols-[1fr_80px_110px_110px] sm:items-center">
 
               <!-- PRODUCTO -->
 
               <div>
-
                 <p class="text-sm font-black uppercase">
-
-                  {{
-                    detalle
-                      .productoTalla
-                      .producto
-                      .nombre
-                  }}
-
+                  {{ detalle.productoTalla.producto.nombre }}
                 </p>
 
-                <p
-                  class="mt-2 text-[9px] font-bold uppercase tracking-[0.12em] text-neutral-400">
-
-                  Talla
-                  {{
-                    detalle
-                      .productoTalla
-                      .talla
-                      .nombreTalla
-                  }}
-
+                <p class="mt-2 text-[9px] font-bold uppercase tracking-[0.12em] text-neutral-400">
+                  Talla {{ detalle.productoTalla.talla.nombreTalla }}
                 </p>
-
               </div>
-
 
               <!-- CANTIDAD -->
 
               <div class="flex justify-between sm:block">
-
-                <span
-                  class="text-[9px] font-black uppercase text-neutral-400 sm:hidden">
+                <span class="text-[9px] font-black uppercase text-neutral-400 sm:hidden">
                   Cantidad
                 </span>
 
                 <p class="text-sm font-bold sm:text-center">
                   {{ detalle.cantidad }}
                 </p>
-
               </div>
-
 
               <!-- PRECIO -->
 
               <div class="flex justify-between sm:block">
-
-                <span
-                  class="text-[9px] font-black uppercase text-neutral-400 sm:hidden">
+                <span class="text-[9px] font-black uppercase text-neutral-400 sm:hidden">
                   Precio
                 </span>
 
                 <p class="text-sm sm:text-right">
-
-                  S/
-                  {{
-                    detalle.precioUnitario
-                      | number:'1.2-2'
-                  }}
-
+                  S/ {{ detalle.precioUnitario | number:'1.2-2' }}
                 </p>
-
               </div>
-
 
               <!-- SUBTOTAL -->
 
               <div class="flex justify-between sm:block">
-
-                <span
-                  class="text-[9px] font-black uppercase text-neutral-400 sm:hidden">
+                <span class="text-[9px] font-black uppercase text-neutral-400 sm:hidden">
                   Subtotal
                 </span>
 
                 <p class="text-sm font-black sm:text-right">
-
-                  S/
-                  {{
-                    detalle.subtotal
-                      | number:'1.2-2'
-                  }}
-
+                  S/ {{ detalle.subtotal | number:'1.2-2' }}
                 </p>
-
               </div>
-
             </div>
-
           }
-
         </section>
-
 
         <!-- RESUMEN -->
 
         <section class="ml-auto mt-10 max-w-[340px]">
-
-          <div
-            class="flex items-center justify-between border-b border-neutral-200 py-3">
-
-            <span
-              class="text-[10px] font-bold uppercase text-neutral-500">
+          <div class="flex items-center justify-between border-b border-neutral-200 py-3">
+            <span class="text-[10px] font-bold uppercase text-neutral-500">
               Productos
             </span>
 
             <span class="text-sm font-bold">
               {{ totalProductos }}
             </span>
-
           </div>
 
-
-          <div
-            class="flex items-center justify-between border-b border-neutral-200 py-3">
-
-            <span
-              class="text-[10px] font-bold uppercase text-neutral-500">
+          <div class="flex items-center justify-between border-b border-neutral-200 py-3">
+            <span class="text-[10px] font-bold uppercase text-neutral-500">
               Subtotal
             </span>
 
             <span class="text-sm font-bold">
-
-              S/
-              {{
-                subtotal
-                  | number:'1.2-2'
-              }}
-
+              S/ {{ subtotal | number:'1.2-2' }}
             </span>
-
           </div>
 
-
-          <div
-            class="flex items-center justify-between border-b border-neutral-200 py-3">
-
-            <span
-              class="text-[10px] font-bold uppercase text-neutral-500">
+          <div class="flex items-center justify-between border-b border-neutral-200 py-3">
+            <span class="text-[10px] font-bold uppercase text-neutral-500">
               Delivery
             </span>
 
             <span class="text-sm font-bold">
-
-              S/
-              {{
-                costoDelivery
-                  | number:'1.2-2'
-              }}
-
+              S/ {{ costoDelivery | number:'1.2-2' }}
             </span>
-
           </div>
 
-
-          <div
-            class="flex items-center justify-between border-t-2 border-black pt-5">
-
+          <div class="flex items-center justify-between border-t-2 border-black pt-5">
             <span class="text-sm font-black uppercase">
               Total
             </span>
 
             <span class="text-2xl font-black">
-
-              S/
-              {{
-                total
-                  | number:'1.2-2'
-              }}
-
+              S/ {{ total | number:'1.2-2' }}
             </span>
-
           </div>
-
         </section>
-
 
         <!-- PIE -->
 
-        <footer
-          class="mt-14 border-t border-neutral-200 pt-7 text-center">
-
-          <p
-            class="text-xs font-black uppercase tracking-[0.12em]">
+        <footer class="mt-14 border-t border-neutral-200 pt-7 text-center">
+          <p class="text-xs font-black uppercase tracking-[0.12em]">
             Gracias por tu compra
           </p>
 
@@ -586,17 +365,12 @@
           <p class="mt-1 text-[9px] text-neutral-300">
             Conserva este comprobante como constancia de tu compra.
           </p>
-
         </footer>
-
       </article>
-
     }
 
   </section>
-
 </main>
-
 
 <div class="no-print">
   <app-footer></app-footer>

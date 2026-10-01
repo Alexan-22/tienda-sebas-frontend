@@ -12,18 +12,13 @@ export interface Categoria {
 
 export interface Producto {
   idProducto: number;
-
   nombre: string;
   descripcion: string;
-
   precio: number;
   precioOferta: number | null;
-
   genero: Genero;
   categoria: Categoria;
-
   imagen: string | null;
-
   nuevo: boolean;
   destacado: boolean;
   estado: boolean;

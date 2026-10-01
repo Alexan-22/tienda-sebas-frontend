@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
 import { Producto } from '../models/producto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductoService {
-
-  private readonly apiUrl =
-    'http://localhost:8080/api/productos';
+  private readonly apiUrl = 'http://localhost:8080/api/productos';
 
   constructor(
     private http: HttpClient
@@ -19,35 +16,23 @@ export class ProductoService {
   // =====================================================
   // PÚBLICO
   // =====================================================
-
   listar(): Observable<Producto[]> {
-    return this.http.get<Producto[]>(
-      `${this.apiUrl}/public`
-    );
+    return this.http.get<Producto[]>(`${this.apiUrl}/public`);
   }
 
-  buscarPorId(
-    idProducto: number
-  ): Observable<Producto> {
-
+  buscarPorId(idProducto: number): Observable<Producto> {
     return this.http.get<Producto>(
       `${this.apiUrl}/public/${idProducto}`
     );
   }
 
-  porGenero(
-    idGenero: number
-  ): Observable<Producto[]> {
-
+  porGenero(idGenero: number): Observable<Producto[]> {
     return this.http.get<Producto[]>(
       `${this.apiUrl}/public/genero/${idGenero}`
     );
   }
 
-  porCategoria(
-    idCategoria: number
-  ): Observable<Producto[]> {
-
+  porCategoria(idCategoria: number): Observable<Producto[]> {
     return this.http.get<Producto[]>(
       `${this.apiUrl}/public/categoria/${idCategoria}`
     );
@@ -56,13 +41,11 @@ export class ProductoService {
   // =====================================================
   // ADMIN - CREAR
   // =====================================================
-
   crear(
     producto: Partial<Producto>,
     idGenero: number,
     idCategoria: number
   ): Observable<Producto> {
-
     const params = new HttpParams()
       .set('idGenero', idGenero.toString())
       .set('idCategoria', idCategoria.toString());
@@ -77,14 +60,12 @@ export class ProductoService {
   // =====================================================
   // ADMIN - ACTUALIZAR
   // =====================================================
-
   actualizar(
     idProducto: number,
     producto: Partial<Producto>,
     idGenero: number,
     idCategoria: number
   ): Observable<Producto> {
-
     const params = new HttpParams()
       .set('idGenero', idGenero.toString())
       .set('idCategoria', idCategoria.toString());
@@ -99,11 +80,7 @@ export class ProductoService {
   // =====================================================
   // ADMIN - ELIMINAR
   // =====================================================
-
-  eliminar(
-    idProducto: number
-  ): Observable<string> {
-
+  eliminar(idProducto: number): Observable<string> {
     return this.http.delete(
       `${this.apiUrl}/admin/${idProducto}`,
       {

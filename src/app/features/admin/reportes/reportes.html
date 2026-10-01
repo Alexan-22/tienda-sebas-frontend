@@ -1,786 +1,332 @@
 <section class="reportes-page">
 
   <!-- =====================================================
-       ENCABEZADO
+       ENCABEZADO Y FILTROS
   ====================================================== -->
-
   <header class="page-header">
-
     <div>
-      <p class="eyebrow">
-        ANÁLISIS
-      </p>
-
-      <h1>
-        REPORTES
-      </h1>
-
-      <span>
-        Indicadores comerciales de Tienda Sebas.
-      </span>
+      <p class="eyebrow">ANÁLISIS</p>
+      <h1>REPORTES</h1>
+      <span>Indicadores comerciales de Tienda Sebas.</span>
     </div>
 
-
-    <div class="periodo">
-
-      <label>
-        PERÍODO
-      </label>
-
-      <select
-        [(ngModel)]="periodo"
-        (change)="aplicarPeriodo()"
-      >
-
-        <option value="TODO">
-          Todo el período
-        </option>
-
-        <option value="7">
-          Últimos 7 días
-        </option>
-
-        <option value="30">
-          Últimos 30 días
-        </option>
-
-        <option value="MES">
-          Este mes
-        </option>
-
-      </select>
-
-    </div>
-
-  </header>
-
-
-  <!-- =====================================================
-       CARGANDO
-  ====================================================== -->
-
-  @if (cargando) {
-
-    <div class="estado-pagina">
-
-      <strong>
-        CARGANDO REPORTES...
-      </strong>
-
-      <span>
-        Procesando ventas, productos,
-        inventario y usuarios.
-      </span>
-
-    </div>
-
-  }
-
-
-  <!-- =====================================================
-       ERROR
-  ====================================================== -->
-
-  @else if (error) {
-
-    <div class="estado-pagina error">
-
-      <strong>
-        NO SE PUDIERON CARGAR LOS REPORTES
-      </strong>
-
-      <span>
-        {{ error }}
-      </span>
-
-      <button
-        type="button"
-        (click)="cargarReportes()"
-      >
-        REINTENTAR
-      </button>
-
-    </div>
-
-  }
-
-
-  @else {
-
-    <!-- ===================================================
-         INDICADORES PRINCIPALES
-    ==================================================== -->
-
-    <section class="stats-grid">
-
-      <article class="stat-card">
-
-        <p>
-          VENTAS TOTALES
-        </p>
-
-        <strong>
-          {{ totalVentas }}
-        </strong>
-
-        <span>
-          Ventas registradas
-        </span>
-
-      </article>
-
-
-      <article class="stat-card">
-
-        <p>
-          INGRESOS
-        </p>
-
-        <strong>
-          S/
-          {{
-            ingresosTotales
-              | number:'1.2-2'
-          }}
-        </strong>
-
-        <span>
-          Ingresos acumulados
-        </span>
-
-      </article>
-
-
-      <article class="stat-card">
-
-        <p>
-          UNIDADES VENDIDAS
-        </p>
-
-        <strong>
-          {{ unidadesVendidas }}
-        </strong>
-
-        <span>
-          Prendas vendidas
-        </span>
-
-      </article>
-
-
-      <article class="stat-card">
-
-        <p>
-          VENTA PROMEDIO
-        </p>
-
-        <strong>
-          S/
-          {{
-            ventaPromedio
-              | number:'1.2-2'
-          }}
-        </strong>
-
-        <span>
-          Promedio por venta
-        </span>
-
-      </article>
-
-    </section>
-
-
-    <!-- ===================================================
-         SEGUNDA FILA
-    ==================================================== -->
-
-    <section class="summary-grid">
-
-      <!-- MEDIOS DE PAGO -->
-
-      <article class="panel">
-
-        <div class="panel-header">
-
-          <div>
-
-            <p class="eyebrow">
-              VENTAS
-            </p>
-
-            <h2>
-              MEDIOS DE PAGO
-            </h2>
-
-          </div>
-
-          <span class="panel-number">
-            01
-          </span>
-
-        </div>
-
-
-        <div class="panel-content">
-
-          @if (
-            mediosPago.length === 0
-          ) {
-
-            <div class="empty">
-              No existen ventas para
-              este período.
-            </div>
-
-          }
-
-          @else {
-
-            @for (
-              medio of mediosPago;
-              track medio.nombre
-            ) {
-
-              <div class="bar-item">
-
-                <div class="bar-info">
-
-                  <div>
-
-                    <strong>
-                      {{ medio.nombre }}
-                    </strong>
-
-                    <span>
-                      {{ medio.cantidad }}
-                      ventas
-                    </span>
-
-                  </div>
-
-
-                  <strong>
-                    S/
-                    {{
-                      medio.total
-                        | number:'1.2-2'
-                    }}
-                  </strong>
-
-                </div>
-
-
-                <div class="bar-background">
-
-                  <div
-                    class="bar-value"
-                    [style.width.%]="medio.porcentaje"
-                  >
-                  </div>
-
-                </div>
-
-
-                <small>
-                  {{
-                    medio.porcentaje
-                      | number:'1.0-0'
-                  }}%
-                  de las ventas
-                </small>
-
-              </div>
-
-            }
-
-          }
-
-        </div>
-
-      </article>
-
-
-      <!-- VENTAS POR CATEGORÍA -->
-
-      <article class="panel">
-
-        <div class="panel-header">
-
-          <div>
-
-            <p class="eyebrow">
-              CATEGORÍAS
-            </p>
-
-            <h2>
-              VENTAS POR CATEGORÍA
-            </h2>
-
-          </div>
-
-          <span class="panel-number">
-            02
-          </span>
-
-        </div>
-
-
-        <div class="panel-content">
-
-          @if (
-            categorias.length === 0
-          ) {
-
-            <div class="empty">
-              No existen datos
-              por categoría.
-            </div>
-
-          }
-
-          @else {
-
-            @for (
-              categoria of categorias;
-              track categoria.nombre
-            ) {
-
-              <div class="bar-item">
-
-                <div class="bar-info">
-
-                  <div>
-
-                    <strong>
-                      {{ categoria.nombre }}
-                    </strong>
-
-                    <span>
-                      {{ categoria.cantidad }}
-                      unidades
-                    </span>
-
-                  </div>
-
-
-                  <strong>
-                    S/
-                    {{
-                      categoria.ingresos
-                        | number:'1.2-2'
-                    }}
-                  </strong>
-
-                </div>
-
-
-                <div class="bar-background">
-
-                  <div
-                    class="bar-value"
-                    [style.width.%]="categoria.porcentaje"
-                  >
-                  </div>
-
-                </div>
-
-              </div>
-
-            }
-
-          }
-
-        </div>
-
-      </article>
-
-    </section>
-
-
-    <!-- ===================================================
-         PRODUCTOS MÁS VENDIDOS
-    ==================================================== -->
-
-    <section class="panel products-panel">
-
-      <div class="panel-header">
-
-        <div>
-
-          <p class="eyebrow">
-            RENDIMIENTO
-          </p>
-
-          <h2>
-            PRODUCTOS MÁS VENDIDOS
-          </h2>
-
-        </div>
-
-        <span class="panel-number">
-          03
-        </span>
-
+    <div class="filters">
+      <div class="filter-control">
+        <label>PERÍODO</label>
+        <select [(ngModel)]="periodo" (change)="aplicarPeriodo()">
+          <option value="TODO">Todo el período</option>
+          <option value="7">Últimos 7 días</option>
+          <option value="30">Últimos 30 días</option>
+          <option value="MES">Este mes</option>
+        </select>
       </div>
 
+      <div class="filter-control">
+        <label>CANAL</label>
+        <select [(ngModel)]="canal" (change)="aplicarCanal()">
+          <option value="TODOS">Todos los canales</option>
+          <option value="ONLINE">Online</option>
+          <option value="PRESENCIAL">Presencial</option>
+        </select>
+      </div>
+    </div>
+  </header>
 
-      @if (
-        productosVendidos.length === 0
-      ) {
+  <!-- =====================================================
+       ESTADOS
+  ====================================================== -->
+  @if (cargando) {
+    <div class="estado-pagina">
+      <strong>CARGANDO REPORTES...</strong>
+      <span>Procesando ventas, productos, inventario y usuarios.</span>
+    </div>
+  } @else if (error) {
+    <div class="estado-pagina error">
+      <strong>NO SE PUDIERON CARGAR LOS REPORTES</strong>
+      <span>{{ error }}</span>
+      <button type="button" (click)="cargarReportes()">REINTENTAR</button>
+    </div>
+  } @else {
 
-        <div class="empty large">
+    <!-- =====================================================
+         INDICADORES PRINCIPALES
+    ====================================================== -->
+    <section class="stats-grid">
+      <article class="stat-card">
+        <p>VENTAS TOTALES</p>
+        <strong>{{ totalVentas }}</strong>
+        <span>Ventas del filtro seleccionado</span>
+      </article>
 
-          No existen productos vendidos
-          para este período.
+      <article class="stat-card">
+        <p>INGRESOS</p>
+        <strong>S/ {{ ingresosTotales | number:'1.2-2' }}</strong>
+        <span>Ingresos acumulados</span>
+      </article>
 
-        </div>
+      <article class="stat-card">
+        <p>UNIDADES VENDIDAS</p>
+        <strong>{{ unidadesVendidas }}</strong>
+        <span>Prendas vendidas</span>
+      </article>
 
-      }
-
-      @else {
-
-        <div class="table-wrapper">
-
-          <table>
-
-            <thead>
-
-              <tr>
-
-                <th>
-                  POSICIÓN
-                </th>
-
-                <th>
-                  PRODUCTO
-                </th>
-
-                <th>
-                  CATEGORÍA
-                </th>
-
-                <th>
-                  UNIDADES
-                </th>
-
-                <th>
-                  INGRESOS
-                </th>
-
-                <th>
-                  RENDIMIENTO
-                </th>
-
-              </tr>
-
-            </thead>
-
-
-            <tbody>
-
-              @for (
-                producto of productosVendidos;
-                track producto.idProducto;
-                let posicion = $index
-              ) {
-
-                <tr>
-
-                  <td>
-
-                    <span class="ranking">
-                      #{{ posicion + 1 }}
-                    </span>
-
-                  </td>
-
-
-                  <td>
-
-                    <strong class="product-name">
-                      {{ producto.nombre }}
-                    </strong>
-
-                  </td>
-
-
-                  <td>
-
-                    <span class="category-badge">
-                      {{ producto.categoria }}
-                    </span>
-
-                  </td>
-
-
-                  <td>
-
-                    <strong>
-                      {{ producto.cantidad }}
-                    </strong>
-
-                  </td>
-
-
-                  <td>
-
-                    <strong>
-                      S/
-                      {{
-                        producto.ingresos
-                          | number:'1.2-2'
-                      }}
-                    </strong>
-
-                  </td>
-
-
-                  <td>
-
-                    <div class="table-progress">
-
-                      <div class="bar-background">
-
-                        <div
-                          class="bar-value"
-                          [style.width.%]="producto.porcentaje"
-                        >
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                  </td>
-
-                </tr>
-
-              }
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      }
-
+      <article class="stat-card">
+        <p>VENTA PROMEDIO</p>
+        <strong>S/ {{ ventaPromedio | number:'1.2-2' }}</strong>
+        <span>Promedio por venta</span>
+      </article>
     </section>
 
+    <!-- =====================================================
+         CANALES
+    ====================================================== -->
+    <section class="channel-summary">
+      <article class="channel-card">
+        <div>
+          <span>VENTAS ONLINE</span>
+          <strong>{{ ventasOnline }}</strong>
+        </div>
+        <small>Compras realizadas desde la tienda web</small>
+      </article>
 
-    <!-- ===================================================
-         INVENTARIO Y CLIENTES
-    ==================================================== -->
+      <article class="channel-card">
+        <div>
+          <span>VENTAS PRESENCIALES</span>
+          <strong>{{ ventasPresenciales }}</strong>
+        </div>
+        <small>Ventas registradas desde el punto de venta</small>
+      </article>
+    </section>
 
-    <section class="summary-grid bottom-grid">
-
-      <!-- INVENTARIO -->
-
+    <!-- =====================================================
+         MEDIOS DE PAGO Y CANALES
+    ====================================================== -->
+    <section class="summary-grid">
       <article class="panel">
-
         <div class="panel-header">
-
           <div>
-
-            <p class="eyebrow">
-              INVENTARIO
-            </p>
-
-            <h2>
-              ESTADO DEL STOCK
-            </h2>
-
+            <p class="eyebrow">VENTAS</p>
+            <h2>MEDIOS DE PAGO</h2>
           </div>
-
-          <span class="panel-number">
-            04
-          </span>
-
+          <span class="panel-number">01</span>
         </div>
 
+        <div class="panel-content">
+          @if (mediosPago.length === 0) {
+            <div class="empty">No existen ventas para los filtros seleccionados.</div>
+          } @else {
+            @for (medio of mediosPago; track medio.nombre) {
+              <div class="bar-item">
+                <div class="bar-info">
+                  <div>
+                    <strong>{{ medio.nombre }}</strong>
+                    <span>{{ medio.cantidad }} ventas</span>
+                  </div>
+                  <strong>S/ {{ medio.total | number:'1.2-2' }}</strong>
+                </div>
+                <div class="bar-background">
+                  <div class="bar-value" [style.width.%]="medio.porcentaje"></div>
+                </div>
+                <small>{{ medio.porcentaje | number:'1.0-0' }}% de las ventas</small>
+              </div>
+            }
+          }
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">CANALES</p>
+            <h2>VENTAS POR CANAL</h2>
+          </div>
+          <span class="panel-number">02</span>
+        </div>
+
+        <div class="panel-content">
+          @if (canales.length === 0) {
+            <div class="empty">No existen ventas para los filtros seleccionados.</div>
+          } @else {
+            @for (item of canales; track item.nombre) {
+              <div class="bar-item">
+                <div class="bar-info">
+                  <div>
+                    <strong>{{ item.nombre }}</strong>
+                    <span>{{ item.cantidad }} ventas</span>
+                  </div>
+                  <strong>S/ {{ item.total | number:'1.2-2' }}</strong>
+                </div>
+                <div class="bar-background">
+                  <div class="bar-value" [style.width.%]="item.porcentaje"></div>
+                </div>
+                <small>{{ item.porcentaje | number:'1.0-0' }}% de las ventas</small>
+              </div>
+            }
+          }
+        </div>
+      </article>
+    </section>
+
+    <!-- =====================================================
+         CATEGORÍAS
+    ====================================================== -->
+    <section class="panel category-panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">CATEGORÍAS</p>
+          <h2>VENTAS POR CATEGORÍA</h2>
+        </div>
+        <span class="panel-number">03</span>
+      </div>
+
+      <div class="category-content">
+        @if (categorias.length === 0) {
+          <div class="empty">No existen datos por categoría para los filtros seleccionados.</div>
+        } @else {
+          @for (categoria of categorias; track categoria.nombre) {
+            <div class="bar-item">
+              <div class="bar-info">
+                <div>
+                  <strong>{{ categoria.nombre }}</strong>
+                  <span>{{ categoria.cantidad }} unidades</span>
+                </div>
+                <strong>S/ {{ categoria.ingresos | number:'1.2-2' }}</strong>
+              </div>
+              <div class="bar-background">
+                <div class="bar-value" [style.width.%]="categoria.porcentaje"></div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </section>
+
+    <!-- =====================================================
+         PRODUCTOS MÁS VENDIDOS
+    ====================================================== -->
+    <section class="panel products-panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">RENDIMIENTO</p>
+          <h2>PRODUCTOS MÁS VENDIDOS</h2>
+        </div>
+        <span class="panel-number">04</span>
+      </div>
+
+      @if (productosVendidos.length === 0) {
+        <div class="empty large">No existen productos vendidos para los filtros seleccionados.</div>
+      } @else {
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>POSICIÓN</th>
+                <th>PRODUCTO</th>
+                <th>CATEGORÍA</th>
+                <th>UNIDADES</th>
+                <th>INGRESOS</th>
+                <th>RENDIMIENTO</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (producto of productosVendidos; track producto.idProducto; let posicion = $index) {
+                <tr>
+                  <td><span class="ranking">#{{ posicion + 1 }}</span></td>
+                  <td><strong class="product-name">{{ producto.nombre }}</strong></td>
+                  <td><span class="category-badge">{{ producto.categoria }}</span></td>
+                  <td><strong>{{ producto.cantidad }}</strong></td>
+                  <td><strong>S/ {{ producto.ingresos | number:'1.2-2' }}</strong></td>
+                  <td>
+                    <div class="table-progress">
+                      <div class="bar-background">
+                        <div class="bar-value" [style.width.%]="producto.porcentaje"></div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <!-- =====================================================
+         INVENTARIO Y CLIENTES
+    ====================================================== -->
+    <section class="summary-grid bottom-grid">
+      <article class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">INVENTARIO</p>
+            <h2>ESTADO DEL STOCK</h2>
+          </div>
+          <span class="panel-number">05</span>
+        </div>
 
         <div class="metrics-grid">
-
           <div class="metric">
-
-            <span>
-              STOCK TOTAL
-            </span>
-
-            <strong>
-              {{ stockTotal }}
-            </strong>
-
-            <small>
-              Unidades disponibles
-            </small>
-
+            <span>STOCK TOTAL</span>
+            <strong>{{ stockTotal }}</strong>
+            <small>Unidades disponibles</small>
           </div>
 
-
           <div class="metric">
-
-            <span>
-              STOCK BAJO
-            </span>
-
-            <strong>
-              {{ stockBajo }}
-            </strong>
-
-            <small>
-              Tallas con 1 a 5 unidades
-            </small>
-
+            <span>STOCK BAJO</span>
+            <strong>{{ stockBajo }}</strong>
+            <small>Tallas con 1 a 5 unidades</small>
           </div>
 
-
           <div class="metric">
-
-            <span>
-              SIN STOCK
-            </span>
-
-            <strong>
-              {{ sinStock }}
-            </strong>
-
-            <small>
-              Tallas agotadas
-            </small>
-
+            <span>SIN STOCK</span>
+            <strong>{{ sinStock }}</strong>
+            <small>Tallas agotadas</small>
           </div>
 
-
           <div class="metric">
-
-            <span>
-              PRODUCTOS ACTIVOS
-            </span>
-
-            <strong>
-              {{ productosActivos }}
-            </strong>
-
-            <small>
-              Productos disponibles
-            </small>
-
+            <span>PRODUCTOS ACTIVOS</span>
+            <strong>{{ productosActivos }}</strong>
+            <small>Productos disponibles</small>
           </div>
-
         </div>
-
       </article>
-
-
-      <!-- CLIENTES -->
 
       <article class="panel">
-
         <div class="panel-header">
-
           <div>
-
-            <p class="eyebrow">
-              USUARIOS
-            </p>
-
-            <h2>
-              CUENTAS REGISTRADAS
-            </h2>
-
+            <p class="eyebrow">USUARIOS</p>
+            <h2>CUENTAS REGISTRADAS</h2>
           </div>
-
-          <span class="panel-number">
-            05
-          </span>
-
+          <span class="panel-number">06</span>
         </div>
-
 
         <div class="customer-content">
-
           <div class="customer-main">
-
-            <span>
-              CLIENTES
-            </span>
-
-            <strong>
-              {{ totalClientes }}
-            </strong>
-
-            <small>
-              Cuentas con rol cliente
-            </small>
-
+            <span>CLIENTES ONLINE</span>
+            <strong>{{ totalClientes }}</strong>
+            <small>Cuentas registradas con rol cliente</small>
           </div>
-
 
           <div class="customer-secondary">
-
             <div>
-
-              <span>
-                USUARIOS TOTALES
-              </span>
-
-              <strong>
-                {{ totalUsuarios }}
-              </strong>
-
+              <span>USUARIOS TOTALES</span>
+              <strong>{{ totalUsuarios }}</strong>
             </div>
-
-
             <div>
-
-              <span>
-                CUENTAS ACTIVAS
-              </span>
-
-              <strong>
-                {{ usuariosActivos }}
-              </strong>
-
+              <span>CUENTAS ACTIVAS</span>
+              <strong>{{ usuariosActivos }}</strong>
             </div>
-
           </div>
 
-
-          @if (
-            productoMasVendido
-          ) {
-
+          @if (productoMasVendido) {
             <div class="best-product">
-
-              <span>
-                PRODUCTO LÍDER
-              </span>
-
-              <strong>
-                {{
-                  productoMasVendido.nombre
-                }}
-              </strong>
-
-              <small>
-                {{
-                  productoMasVendido.cantidad
-                }}
-                unidades vendidas
-              </small>
-
+              <span>PRODUCTO LÍDER DEL FILTRO</span>
+              <strong>{{ productoMasVendido.nombre }}</strong>
+              <small>{{ productoMasVendido.cantidad }} unidades vendidas</small>
             </div>
-
           }
-
         </div>
-
       </article>
-
     </section>
-
   }
-
 </section>

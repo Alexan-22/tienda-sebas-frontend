@@ -1,1545 +1,625 @@
-﻿import {
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-
-import {
-  FormsModule
-} from '@angular/forms';
-
-import {
-  HomeBanner,
-  HomeColeccion
-} from '../../../core/models/home-contenido';
-
-import {
-  HomeContenidoService
-} from '../../../core/services/home-contenido';
-
+﻿import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HomeBanner, HomeColeccion } from '../../../core/models/home-contenido';
+import { HomeContenidoService } from '../../../core/services/home-contenido';
 
 @Component({
   selector: 'app-home-admin',
   standalone: true,
-
-  imports: [
-    FormsModule
-  ],
-
+  imports: [FormsModule],
   templateUrl: './home-admin.html',
   styleUrl: './home-admin.css'
 })
-export class HomeAdmin
-  implements OnInit, OnDestroy {
-
-  private readonly uploadsUrl =
-    'http://localhost:8080/uploads/';
-
+export class HomeAdmin implements OnInit, OnDestroy {
+  private readonly uploadsUrl = 'http://localhost:8080/uploads/';
 
   // =========================================================
   // ESTADOS GENERALES
   // =========================================================
-
   cargando = true;
-
   error = '';
-
   mensaje = '';
-
 
   // =========================================================
   // BANNERS
   // =========================================================
-
   banners: HomeBanner[] = [];
-
-  guardandoBanner:
-    number | null = null;
-
-  eliminandoBanner:
-    number | null = null;
-
+  guardandoBanner: number | null = null;
+  eliminandoBanner: number | null = null;
   creandoBanner = false;
-
 
   // =========================================================
   // IMÁGENES BANNERS
   // =========================================================
-
-  archivosBanners =
-    new Map<number, File>();
-
-  previewsBanners =
-    new Map<number, string>();
-
-  erroresBanners =
-    new Map<number, string>();
-
+  archivosBanners = new Map<number, File>();
+  previewsBanners = new Map<number, string>();
+  erroresBanners = new Map<number, string>();
 
   // =========================================================
   // COLECCIONES
   // =========================================================
-
   colecciones: HomeColeccion[] = [];
-
-  guardandoColeccion:
-    number | null = null;
-
-  eliminandoColeccion:
-    number | null = null;
-
+  guardandoColeccion: number | null = null;
+  eliminandoColeccion: number | null = null;
   creandoColeccion = false;
-
 
   // =========================================================
   // IMÁGENES COLECCIONES
   // =========================================================
-
-  archivosColecciones =
-    new Map<number, File>();
-
-  previewsColecciones =
-    new Map<number, string>();
-
-  erroresColecciones =
-    new Map<number, string>();
-
+  archivosColecciones = new Map<number, File>();
+  previewsColecciones = new Map<number, string>();
+  erroresColecciones = new Map<number, string>();
 
   // =========================================================
   // CONSTRUCTOR
   // =========================================================
-
   constructor(
-    private homeService:
-      HomeContenidoService,
-
-    private cdr:
-      ChangeDetectorRef
+    private homeService: HomeContenidoService,
+    private cdr: ChangeDetectorRef
   ) {}
-
 
   // =========================================================
   // INIT
   // =========================================================
-
   ngOnInit(): void {
-
     this.cargar();
-
   }
-
 
   // =========================================================
   // DESTROY
   // =========================================================
-
   ngOnDestroy(): void {
+    this.previewsBanners.forEach(preview => {
+      this.liberarPreview(preview);
+    });
 
-    this.previewsBanners
-      .forEach(preview => {
-
-        this.liberarPreview(
-          preview
-        );
-
-      });
-
-
-    this.previewsColecciones
-      .forEach(preview => {
-
-        this.liberarPreview(
-          preview
-        );
-
-      });
-
+    this.previewsColecciones.forEach(preview => {
+      this.liberarPreview(preview);
+    });
   }
-
 
   // =========================================================
   // CARGAR TODO
   // =========================================================
-
   cargar(): void {
-
     this.cargando = true;
-
     this.error = '';
-
     this.mensaje = '';
-
     let bannersTerminados = false;
-
     let coleccionesTerminadas = false;
 
-
     const finalizarCarga = (): void => {
-
-      if (
-        bannersTerminados &&
-        coleccionesTerminadas
-      ) {
-
+      if (bannersTerminados && coleccionesTerminadas) {
         this.cargando = false;
-
         this.actualizarVista();
-
       }
-
     };
-
 
     // =======================================================
     // BANNERS
     // =======================================================
-
-    this.homeService
-      .listarBannersAdmin()
-      .subscribe({
-
-        next: banners => {
-
-          this.banners =
-            [...banners]
-              .sort(
-                (a, b) =>
-                  a.orden - b.orden
-              );
-
-          bannersTerminados = true;
-
-          finalizarCarga();
-
-        },
-
-
-        error: error => {
-
-          console.error(
-            'ERROR CARGANDO BANNERS:',
-            error
-          );
-
-          this.error =
-            'No se pudieron cargar los banners.';
-
-          bannersTerminados = true;
-
-          finalizarCarga();
-
-        }
-
-      });
-
+    this.homeService.listarBannersAdmin().subscribe({
+      next: banners => {
+        this.banners = [...banners].sort((a, b) => a.orden - b.orden);
+        bannersTerminados = true;
+        finalizarCarga();
+      },
+      error: error => {
+        console.error('ERROR CARGANDO BANNERS:', error);
+        this.error = 'No se pudieron cargar los banners.';
+        bannersTerminados = true;
+        finalizarCarga();
+      }
+    });
 
     // =======================================================
     // COLECCIONES
     // =======================================================
-
-    this.homeService
-      .listarColeccionesAdmin()
-      .subscribe({
-
-        next: colecciones => {
-
-          this.colecciones =
-            [...colecciones]
-              .sort(
-                (a, b) =>
-                  a.orden - b.orden
-              );
-
-          coleccionesTerminadas = true;
-
-          finalizarCarga();
-
-        },
-
-
-        error: error => {
-
-          console.error(
-            'ERROR CARGANDO COLECCIONES:',
-            error
-          );
-
-          this.error =
-            'No se pudieron cargar las colecciones.';
-
-          coleccionesTerminadas = true;
-
-          finalizarCarga();
-
-        }
-
-      });
-
+    this.homeService.listarColeccionesAdmin().subscribe({
+      next: colecciones => {
+        this.colecciones = [...colecciones].sort((a, b) => a.orden - b.orden);
+        coleccionesTerminadas = true;
+        finalizarCarga();
+      },
+      error: error => {
+        console.error('ERROR CARGANDO COLECCIONES:', error);
+        this.error = 'No se pudieron cargar las colecciones.';
+        coleccionesTerminadas = true;
+        finalizarCarga();
+      }
+    });
   }
-
 
   // =========================================================
   // CREAR BANNER
   // =========================================================
-
   nuevoBanner(): void {
-
     if (this.creandoBanner) {
       return;
     }
 
     this.error = '';
-
     this.mensaje = '';
-
     this.creandoBanner = true;
 
     const nuevo: HomeBanner = {
-
       idBanner: 0,
-
-      etiqueta:
-        'Nueva colección',
-
-      titulo:
-        'Nuevo banner',
-
-      descripcion:
-        '',
-
-      textoBoton:
-        'Comprar ahora',
-
-      enlaceBoton:
-        '/tienda',
-
-      imagen:
-        null,
-
-      orden:
-        this.siguienteOrdenBanner(),
-
-      estado:
-        true
+      etiqueta: 'Nueva colección',
+      titulo: 'Nuevo banner',
+      descripcion: '',
+      textoBoton: 'Comprar ahora',
+      enlaceBoton: '/tienda',
+      imagen: null,
+      orden: this.siguienteOrdenBanner(),
+      estado: true
     };
 
-
-    this.homeService
-      .crearBanner(
-        nuevo
-      )
-      .subscribe({
-
-        next: creado => {
-
-          this.banners = [
-            ...this.banners,
-            creado
-          ];
-
-          this.ordenarBanners();
-
-          this.creandoBanner = false;
-
-          this.mensaje =
-            'Nuevo banner creado correctamente. Ahora puedes editarlo y cargar su imagen.';
-
-          this.actualizarVista();
-
-        },
-
-
-        error: error => {
-
-          console.error(
-            'ERROR CREANDO BANNER:',
-            error
-          );
-
-          this.error =
-            'No se pudo crear el nuevo banner.';
-
-          this.creandoBanner = false;
-
-          this.actualizarVista();
-
-        }
-
-      });
-
+    this.homeService.crearBanner(nuevo).subscribe({
+      next: creado => {
+        this.banners = [...this.banners, creado];
+        this.ordenarBanners();
+        this.creandoBanner = false;
+        this.mensaje = 'Nuevo banner creado correctamente. Ahora puedes editarlo y cargar su imagen.';
+        this.actualizarVista();
+      },
+      error: error => {
+        console.error('ERROR CREANDO BANNER:', error);
+        this.error = 'No se pudo crear el nuevo banner.';
+        this.creandoBanner = false;
+        this.actualizarVista();
+      }
+    });
   }
-
 
   // =========================================================
   // GUARDAR BANNER
   // =========================================================
-
-  guardarBanner(
-    banner: HomeBanner
-  ): void {
-
+  guardarBanner(banner: HomeBanner): void {
     this.error = '';
-
     this.mensaje = '';
 
-    if (
-      !banner.titulo ||
-      !banner.titulo.trim()
-    ) {
-
-      this.error =
-        'El título del banner es obligatorio.';
-
+    if (!banner.titulo || !banner.titulo.trim()) {
+      this.error = 'El título del banner es obligatorio.';
       this.actualizarVista();
-
       return;
     }
 
-
-    if (
-      banner.orden == null ||
-      banner.orden < 1
-    ) {
-
-      this.error =
-        'El orden del banner debe ser mayor a 0.';
-
+    if (banner.orden == null || banner.orden < 1) {
+      this.error = 'El orden del banner debe ser mayor a 0.';
       this.actualizarVista();
-
       return;
     }
 
-
-    this.guardandoBanner =
-      banner.idBanner;
-
+    this.guardandoBanner = banner.idBanner;
     this.actualizarVista();
 
+    this.homeService.actualizarBanner(banner.idBanner, banner).subscribe({
+      next: actualizado => {
+        this.reemplazarBanner(actualizado);
+        const archivo = this.archivoBanner(actualizado.idBanner);
 
-    this.homeService
-      .actualizarBanner(
-        banner.idBanner,
-        banner
-      )
-      .subscribe({
-
-        next: actualizado => {
-
-          this.reemplazarBanner(
-            actualizado
-          );
-
-
-          const archivo =
-            this.archivoBanner(
-              actualizado.idBanner
-            );
-
-
-          if (archivo) {
-
-            this.subirImagenBanner(
-              actualizado,
-              archivo
-            );
-
-            return;
-          }
-
-
-          this.guardandoBanner =
-            null;
-
-          this.ordenarBanners();
-
-          this.mensaje =
-            `Banner "${actualizado.titulo}" actualizado correctamente.`;
-
-          this.actualizarVista();
-
-        },
-
-
-        error: error => {
-
-          console.error(
-            'ERROR ACTUALIZANDO BANNER:',
-            error
-          );
-
-          this.error =
-            'No se pudo actualizar el banner.';
-
-          this.guardandoBanner =
-            null;
-
-          this.actualizarVista();
-
+        if (archivo) {
+          this.subirImagenBanner(actualizado, archivo);
+          return;
         }
 
-      });
-
+        this.guardandoBanner = null;
+        this.ordenarBanners();
+        this.mensaje = `Banner "${actualizado.titulo}" actualizado correctamente.`;
+        this.actualizarVista();
+      },
+      error: error => {
+        console.error('ERROR ACTUALIZANDO BANNER:', error);
+        this.error = 'No se pudo actualizar el banner.';
+        this.guardandoBanner = null;
+        this.actualizarVista();
+      }
+    });
   }
-
 
   // =========================================================
   // ELIMINAR BANNER
   // =========================================================
-
-  eliminarBanner(
-    banner: HomeBanner
-  ): void {
-
-    const confirmado =
-      window.confirm(
-        `¿Eliminar el banner "${banner.titulo}"?\n\nEsta acción también eliminará su imagen y no se puede deshacer.`
-      );
-
+  eliminarBanner(banner: HomeBanner): void {
+    const confirmado = window.confirm(
+      `¿Eliminar el banner "${banner.titulo}"?\n\nEsta acción también eliminará su imagen y no se puede deshacer.`
+    );
 
     if (!confirmado) {
       return;
     }
 
-
     this.error = '';
-
     this.mensaje = '';
-
-    this.eliminandoBanner =
-      banner.idBanner;
-
+    this.eliminandoBanner = banner.idBanner;
     this.actualizarVista();
 
-
-    this.homeService
-      .eliminarBanner(
-        banner.idBanner
-      )
-      .subscribe({
-
-        next: () => {
-
-          this.cancelarImagenBanner(
-            banner.idBanner
-          );
-
-
-          this.banners =
-            this.banners.filter(
-              item =>
-                item.idBanner !==
-                banner.idBanner
-            );
-
-
-          this.eliminandoBanner =
-            null;
-
-          this.mensaje =
-            `Banner "${banner.titulo}" eliminado correctamente.`;
-
-          this.actualizarVista();
-
-        },
-
-
-        error: error => {
-
-          console.error(
-            'ERROR ELIMINANDO BANNER:',
-            error
-          );
-
-          this.error =
-            'No se pudo eliminar el banner.';
-
-          this.eliminandoBanner =
-            null;
-
-          this.actualizarVista();
-
-        }
-
-      });
-
+    this.homeService.eliminarBanner(banner.idBanner).subscribe({
+      next: () => {
+        this.cancelarImagenBanner(banner.idBanner);
+        this.banners = this.banners.filter(item => item.idBanner !== banner.idBanner);
+        this.eliminandoBanner = null;
+        this.mensaje = `Banner "${banner.titulo}" eliminado correctamente.`;
+        this.actualizarVista();
+      },
+      error: error => {
+        console.error('ERROR ELIMINANDO BANNER:', error);
+        this.error = 'No se pudo eliminar el banner.';
+        this.eliminandoBanner = null;
+        this.actualizarVista();
+      }
+    });
   }
-
 
   // =========================================================
   // SELECCIONAR IMAGEN BANNER
   // =========================================================
+  seleccionarImagenBanner(event: Event, idBanner: number): void {
+    this.erroresBanners.delete(idBanner);
+    const input = event.target as HTMLInputElement;
 
-  seleccionarImagenBanner(
-    event: Event,
-    idBanner: number
-  ): void {
-
-    this.erroresBanners
-      .delete(
-        idBanner
-      );
-
-
-    const input =
-      event.target as HTMLInputElement;
-
-
-    if (
-      !input.files ||
-      input.files.length === 0
-    ) {
-
+    if (!input.files || input.files.length === 0) {
       return;
     }
 
-
-    const archivo =
-      input.files[0];
-
-
-    const error =
-      this.validarImagen(
-        archivo
-      );
-
+    const archivo = input.files[0];
+    const error = this.validarImagen(archivo);
 
     if (error) {
-
-      this.erroresBanners
-        .set(
-          idBanner,
-          error
-        );
-
+      this.erroresBanners.set(idBanner, error);
       input.value = '';
-
       this.actualizarVista();
-
       return;
     }
 
-
-    const previewAnterior =
-      this.previewsBanners
-        .get(
-          idBanner
-        );
-
-
-    this.liberarPreview(
-      previewAnterior
-    );
-
-
-    this.archivosBanners
-      .set(
-        idBanner,
-        archivo
-      );
-
-
-    this.previewsBanners
-      .set(
-        idBanner,
-        URL.createObjectURL(
-          archivo
-        )
-      );
-
-
+    const previewAnterior = this.previewsBanners.get(idBanner);
+    this.liberarPreview(previewAnterior);
+    this.archivosBanners.set(idBanner, archivo);
+    this.previewsBanners.set(idBanner, URL.createObjectURL(archivo));
     this.actualizarVista();
-
   }
-
 
   // =========================================================
   // CANCELAR IMAGEN BANNER
   // =========================================================
-
-  cancelarImagenBanner(
-    idBanner: number
-  ): void {
-
-    const preview =
-      this.previewsBanners
-        .get(
-          idBanner
-        );
-
-
-    this.liberarPreview(
-      preview
-    );
-
-
-    this.archivosBanners
-      .delete(
-        idBanner
-      );
-
-
-    this.previewsBanners
-      .delete(
-        idBanner
-      );
-
-
-    this.erroresBanners
-      .delete(
-        idBanner
-      );
-
+  cancelarImagenBanner(idBanner: number): void {
+    const preview = this.previewsBanners.get(idBanner);
+    this.liberarPreview(preview);
+    this.archivosBanners.delete(idBanner);
+    this.previewsBanners.delete(idBanner);
+    this.erroresBanners.delete(idBanner);
   }
-
 
   // =========================================================
   // URL IMAGEN BANNER
   // =========================================================
-
-  imagenBannerUrl(
-    banner: HomeBanner
-  ): string | null {
-
-    const preview =
-      this.previewsBanners
-        .get(
-          banner.idBanner
-        );
-
+  imagenBannerUrl(banner: HomeBanner): string | null {
+    const preview = this.previewsBanners.get(banner.idBanner);
 
     if (preview) {
-
       return preview;
-
     }
-
 
     if (banner.imagen) {
-
-      return (
-        this.uploadsUrl +
-        banner.imagen
-      );
-
+      return this.uploadsUrl + banner.imagen;
     }
 
-
     return null;
-
   }
-
 
   // =========================================================
   // ARCHIVO BANNER
   // =========================================================
-
-  archivoBanner(
-    idBanner: number
-  ): File | null {
-
-    return (
-      this.archivosBanners
-        .get(
-          idBanner
-        )
-      ?? null
-    );
-
+  archivoBanner(idBanner: number): File | null {
+    return this.archivosBanners.get(idBanner) ?? null;
   }
-
 
   // =========================================================
   // ERROR BANNER
   // =========================================================
-
-  errorBanner(
-    idBanner: number
-  ): string {
-
-    return (
-      this.erroresBanners
-        .get(
-          idBanner
-        )
-      ?? ''
-    );
-
+  errorBanner(idBanner: number): string {
+    return this.erroresBanners.get(idBanner) ?? '';
   }
-
 
   // =========================================================
   // SUBIR IMAGEN BANNER
   // =========================================================
-
-  private subirImagenBanner(
-    banner: HomeBanner,
-    archivo: File
-  ): void {
-
-    this.homeService
-      .subirImagenBanner(
-        banner.idBanner,
-        archivo
-      )
-      .subscribe({
-
-        next: actualizado => {
-
-          this.reemplazarBanner(
-            actualizado
-          );
-
-
-          this.cancelarImagenBanner(
-            actualizado.idBanner
-          );
-
-
-          this.guardandoBanner =
-            null;
-
-          this.ordenarBanners();
-
-          this.mensaje =
-            `Banner "${actualizado.titulo}" e imagen actualizados correctamente.`;
-
-          this.actualizarVista();
-
-        },
-
-
-        error: error => {
-
-          console.error(
-            'ERROR SUBIENDO IMAGEN BANNER:',
-            error
-          );
-
-          this.error =
-            'Los datos del banner se guardaron, pero no se pudo subir la imagen.';
-
-          this.guardandoBanner =
-            null;
-
-          this.actualizarVista();
-
-        }
-
-      });
-
+  private subirImagenBanner(banner: HomeBanner, archivo: File): void {
+    this.homeService.subirImagenBanner(banner.idBanner, archivo).subscribe({
+      next: actualizado => {
+        this.reemplazarBanner(actualizado);
+        this.cancelarImagenBanner(actualizado.idBanner);
+        this.guardandoBanner = null;
+        this.ordenarBanners();
+        this.mensaje = `Banner "${actualizado.titulo}" e imagen actualizados correctamente.`;
+        this.actualizarVista();
+      },
+      error: error => {
+        console.error('ERROR SUBIENDO IMAGEN BANNER:', error);
+        this.error = 'Los datos del banner se guardaron, pero no se pudo subir la imagen.';
+        this.guardandoBanner = null;
+        this.actualizarVista();
+      }
+    });
   }
-
 
   // =========================================================
   // REEMPLAZAR BANNER
   // =========================================================
-
-  private reemplazarBanner(
-    actualizado: HomeBanner
-  ): void {
-
-    const indice =
-      this.banners.findIndex(
-        item =>
-          item.idBanner ===
-          actualizado.idBanner
-      );
-
+  private reemplazarBanner(actualizado: HomeBanner): void {
+    const indice = this.banners.findIndex(item => item.idBanner === actualizado.idBanner);
 
     if (indice >= 0) {
-
-      this.banners[indice] =
-        actualizado;
-
+      this.banners[indice] = actualizado;
     }
-
   }
-
 
   // =========================================================
   // ORDENAR BANNERS
   // =========================================================
-
   private ordenarBanners(): void {
-
-    this.banners =
-      [...this.banners]
-        .sort(
-          (a, b) =>
-            a.orden - b.orden
-        );
-
+    this.banners = [...this.banners].sort((a, b) => a.orden - b.orden);
   }
-
 
   // =========================================================
   // SIGUIENTE ORDEN BANNER
   // =========================================================
-
-  private siguienteOrdenBanner():
-    number {
-
-    if (
-      this.banners.length === 0
-    ) {
-
+  private siguienteOrdenBanner(): number {
+    if (this.banners.length === 0) {
       return 1;
-
     }
 
-
-    return Math.max(
-      ...this.banners.map(
-        banner =>
-          banner.orden || 0
-      )
-    ) + 1;
-
+    return Math.max(...this.banners.map(banner => banner.orden || 0)) + 1;
   }
-
 
   // =========================================================
   // CREAR COLECCIÓN
   // =========================================================
-
   nuevaColeccion(): void {
-
     if (this.creandoColeccion) {
       return;
     }
 
-
     this.error = '';
-
     this.mensaje = '';
-
     this.creandoColeccion = true;
 
-
     const nueva: HomeColeccion = {
-
       idColeccion: 0,
-
-      titulo:
-        'Nueva colección',
-
-      etiqueta:
-        'Colección',
-
-      textoBoton:
-        'Ver productos',
-
-      enlace:
-        '/tienda',
-
-      imagen:
-        null,
-
-      orden:
-        this.siguienteOrdenColeccion(),
-
-      estado:
-        true
+      titulo: 'Nueva colección',
+      etiqueta: 'Colección',
+      textoBoton: 'Ver productos',
+      enlace: '/tienda',
+      imagen: null,
+      orden: this.siguienteOrdenColeccion(),
+      estado: true
     };
 
-
-    this.homeService
-      .crearColeccion(
-        nueva
-      )
-      .subscribe({
-
-        next: creada => {
-
-          this.colecciones = [
-            ...this.colecciones,
-            creada
-          ];
-
-          this.ordenarColecciones();
-
-          this.creandoColeccion =
-            false;
-
-          this.mensaje =
-            'Nueva colección creada correctamente. Ahora puedes editarla y cargar su imagen.';
-
-          this.actualizarVista();
-
-        },
-
-
-        error: error => {
-
-          console.error(
-            'ERROR CREANDO COLECCIÓN:',
-            error
-          );
-
-          this.error =
-            'No se pudo crear la nueva colección.';
-
-          this.creandoColeccion =
-            false;
-
-          this.actualizarVista();
-
-        }
-
-      });
-
+    this.homeService.crearColeccion(nueva).subscribe({
+      next: creada => {
+        this.colecciones = [...this.colecciones, creada];
+        this.ordenarColecciones();
+        this.creandoColeccion = false;
+        this.mensaje = 'Nueva colección creada correctamente. Ahora puedes editarla y cargar su imagen.';
+        this.actualizarVista();
+      },
+      error: error => {
+        console.error('ERROR CREANDO COLECCIÓN:', error);
+        this.error = 'No se pudo crear la nueva colección.';
+        this.creandoColeccion = false;
+        this.actualizarVista();
+      }
+    });
   }
-
 
   // =========================================================
   // GUARDAR COLECCIÓN
   // =========================================================
-
-  guardarColeccion(
-    coleccion: HomeColeccion
-  ): void {
-
+  guardarColeccion(coleccion: HomeColeccion): void {
     this.error = '';
-
     this.mensaje = '';
 
-
-    if (
-      !coleccion.titulo ||
-      !coleccion.titulo.trim()
-    ) {
-
-      this.error =
-        'El título de la colección es obligatorio.';
-
+    if (!coleccion.titulo || !coleccion.titulo.trim()) {
+      this.error = 'El título de la colección es obligatorio.';
       this.actualizarVista();
-
       return;
     }
 
-
-    if (
-      coleccion.orden == null ||
-      coleccion.orden < 1
-    ) {
-
-      this.error =
-        'El orden debe ser mayor a 0.';
-
+    if (coleccion.orden == null || coleccion.orden < 1) {
+      this.error = 'El orden debe ser mayor a 0.';
       this.actualizarVista();
-
       return;
     }
 
-
-    this.guardandoColeccion =
-      coleccion.idColeccion;
-
+    this.guardandoColeccion = coleccion.idColeccion;
     this.actualizarVista();
 
+    this.homeService.actualizarColeccion(coleccion).subscribe({
+      next: actualizada => {
+        this.reemplazarColeccion(actualizada);
+        const archivo = this.archivoColeccion(actualizada.idColeccion);
 
-    this.homeService
-      .actualizarColeccion(
-        coleccion
-      )
-      .subscribe({
-
-        next: actualizada => {
-
-          this.reemplazarColeccion(
-            actualizada
-          );
-
-
-          const archivo =
-            this.archivoColeccion(
-              actualizada.idColeccion
-            );
-
-
-          if (archivo) {
-
-            this.subirImagenColeccion(
-              actualizada,
-              archivo
-            );
-
-            return;
-          }
-
-
-          this.guardandoColeccion =
-            null;
-
-          this.ordenarColecciones();
-
-          this.mensaje =
-            `Colección "${actualizada.titulo}" actualizada correctamente.`;
-
-          this.actualizarVista();
-
-        },
-
-
-        error: error => {
-
-          console.error(
-            'ERROR ACTUALIZANDO COLECCIÓN:',
-            error
-          );
-
-          this.error =
-            'No se pudo actualizar la colección.';
-
-          this.guardandoColeccion =
-            null;
-
-          this.actualizarVista();
-
+        if (archivo) {
+          this.subirImagenColeccion(actualizada, archivo);
+          return;
         }
 
-      });
-
+        this.guardandoColeccion = null;
+        this.ordenarColecciones();
+        this.mensaje = `Colección "${actualizada.titulo}" actualizada correctamente.`;
+        this.actualizarVista();
+      },
+      error: error => {
+        console.error('ERROR ACTUALIZANDO COLECCIÓN:', error);
+        this.error = 'No se pudo actualizar la colección.';
+        this.guardandoColeccion = null;
+        this.actualizarVista();
+      }
+    });
   }
-
 
   // =========================================================
   // ELIMINAR COLECCIÓN
   // =========================================================
-
-  eliminarColeccion(
-    coleccion: HomeColeccion
-  ): void {
-
-    const confirmado =
-      window.confirm(
-        `¿Eliminar la colección "${coleccion.titulo}"?\n\nEsta acción también eliminará su imagen y no se puede deshacer.`
-      );
-
+  eliminarColeccion(coleccion: HomeColeccion): void {
+    const confirmado = window.confirm(
+      `¿Eliminar la colección "${coleccion.titulo}"?\n\nEsta acción también eliminará su imagen y no se puede deshacer.`
+    );
 
     if (!confirmado) {
       return;
     }
 
-
     this.error = '';
-
     this.mensaje = '';
-
-    this.eliminandoColeccion =
-      coleccion.idColeccion;
-
+    this.eliminandoColeccion = coleccion.idColeccion;
     this.actualizarVista();
 
-
-    this.homeService
-      .eliminarColeccion(
-        coleccion.idColeccion
-      )
-      .subscribe({
-
-        next: () => {
-
-          this.cancelarImagenColeccion(
-            coleccion.idColeccion
-          );
-
-
-          this.colecciones =
-            this.colecciones.filter(
-              item =>
-                item.idColeccion !==
-                coleccion.idColeccion
-            );
-
-
-          this.eliminandoColeccion =
-            null;
-
-          this.mensaje =
-            `Colección "${coleccion.titulo}" eliminada correctamente.`;
-
-          this.actualizarVista();
-
-        },
-
-
-        error: error => {
-
-          console.error(
-            'ERROR ELIMINANDO COLECCIÓN:',
-            error
-          );
-
-          this.error =
-            'No se pudo eliminar la colección.';
-
-          this.eliminandoColeccion =
-            null;
-
-          this.actualizarVista();
-
-        }
-
-      });
-
+    this.homeService.eliminarColeccion(coleccion.idColeccion).subscribe({
+      next: () => {
+        this.cancelarImagenColeccion(coleccion.idColeccion);
+        this.colecciones = this.colecciones.filter(item => item.idColeccion !== coleccion.idColeccion);
+        this.eliminandoColeccion = null;
+        this.mensaje = `Colección "${coleccion.titulo}" eliminada correctamente.`;
+        this.actualizarVista();
+      },
+      error: error => {
+        console.error('ERROR ELIMINANDO COLECCIÓN:', error);
+        this.error = 'No se pudo eliminar la colección.';
+        this.eliminandoColeccion = null;
+        this.actualizarVista();
+      }
+    });
   }
-
 
   // =========================================================
   // SELECCIONAR IMAGEN COLECCIÓN
   // =========================================================
+  seleccionarImagenColeccion(event: Event, idColeccion: number): void {
+    this.erroresColecciones.delete(idColeccion);
+    const input = event.target as HTMLInputElement;
 
-  seleccionarImagenColeccion(
-    event: Event,
-    idColeccion: number
-  ): void {
-
-    this.erroresColecciones
-      .delete(
-        idColeccion
-      );
-
-
-    const input =
-      event.target as HTMLInputElement;
-
-
-    if (
-      !input.files ||
-      input.files.length === 0
-    ) {
-
+    if (!input.files || input.files.length === 0) {
       return;
     }
 
-
-    const archivo =
-      input.files[0];
-
-
-    const error =
-      this.validarImagen(
-        archivo
-      );
-
+    const archivo = input.files[0];
+    const error = this.validarImagen(archivo);
 
     if (error) {
-
-      this.erroresColecciones
-        .set(
-          idColeccion,
-          error
-        );
-
+      this.erroresColecciones.set(idColeccion, error);
       input.value = '';
-
       this.actualizarVista();
-
       return;
     }
 
-
-    const previewAnterior =
-      this.previewsColecciones
-        .get(
-          idColeccion
-        );
-
-
-    this.liberarPreview(
-      previewAnterior
-    );
-
-
-    this.archivosColecciones
-      .set(
-        idColeccion,
-        archivo
-      );
-
-
-    this.previewsColecciones
-      .set(
-        idColeccion,
-        URL.createObjectURL(
-          archivo
-        )
-      );
-
-
+    const previewAnterior = this.previewsColecciones.get(idColeccion);
+    this.liberarPreview(previewAnterior);
+    this.archivosColecciones.set(idColeccion, archivo);
+    this.previewsColecciones.set(idColeccion, URL.createObjectURL(archivo));
     this.actualizarVista();
-
   }
-
 
   // =========================================================
   // CANCELAR IMAGEN COLECCIÓN
   // =========================================================
-
-  cancelarImagenColeccion(
-    idColeccion: number
-  ): void {
-
-    const preview =
-      this.previewsColecciones
-        .get(
-          idColeccion
-        );
-
-
-    this.liberarPreview(
-      preview
-    );
-
-
-    this.archivosColecciones
-      .delete(
-        idColeccion
-      );
-
-
-    this.previewsColecciones
-      .delete(
-        idColeccion
-      );
-
-
-    this.erroresColecciones
-      .delete(
-        idColeccion
-      );
-
+  cancelarImagenColeccion(idColeccion: number): void {
+    const preview = this.previewsColecciones.get(idColeccion);
+    this.liberarPreview(preview);
+    this.archivosColecciones.delete(idColeccion);
+    this.previewsColecciones.delete(idColeccion);
+    this.erroresColecciones.delete(idColeccion);
   }
-
 
   // =========================================================
   // URL IMAGEN COLECCIÓN
   // =========================================================
-
-  imagenColeccionUrl(
-    coleccion: HomeColeccion
-  ): string | null {
-
-    const preview =
-      this.previewsColecciones
-        .get(
-          coleccion.idColeccion
-        );
-
+  imagenColeccionUrl(coleccion: HomeColeccion): string | null {
+    const preview = this.previewsColecciones.get(coleccion.idColeccion);
 
     if (preview) {
-
       return preview;
-
     }
-
 
     if (coleccion.imagen) {
-
-      return (
-        this.uploadsUrl +
-        coleccion.imagen
-      );
-
+      return this.uploadsUrl + coleccion.imagen;
     }
 
-
     return null;
-
   }
-
 
   // =========================================================
   // ARCHIVO COLECCIÓN
   // =========================================================
-
-  archivoColeccion(
-    idColeccion: number
-  ): File | null {
-
-    return (
-      this.archivosColecciones
-        .get(
-          idColeccion
-        )
-      ?? null
-    );
-
+  archivoColeccion(idColeccion: number): File | null {
+    return this.archivosColecciones.get(idColeccion) ?? null;
   }
-
 
   // =========================================================
   // ERROR COLECCIÓN
   // =========================================================
-
-  errorColeccion(
-    idColeccion: number
-  ): string {
-
-    return (
-      this.erroresColecciones
-        .get(
-          idColeccion
-        )
-      ?? ''
-    );
-
+  errorColeccion(idColeccion: number): string {
+    return this.erroresColecciones.get(idColeccion) ?? '';
   }
-
 
   // =========================================================
   // SUBIR IMAGEN COLECCIÓN
   // =========================================================
-
-  private subirImagenColeccion(
-    coleccion: HomeColeccion,
-    archivo: File
-  ): void {
-
-    this.homeService
-      .subirImagenColeccion(
-        coleccion.idColeccion,
-        archivo
-      )
-      .subscribe({
-
-        next: actualizada => {
-
-          this.reemplazarColeccion(
-            actualizada
-          );
-
-
-          this.cancelarImagenColeccion(
-            actualizada.idColeccion
-          );
-
-
-          this.guardandoColeccion =
-            null;
-
-          this.ordenarColecciones();
-
-          this.mensaje =
-            `Colección "${actualizada.titulo}" e imagen actualizadas correctamente.`;
-
-          this.actualizarVista();
-
-        },
-
-
-        error: error => {
-
-          console.error(
-            'ERROR SUBIENDO IMAGEN COLECCIÓN:',
-            error
-          );
-
-          this.error =
-            'Los datos de la colección se guardaron, pero no se pudo subir la imagen.';
-
-          this.guardandoColeccion =
-            null;
-
-          this.actualizarVista();
-
-        }
-
-      });
-
+  private subirImagenColeccion(coleccion: HomeColeccion, archivo: File): void {
+    this.homeService.subirImagenColeccion(coleccion.idColeccion, archivo).subscribe({
+      next: actualizada => {
+        this.reemplazarColeccion(actualizada);
+        this.cancelarImagenColeccion(actualizada.idColeccion);
+        this.guardandoColeccion = null;
+        this.ordenarColecciones();
+        this.mensaje = `Colección "${actualizada.titulo}" e imagen actualizadas correctamente.`;
+        this.actualizarVista();
+      },
+      error: error => {
+        console.error('ERROR SUBIENDO IMAGEN COLECCIÓN:', error);
+        this.error = 'Los datos de la colección se guardaron, pero no se pudo subir la imagen.';
+        this.guardandoColeccion = null;
+        this.actualizarVista();
+      }
+    });
   }
-
 
   // =========================================================
   // REEMPLAZAR COLECCIÓN
   // =========================================================
-
-  private reemplazarColeccion(
-    actualizada: HomeColeccion
-  ): void {
-
-    const indice =
-      this.colecciones.findIndex(
-        item =>
-          item.idColeccion ===
-          actualizada.idColeccion
-      );
-
+  private reemplazarColeccion(actualizada: HomeColeccion): void {
+    const indice = this.colecciones.findIndex(item => item.idColeccion === actualizada.idColeccion);
 
     if (indice >= 0) {
-
-      this.colecciones[indice] =
-        actualizada;
-
+      this.colecciones[indice] = actualizada;
     }
-
   }
-
 
   // =========================================================
   // ORDENAR COLECCIONES
   // =========================================================
-
   private ordenarColecciones(): void {
-
-    this.colecciones =
-      [...this.colecciones]
-        .sort(
-          (a, b) =>
-            a.orden - b.orden
-        );
-
+    this.colecciones = [...this.colecciones].sort((a, b) => a.orden - b.orden);
   }
-
 
   // =========================================================
   // SIGUIENTE ORDEN COLECCIÓN
   // =========================================================
-
-  private siguienteOrdenColeccion():
-    number {
-
-    if (
-      this.colecciones.length === 0
-    ) {
-
+  private siguienteOrdenColeccion(): number {
+    if (this.colecciones.length === 0) {
       return 1;
-
     }
 
-
-    return Math.max(
-      ...this.colecciones.map(
-        coleccion =>
-          coleccion.orden || 0
-      )
-    ) + 1;
-
+    return Math.max(...this.colecciones.map(coleccion => coleccion.orden || 0)) + 1;
   }
-
 
   // =========================================================
   // VALIDAR IMAGEN
   // JPG / JPEG / JFIF / PNG / WEBP
   // =========================================================
-
-  private validarImagen(
-    archivo: File
-  ): string {
-
-    const nombre =
-      archivo.name
-        .toLowerCase();
-
-
-    const extensionValida =
-      /\.(jpg|jpeg|jfif|png|webp)$/
-        .test(
-          nombre
-        );
-
+  private validarImagen(archivo: File): string {
+    const nombre = archivo.name.toLowerCase();
+    const extensionValida = /\.(jpg|jpeg|jfif|png|webp)$/.test(nombre);
 
     const tiposPermitidos = [
       'image/jpeg',
@@ -1549,7 +629,6 @@ export class HomeAdmin
       'image/webp'
     ];
 
-
     /*
      * Algunos navegadores reportan los archivos
      * JFIF como image/jpeg.
@@ -1557,88 +636,41 @@ export class HomeAdmin
      * Otros pueden entregar type vacío.
      * Por eso validamos MIME + extensión.
      */
-    const tipoValido =
-      !archivo.type ||
-      tiposPermitidos.includes(
-        archivo.type.toLowerCase()
-      );
+    const tipoValido = !archivo.type || tiposPermitidos.includes(archivo.type.toLowerCase());
 
-
-    if (
-      !extensionValida ||
-      !tipoValido
-    ) {
-
-      return (
-        'Solo se permiten imágenes JPG, JPEG, JFIF, PNG o WEBP.'
-      );
-
+    if (!extensionValida || !tipoValido) {
+      return 'Solo se permiten imágenes JPG, JPEG, JFIF, PNG o WEBP.';
     }
 
+    const maximo = 5 * 1024 * 1024;
 
-    const maximo =
-      5 * 1024 * 1024;
-
-
-    if (
-      archivo.size > maximo
-    ) {
-
-      return (
-        'La imagen no puede superar los 5 MB.'
-      );
-
+    if (archivo.size > maximo) {
+      return 'La imagen no puede superar los 5 MB.';
     }
-
 
     return '';
-
   }
-
 
   // =========================================================
   // LIBERAR PREVIEW
   // =========================================================
-
-  private liberarPreview(
-    preview:
-      string | null | undefined
-  ): void {
-
-    if (
-      preview &&
-      preview.startsWith(
-        'blob:'
-      )
-    ) {
-
-      URL.revokeObjectURL(
-        preview
-      );
-
+  private liberarPreview(preview: string | null | undefined): void {
+    if (preview && preview.startsWith('blob:')) {
+      URL.revokeObjectURL(preview);
     }
-
   }
-
 
   // =========================================================
   // ACTUALIZAR VISTA
   // =========================================================
-
   private actualizarVista(): void {
-
     try {
-
       this.cdr.detectChanges();
-
     } catch {
-
       /*
        * El componente puede haber sido destruido
        * mientras finalizaba una petición HTTP.
        */
-
     }
-
   }
 }

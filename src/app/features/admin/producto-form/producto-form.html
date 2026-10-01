@@ -1,55 +1,27 @@
 <section class="page">
 
-  <a
-    routerLink="/admin/productos"
-    class="back"
-  >
-    ← VOLVER A PRODUCTOS
-  </a>
-
+  <a routerLink="/admin/productos" class="back">← VOLVER A PRODUCTOS</a>
 
   <header>
-
-    <p>
-      CATÁLOGO
-    </p>
-
-    <h1>
-      {{
-        editando
-          ? 'Editar producto'
-          : 'Nuevo producto'
-      }}
-    </h1>
-
+    <p>CATÁLOGO</p>
+    <h1>{{ editando ? 'Editar producto' : 'Nuevo producto' }}</h1>
   </header>
-
 
   <!-- ===================================================== -->
   <!-- ERROR GENERAL -->
   <!-- ===================================================== -->
 
   @if (error) {
-
-    <div class="error">
-      {{ error }}
-    </div>
-
+    <div class="error">{{ error }}</div>
   }
-
 
   <!-- ===================================================== -->
   <!-- CARGANDO -->
   <!-- ===================================================== -->
 
   @if (cargando) {
-
-    <div class="loading">
-      Cargando producto...
-    </div>
-
+    <div class="loading">Cargando producto...</div>
   } @else {
-
 
     <!-- =================================================== -->
     <!-- FORMULARIO -->
@@ -57,199 +29,110 @@
 
     <form (ngSubmit)="guardar()">
 
-
       <!-- ================================================= -->
       <!-- COLUMNA PRINCIPAL -->
       <!-- ================================================= -->
 
       <div class="main">
 
-
         <!-- INFORMACIÓN -->
 
         <section class="card">
-
-          <h2>
-            Información
-          </h2>
-
+          <h2>Información</h2>
 
           <label>
-
             NOMBRE
-
             <input
               type="text"
               name="nombre"
               [(ngModel)]="nombre"
               required
-              [disabled]="guardando"
-            >
-
+              [disabled]="guardando">
           </label>
 
-
           <label>
-
             DESCRIPCIÓN
-
             <textarea
               name="descripcion"
               [(ngModel)]="descripcion"
               rows="6"
-              [disabled]="guardando"
-            ></textarea>
-
+              [disabled]="guardando"></textarea>
           </label>
-
         </section>
-
 
         <!-- ================================================= -->
         <!-- PRECIO -->
         <!-- ================================================= -->
 
         <section class="card">
-
-          <h2>
-            Precio
-          </h2>
-
+          <h2>Precio</h2>
 
           <div class="columns">
-
             <label>
-
               PRECIO NORMAL
-
               <input
                 type="number"
                 name="precio"
                 [(ngModel)]="precio"
                 step="0.01"
                 min="0"
-                [disabled]="guardando"
-              >
-
+                [disabled]="guardando">
             </label>
 
-
             <label>
-
               PRECIO OFERTA
-
               <input
                 type="number"
                 name="precioOferta"
                 [(ngModel)]="precioOferta"
                 step="0.01"
                 min="0"
-                [disabled]="guardando"
-              >
-
+                [disabled]="guardando">
             </label>
-
           </div>
-
         </section>
-
 
         <!-- ================================================= -->
         <!-- CLASIFICACIÓN -->
         <!-- ================================================= -->
 
         <section class="card">
-
-          <h2>
-            Clasificación
-          </h2>
-
+          <h2>Clasificación</h2>
 
           <div class="columns">
 
             <!-- GÉNERO -->
 
             <label>
-
               GÉNERO
 
-              <select
-                name="genero"
-                [(ngModel)]="idGenero"
-                [disabled]="guardando"
-              >
+              <select name="genero" [(ngModel)]="idGenero" [disabled]="guardando">
+                <option [ngValue]="null">Seleccionar</option>
 
-                <option
-                  [ngValue]="null"
-                >
-                  Seleccionar
-                </option>
-
-
-                @for (
-                  genero of generos;
-                  track genero.idGenero
-                ) {
-
-                  <option
-                    [ngValue]="genero.idGenero"
-                  >
-                    {{
-                      genero.nombreGenero
-                    }}
-                  </option>
-
+                @for (genero of generos; track genero.idGenero) {
+                  <option [ngValue]="genero.idGenero">{{ genero.nombreGenero }}</option>
                 }
-
               </select>
-
             </label>
-
 
             <!-- CATEGORÍA -->
 
             <label>
-
               CATEGORÍA
 
-              <select
-                name="categoria"
-                [(ngModel)]="idCategoria"
-                [disabled]="guardando"
-              >
+              <select name="categoria" [(ngModel)]="idCategoria" [disabled]="guardando">
+                <option [ngValue]="null">Seleccionar</option>
 
-                <option
-                  [ngValue]="null"
-                >
-                  Seleccionar
-                </option>
-
-
-                @for (
-                  categoria of categorias;
-                  track categoria.idCategoria
-                ) {
-
-                  <option
-                    [ngValue]="categoria.idCategoria"
-                  >
-                    {{
-                      categoria.nombreCategoria
-                    }}
-                  </option>
-
+                @for (categoria of categorias; track categoria.idCategoria) {
+                  <option [ngValue]="categoria.idCategoria">{{ categoria.nombreCategoria }}</option>
                 }
-
               </select>
-
             </label>
 
           </div>
-
         </section>
 
       </div>
-
 
       <!-- ================================================= -->
       <!-- COLUMNA DERECHA -->
@@ -257,240 +140,127 @@
 
       <aside>
 
-
         <!-- ================================================= -->
         <!-- IMAGEN -->
         <!-- ================================================= -->
 
         <section class="card image-card">
-
-          <h2>
-            Imagen
-          </h2>
-
+          <h2>Imagen</h2>
 
           <!-- PREVISUALIZACIÓN -->
 
           <div class="image-preview">
-
             @if (imagenActualUrl()) {
-
-              <img
-                [src]="imagenActualUrl()"
-                [alt]="
-                  nombre ||
-                  'Imagen del producto'
-                "
-              >
-
+              <img [src]="imagenActualUrl()" [alt]="nombre || 'Imagen del producto'">
             } @else {
-
               <div class="image-empty">
-
-                <strong>
-                  TS
-                </strong>
-
-                <span>
-                  SIN IMAGEN
-                </span>
-
+                <strong>TS</strong>
+                <span>SIN IMAGEN</span>
               </div>
-
             }
-
           </div>
-
 
           <!-- SELECCIONAR ARCHIVO -->
 
           <label class="file-label">
-
             IMAGEN DEL PRODUCTO
 
             <input
               type="file"
               accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-              (change)="
-                seleccionarImagen($event)
-              "
-              [disabled]="guardando"
-            >
-
+              (change)="seleccionarImagen($event)"
+              [disabled]="guardando">
           </label>
-
 
           <!-- ARCHIVO SELECCIONADO -->
 
           @if (archivoImagen) {
-
             <div class="selected-file">
-
               <div>
-
-                <strong>
-                  IMAGEN SELECCIONADA
-                </strong>
-
-                <span>
-                  {{
-                    archivoImagen.name
-                  }}
-                </span>
-
+                <strong>IMAGEN SELECCIONADA</strong>
+                <span>{{ archivoImagen.name }}</span>
               </div>
 
-
-              <button
-                type="button"
-                (click)="cancelarImagen()"
-                [disabled]="guardando"
-              >
+              <button type="button" (click)="cancelarImagen()" [disabled]="guardando">
                 QUITAR
               </button>
-
             </div>
-
           }
-
 
           <!-- ERROR IMAGEN -->
 
           @if (errorImagen) {
-
-            <div class="image-error">
-              {{ errorImagen }}
-            </div>
-
+            <div class="image-error">{{ errorImagen }}</div>
           }
 
-
           <small>
-            Formatos permitidos:
-            JPG, PNG o WEBP.
-            Máximo 5 MB.
+            Formatos permitidos: JPG, PNG o WEBP. Máximo 5 MB.
           </small>
-
 
           <!-- IMAGEN ACTUAL -->
 
-          @if (
-            imagen &&
-            !archivoImagen
-          ) {
-
+          @if (imagen && !archivoImagen) {
             <div class="current-image-info">
-
-              <span>
-                IMAGEN ACTUAL
-              </span>
-
-              <strong>
-                {{ imagen }}
-              </strong>
-
+              <span>IMAGEN ACTUAL</span>
+              <strong>{{ imagen }}</strong>
             </div>
-
           }
-
         </section>
-
 
         <!-- ================================================= -->
         <!-- VISIBILIDAD -->
         <!-- ================================================= -->
 
         <section class="card">
-
-          <h2>
-            Visibilidad
-          </h2>
-
+          <h2>Visibilidad</h2>
 
           <label class="check">
-
-            <span>
-              Producto activo
-            </span>
-
+            <span>Producto activo</span>
             <input
               type="checkbox"
               name="estado"
               [(ngModel)]="estado"
-              [disabled]="guardando"
-            >
-
+              [disabled]="guardando">
           </label>
 
-
           <label class="check">
-
-            <span>
-              Nuevo
-            </span>
-
+            <span>Nuevo</span>
             <input
               type="checkbox"
               name="nuevo"
               [(ngModel)]="nuevo"
-              [disabled]="guardando"
-            >
-
+              [disabled]="guardando">
           </label>
 
-
           <label class="check">
-
-            <span>
-              Destacado
-            </span>
-
+            <span>Destacado</span>
             <input
               type="checkbox"
               name="destacado"
               [(ngModel)]="destacado"
-              [disabled]="guardando"
-            >
-
+              [disabled]="guardando">
           </label>
-
         </section>
-
 
         <!-- ================================================= -->
         <!-- GUARDAR -->
         <!-- ================================================= -->
 
-        <button
-          class="save"
-          type="submit"
-          [disabled]="guardando"
-        >
-
+        <button class="save" type="submit" [disabled]="guardando">
           @if (subiendoImagen) {
-
             SUBIENDO IMAGEN...
-
           } @else if (guardando) {
-
             GUARDANDO...
-
           } @else if (editando) {
-
             GUARDAR CAMBIOS
-
           } @else {
-
             CREAR PRODUCTO
-
           }
-
         </button>
 
       </aside>
 
     </form>
-
   }
 
 </section>

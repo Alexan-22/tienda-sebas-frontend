@@ -1,115 +1,36 @@
 <header class="site-header">
-
   <div class="navbar-container">
-
 
     <!-- =====================================
          LOGO
     ====================================== -->
-
-    <a
-      routerLink="/"
-      class="brand"
-      (click)="cerrarMenu()">
-
-      <span class="brand-main">
-        TIENDA SEBAS
-      </span>
-
-      <span class="brand-sub">
-        POLVOS
-      </span>
-
+    <a routerLink="/" class="brand" (click)="cerrarMenu()">
+      <span class="brand-main">TIENDA SEBAS</span>
+      <span class="brand-sub">POLVOS</span>
     </a>
-
 
     <!-- =====================================
          NAVEGACIÓN DESKTOP
     ====================================== -->
-
     <nav class="desktop-nav">
-
-      <a
-        routerLink="/tienda"
-        [queryParams]="{ nuevo: true }"
-        class="nav-link">
-
-        Novedades
-
-      </a>
-
-
-      <a
-        routerLink="/tienda"
-        [queryParams]="{ genero: 1 }"
-        class="nav-link">
-
-        Hombres
-
-      </a>
-
-
-      <a
-        routerLink="/tienda"
-        [queryParams]="{ genero: 2 }"
-        class="nav-link">
-
-        Mujeres
-
-      </a>
-
-
-      <a
-        routerLink="/tienda"
-        [queryParams]="{ genero: 3 }"
-        class="nav-link">
-
-        Niños
-
-      </a>
-
-
-      <a
-        routerLink="/tienda"
-        [queryParams]="{ genero: 4 }"
-        class="nav-link">
-
-        Niñas
-
-      </a>
-
-
-      <a
-        routerLink="/tienda"
-        class="nav-link">
-
-        Colecciones
-
-      </a>
-
+      <a routerLink="/tienda" [queryParams]="{ nuevo: true }" class="nav-link">Novedades</a>
+      <a routerLink="/tienda" [queryParams]="{ genero: 1 }" class="nav-link">Hombres</a>
+      <a routerLink="/tienda" [queryParams]="{ genero: 2 }" class="nav-link">Mujeres</a>
+      <a routerLink="/tienda" [queryParams]="{ genero: 3 }" class="nav-link">Niños</a>
+      <a routerLink="/tienda" [queryParams]="{ genero: 4 }" class="nav-link">Niñas</a>
+      <a routerLink="/tienda" class="nav-link">Colecciones</a>
     </nav>
-
 
     <!-- =====================================
          ACCIONES
     ====================================== -->
-
     <div class="navbar-actions">
-
 
       <!-- ===================================
            USUARIO AUTENTICADO
       ==================================== -->
-
-      @if (
-        authService.autenticado()
-      ) {
-
-        <div
-          class="account-wrapper"
-          (click)="$event.stopPropagation()">
-
-
+      @if (authService.autenticado()) {
+        <div class="account-wrapper" (click)="$event.stopPropagation()">
           <button
             type="button"
             class="account-button"
@@ -117,78 +38,44 @@
             aria-label="Abrir mi cuenta">
 
             <span class="account-info">
-
               <span class="account-role">
-
                 @if (esAdmin) {
                   Administrador
                 } @else {
                   Cliente
                 }
-
               </span>
 
-              <span class="account-email">
-                {{ correoUsuario }}
-              </span>
-
+              <span class="account-email">{{ correoUsuario }}</span>
             </span>
 
-
-            <span class="account-avatar">
-              {{ inicialUsuario }}
-            </span>
-
+            <span class="account-avatar">{{ inicialUsuario }}</span>
           </button>
 
-
           <!-- MENÚ DESPLEGABLE -->
-
           @if (cuentaAbierta) {
-
             <div class="account-dropdown">
-
-
               <div class="dropdown-user">
-
-                <div class="dropdown-avatar">
-                  {{ inicialUsuario }}
-                </div>
-
+                <div class="dropdown-avatar">{{ inicialUsuario }}</div>
 
                 <div class="dropdown-user-info">
-
                   <span class="dropdown-role">
-
                     @if (esAdmin) {
                       Administrador
                     } @else {
                       Cliente
                     }
-
                   </span>
 
-                  <strong>
-                    {{ correoUsuario }}
-                  </strong>
-
+                  <strong>{{ correoUsuario }}</strong>
                 </div>
-
               </div>
-
 
               <div class="dropdown-divider"></div>
 
-
               @if (esAdmin) {
-
-                <button
-                  type="button"
-                  class="dropdown-option"
-                  (click)="irAAdmin()">
-
+                <button type="button" class="dropdown-option" (click)="irAAdmin()">
                   <span class="dropdown-icon">
-
                     <svg
                       width="18"
                       height="18"
@@ -196,52 +83,17 @@
                       fill="none"
                       stroke="currentColor"
                       stroke-width="1.7">
-
-                      <rect
-                        x="3"
-                        y="3"
-                        width="7"
-                        height="7">
-                      </rect>
-
-                      <rect
-                        x="14"
-                        y="3"
-                        width="7"
-                        height="7">
-                      </rect>
-
-                      <rect
-                        x="3"
-                        y="14"
-                        width="7"
-                        height="7">
-                      </rect>
-
-                      <rect
-                        x="14"
-                        y="14"
-                        width="7"
-                        height="7">
-                      </rect>
-
+                      <rect x="3" y="3" width="7" height="7"></rect>
+                      <rect x="14" y="3" width="7" height="7"></rect>
+                      <rect x="3" y="14" width="7" height="7"></rect>
+                      <rect x="14" y="14" width="7" height="7"></rect>
                     </svg>
-
                   </span>
-
                   Panel administrativo
-
                 </button>
-
               } @else {
-
-                <button
-                  type="button"
-                  class="dropdown-option"
-                  (click)="irAMisCompras()">
-
+                <button type="button" class="dropdown-option" (click)="irAMisCompras()">
                   <span class="dropdown-icon">
-
                     <svg
                       width="18"
                       height="18"
@@ -249,37 +101,17 @@
                       fill="none"
                       stroke="currentColor"
                       stroke-width="1.7">
-
-                      <path
-                        d="M6 2h12l2 5H4l2-5Z">
-                      </path>
-
-                      <path
-                        d="M4 7v15h16V7">
-                      </path>
-
-                      <path
-                        d="M9 11h6">
-                      </path>
-
+                      <path d="M6 2h12l2 5H4l2-5Z"></path>
+                      <path d="M4 7v15h16V7"></path>
+                      <path d="M9 11h6"></path>
                     </svg>
-
                   </span>
-
                   Mis compras
-
                 </button>
-
               }
 
-
-              <button
-                type="button"
-                class="dropdown-option logout-option"
-                (click)="cerrarSesion()">
-
+              <button type="button" class="dropdown-option logout-option" (click)="cerrarSesion()">
                 <span class="dropdown-icon">
-
                   <svg
                     width="18"
                     height="18"
@@ -287,45 +119,22 @@
                     fill="none"
                     stroke="currentColor"
                     stroke-width="1.7">
-
-                    <path
-                      d="M10 17l5-5-5-5">
-                    </path>
-
-                    <path
-                      d="M15 12H3">
-                    </path>
-
-                    <path
-                      d="M14 3h6v18h-6">
-                    </path>
-
+                    <path d="M10 17l5-5-5-5"></path>
+                    <path d="M15 12H3"></path>
+                    <path d="M14 3h6v18h-6"></path>
                   </svg>
-
                 </span>
-
                 Cerrar sesión
-
               </button>
-
             </div>
-
           }
-
         </div>
-
       } @else {
-
 
         <!-- ===================================
              SIN SESIÓN
         ==================================== -->
-
-        <button
-          type="button"
-          class="login-button"
-          (click)="irACuenta()">
-
+        <button type="button" class="login-button" (click)="irACuenta()">
           <svg
             width="20"
             height="20"
@@ -333,38 +142,17 @@
             fill="none"
             stroke="currentColor"
             stroke-width="1.7">
-
-            <circle
-              cx="12"
-              cy="8"
-              r="4">
-            </circle>
-
-            <path
-              d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7">
-            </path>
-
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"></path>
           </svg>
-
-          <span>
-            Iniciar sesión
-          </span>
-
+          <span>Iniciar sesión</span>
         </button>
-
       }
-
 
       <!-- ===================================
            CARRITO
       ==================================== -->
-
-      <a
-        routerLink="/carrito"
-        class="icon-button cart-button"
-        aria-label="Carrito"
-        title="Carrito">
-
+      <a routerLink="/carrito" class="icon-button cart-button" aria-label="Carrito" title="Carrito">
         <svg
           width="22"
           height="22"
@@ -372,49 +160,19 @@
           fill="none"
           stroke="currentColor"
           stroke-width="1.7">
-
-          <path
-            d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.5h7.8a2 2 0 0 0 2-1.6L21 7H7">
-          </path>
-
-          <circle
-            cx="10"
-            cy="20"
-            r="1">
-          </circle>
-
-          <circle
-            cx="18"
-            cy="20"
-            r="1">
-          </circle>
-
+          <path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.5h7.8a2 2 0 0 0 2-1.6L21 7H7"></path>
+          <circle cx="10" cy="20" r="1"></circle>
+          <circle cx="18" cy="20" r="1"></circle>
         </svg>
 
-
-        @if (
-          carritoService
-            .cantidadTotal() > 0
-        ) {
-
-          <span class="cart-count">
-
-            {{
-              carritoService
-                .cantidadTotal()
-            }}
-
-          </span>
-
+        @if (carritoService.cantidadTotal() > 0) {
+          <span class="cart-count">{{ carritoService.cantidadTotal() }}</span>
         }
-
       </a>
-
 
       <!-- ===================================
            MENÚ MÓVIL
       ==================================== -->
-
       <button
         type="button"
         class="icon-button menu-button"
@@ -422,7 +180,6 @@
         (click)="toggleMenu()">
 
         @if (!menuAbierto) {
-
           <svg
             width="23"
             height="23"
@@ -430,15 +187,11 @@
             fill="none"
             stroke="currentColor"
             stroke-width="1.7">
-
             <path d="M4 7h16"></path>
             <path d="M4 12h16"></path>
             <path d="M4 17h16"></path>
-
           </svg>
-
         } @else {
-
           <svg
             width="23"
             height="23"
@@ -446,181 +199,67 @@
             fill="none"
             stroke="currentColor"
             stroke-width="1.7">
-
             <path d="M6 6l12 12"></path>
             <path d="M18 6L6 18"></path>
-
           </svg>
-
         }
-
       </button>
-
     </div>
-
   </div>
-
 
   <!-- =====================================
        MENÚ MÓVIL
   ====================================== -->
-
   @if (menuAbierto) {
-
     <div class="mobile-menu">
-
       <nav class="mobile-nav">
-
-
-        <a
-          routerLink="/tienda"
-          [queryParams]="{ nuevo: true }"
-          class="mobile-link"
-          (click)="cerrarMenu()">
-
-          Novedades
-
-        </a>
-
-
-        <a
-          routerLink="/tienda"
-          [queryParams]="{ genero: 1 }"
-          class="mobile-link"
-          (click)="cerrarMenu()">
-
-          Hombres
-
-        </a>
-
-
-        <a
-          routerLink="/tienda"
-          [queryParams]="{ genero: 2 }"
-          class="mobile-link"
-          (click)="cerrarMenu()">
-
-          Mujeres
-
-        </a>
-
-
-        <a
-          routerLink="/tienda"
-          [queryParams]="{ genero: 3 }"
-          class="mobile-link"
-          (click)="cerrarMenu()">
-
-          Niños
-
-        </a>
-
-
-        <a
-          routerLink="/tienda"
-          [queryParams]="{ genero: 4 }"
-          class="mobile-link"
-          (click)="cerrarMenu()">
-
-          Niñas
-
-        </a>
-
-
-        <a
-          routerLink="/tienda"
-          class="mobile-link"
-          (click)="cerrarMenu()">
-
-          Colecciones
-
-        </a>
-
+        <a routerLink="/tienda" [queryParams]="{ nuevo: true }" class="mobile-link" (click)="cerrarMenu()">Novedades</a>
+        <a routerLink="/tienda" [queryParams]="{ genero: 1 }" class="mobile-link" (click)="cerrarMenu()">Hombres</a>
+        <a routerLink="/tienda" [queryParams]="{ genero: 2 }" class="mobile-link" (click)="cerrarMenu()">Mujeres</a>
+        <a routerLink="/tienda" [queryParams]="{ genero: 3 }" class="mobile-link" (click)="cerrarMenu()">Niños</a>
+        <a routerLink="/tienda" [queryParams]="{ genero: 4 }" class="mobile-link" (click)="cerrarMenu()">Niñas</a>
+        <a routerLink="/tienda" class="mobile-link" (click)="cerrarMenu()">Colecciones</a>
 
         <!-- CUENTA MÓVIL -->
-
-        @if (
-          authService.autenticado()
-        ) {
-
+        @if (authService.autenticado()) {
           <div class="mobile-user">
-
-            <div class="mobile-avatar">
-              {{ inicialUsuario }}
-            </div>
+            <div class="mobile-avatar">{{ inicialUsuario }}</div>
 
             <div>
-
               <span>
-
                 @if (esAdmin) {
                   Administrador
                 } @else {
                   Cliente
                 }
-
               </span>
 
-              <strong>
-                {{ correoUsuario }}
-              </strong>
-
+              <strong>{{ correoUsuario }}</strong>
             </div>
-
           </div>
 
-
           @if (esAdmin) {
-
-            <button
-              type="button"
-              class="mobile-link mobile-button"
-              (click)="irAAdmin()">
-
+            <button type="button" class="mobile-link mobile-button" (click)="irAAdmin()">
               Panel administrativo
-
             </button>
-
           } @else {
-
-            <button
-              type="button"
-              class="mobile-link mobile-button"
-              (click)="irAMisCompras()">
-
+            <button type="button" class="mobile-link mobile-button" (click)="irAMisCompras()">
               Mis compras
-
             </button>
-
           }
-
 
           <button
             type="button"
             class="mobile-link mobile-button logout-button"
             (click)="cerrarSesion()">
-
             Cerrar sesión
-
           </button>
-
         } @else {
-
-          <button
-            type="button"
-            class="mobile-link mobile-button"
-            (click)="irACuenta()">
-
+          <button type="button" class="mobile-link mobile-button" (click)="irACuenta()">
             Iniciar sesión
-
           </button>
-
         }
-
       </nav>
-
     </div>
-
   }
-
 </header>

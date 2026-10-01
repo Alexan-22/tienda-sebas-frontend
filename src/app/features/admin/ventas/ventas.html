@@ -1,903 +1,347 @@
 <section class="page">
 
   <header class="page-header">
-
     <div>
-
       <p>NEGOCIO</p>
-
       <h1>Ventas</h1>
-
-      <span>
-        Consulta y administra las ventas online
-        y presenciales de Tienda Sebas.
-      </span>
-
+      <span>Consulta y administra las ventas online y presenciales de Tienda Sebas.</span>
     </div>
-
   </header>
-
 
   <!-- ESTADÍSTICAS -->
 
   <section class="stats">
-
     <article>
-
       <span>VENTAS TOTALES</span>
-
-      <strong>
-        {{ totalVentas }}
-      </strong>
-
-      <small>
-        Ventas registradas
-      </small>
-
+      <strong>{{ totalVentas }}</strong>
+      <small>Ventas registradas</small>
     </article>
 
-
     <article>
-
       <span>INGRESOS</span>
-
-      <strong>
-        S/
-        {{
-          ingresosTotales
-            | number:'1.2-2'
-        }}
-      </strong>
-
-      <small>
-        Ingresos acumulados
-      </small>
-
+      <strong>S/ {{ ingresosTotales | number:'1.2-2' }}</strong>
+      <small>Ingresos acumulados</small>
     </article>
-
 
     <article>
-
       <span>VENTA PROMEDIO</span>
-
-      <strong>
-        S/
-        {{
-          ventaPromedio
-            | number:'1.2-2'
-        }}
-      </strong>
-
-      <small>
-        Promedio por venta
-      </small>
-
+      <strong>S/ {{ ventaPromedio | number:'1.2-2' }}</strong>
+      <small>Promedio por venta</small>
     </article>
-
   </section>
-
 
   <!-- RESUMEN DE CANALES -->
 
   <section class="channel-stats">
-
     <article>
-
       <span>ONLINE</span>
-
-      <strong>
-        {{ ventasOnline }}
-      </strong>
-
-      <small>
-        Ventas por la tienda web
-      </small>
-
+      <strong>{{ ventasOnline }}</strong>
+      <small>Ventas por la tienda web</small>
     </article>
 
-
     <article>
-
       <span>PRESENCIAL</span>
-
-      <strong>
-        {{ ventasPresenciales }}
-      </strong>
-
-      <small>
-        Ventas realizadas en POS
-      </small>
-
+      <strong>{{ ventasPresenciales }}</strong>
+      <small>Ventas realizadas en POS</small>
     </article>
 
-
     <article>
-
       <span>EFECTIVO</span>
-
-      <strong>
-        {{ ventasEfectivo }}
-      </strong>
-
-      <small>
-        Operaciones en efectivo
-      </small>
-
+      <strong>{{ ventasEfectivo }}</strong>
+      <small>Operaciones en efectivo</small>
     </article>
 
-
     <article>
-
       <span>YAPE</span>
-
-      <strong>
-        {{ ventasYape }}
-      </strong>
-
-      <small>
-        Operaciones con Yape
-      </small>
-
+      <strong>{{ ventasYape }}</strong>
+      <small>Operaciones con Yape</small>
     </article>
-
 
     <article>
-
       <span>TARJETA</span>
-
-      <strong>
-        {{ ventasTarjeta }}
-      </strong>
-
-      <small>
-        Operaciones con tarjeta
-      </small>
-
+      <strong>{{ ventasTarjeta }}</strong>
+      <small>Operaciones con tarjeta</small>
     </article>
-
   </section>
-
 
   <!-- PANEL -->
 
   <section class="panel">
-
     <div class="panel-header">
-
       <div class="title">
-
         <p>REGISTRO DE VENTAS</p>
-
-        <h2>
-          Ventas
-        </h2>
-
+        <h2>Ventas</h2>
       </div>
 
-
       <div class="filters">
-
         <input
           type="text"
           [(ngModel)]="busqueda"
           (ngModelChange)="aplicarFiltros()"
-          placeholder="Buscar venta, cliente, correo o documento..."
-        >
+          placeholder="Buscar venta, cliente, correo o documento...">
 
-
-        <select
-          [(ngModel)]="filtroTipoVenta"
-          (ngModelChange)="aplicarFiltros()"
-        >
-
-          <option value="">
-            Todos los canales
-          </option>
-
-          <option value="ONLINE">
-            Online
-          </option>
-
-          <option value="PRESENCIAL">
-            Presencial
-          </option>
-
+        <select [(ngModel)]="filtroTipoVenta" (ngModelChange)="aplicarFiltros()">
+          <option value="">Todos los canales</option>
+          <option value="ONLINE">Online</option>
+          <option value="PRESENCIAL">Presencial</option>
         </select>
 
-
-        <select
-          [(ngModel)]="filtroPago"
-          (ngModelChange)="aplicarFiltros()"
-        >
-
-          <option value="">
-            Todos los pagos
-          </option>
-
-          <option value="EFECTIVO">
-            Efectivo
-          </option>
-
-          <option value="YAPE">
-            Yape
-          </option>
-
-          <option value="TARJETA">
-            Tarjeta
-          </option>
-
+        <select [(ngModel)]="filtroPago" (ngModelChange)="aplicarFiltros()">
+          <option value="">Todos los pagos</option>
+          <option value="EFECTIVO">Efectivo</option>
+          <option value="YAPE">Yape</option>
+          <option value="TARJETA">Tarjeta</option>
         </select>
 
+        <select [(ngModel)]="filtroEstado" (ngModelChange)="aplicarFiltros()">
+          <option value="">Todos los estados</option>
 
-        <select
-          [(ngModel)]="filtroEstado"
-          (ngModelChange)="aplicarFiltros()"
-        >
-
-          <option value="">
-            Todos los estados
-          </option>
-
-          @for (
-            estado of estados;
-            track estado
-          ) {
-
-            <option
-              [value]="estado"
-            >
-              {{ estado }}
-            </option>
-
+          @for (estado of estados; track estado) {
+            <option [value]="estado">{{ estado }}</option>
           }
-
         </select>
 
-
-        <button
-          type="button"
-          class="clear-button"
-          (click)="limpiarFiltros()"
-        >
+        <button type="button" class="clear-button" (click)="limpiarFiltros()">
           LIMPIAR
         </button>
-
       </div>
-
     </div>
 
-
     @if (cargando) {
-
-      <div class="message">
-        Cargando ventas...
-      </div>
-
-    }
-
-    @else if (error) {
-
-      <div class="message error">
-        {{ error }}
-      </div>
-
-    }
-
-    @else if (
-      ventasFiltradas.length === 0
-    ) {
-
-      <div class="message">
-        No se encontraron ventas.
-      </div>
-
-    }
-
-    @else {
-
+      <div class="message">Cargando ventas...</div>
+    } @else if (error) {
+      <div class="message error">{{ error }}</div>
+    } @else if (ventasFiltradas.length === 0) {
+      <div class="message">No se encontraron ventas.</div>
+    } @else {
       <div class="table-wrapper">
-
         <table>
-
           <thead>
-
             <tr>
-
               <th>VENTA</th>
-
               <th>FECHA</th>
-
               <th>TIPO</th>
-
               <th>CLIENTE</th>
-
               <th>MEDIO DE PAGO</th>
-
               <th>TOTAL</th>
-
               <th>ESTADO</th>
-
               <th>ACCIÓN</th>
-
             </tr>
-
           </thead>
 
-
           <tbody>
-
-            @for (
-              venta of ventasFiltradas;
-              track venta.idVenta
-            ) {
-
+            @for (venta of ventasFiltradas; track venta.idVenta) {
               <tr>
-
                 <td>
-
-                  <strong>
-                    #{{ venta.idVenta }}
-                  </strong>
-
+                  <strong>#{{ venta.idVenta }}</strong>
                 </td>
 
-
                 <td>
-
-                  {{
-                    venta.fechaVenta
-                      | date:'dd/MM/yyyy'
-                  }}
-
-                  <small class="time">
-
-                    {{
-                      venta.fechaVenta
-                        | date:'HH:mm'
-                    }}
-
-                  </small>
-
+                  {{ venta.fechaVenta | date:'dd/MM/yyyy' }}
+                  <small class="time">{{ venta.fechaVenta | date:'HH:mm' }}</small>
                 </td>
 
-
                 <td>
-
                   <span
                     class="sale-type"
-                    [class.presencial]="
-                      venta.tipoVenta ===
-                      'PRESENCIAL'
-                    "
-                    [class.online]="
-                      venta.tipoVenta ===
-                      'ONLINE'
-                    "
-                  >
-                    {{
-                      tipoVentaTexto(
-                        venta
-                      )
-                    }}
+                    [class.presencial]="venta.tipoVenta === 'PRESENCIAL'"
+                    [class.online]="venta.tipoVenta === 'ONLINE'">
+                    {{ tipoVentaTexto(venta) }}
                   </span>
-
                 </td>
 
-
                 <td>
-
                   <div class="customer">
-
-                    <strong>
-
-                      {{
-                        nombreCliente(
-                          venta
-                        )
-                      }}
-
-                    </strong>
-
-                    <span>
-
-                      {{
-                        informacionCliente(
-                          venta
-                        )
-                      }}
-
-                    </span>
-
+                    <strong>{{ nombreCliente(venta) }}</strong>
+                    <span>{{ informacionCliente(venta) }}</span>
                   </div>
-
                 </td>
 
-
                 <td>
-
-                  <span
-                    class="payment"
-                    [class.cash]="
-                      venta.medioPago ===
-                      'EFECTIVO'
-                    "
-                  >
+                  <span class="payment" [class.cash]="venta.medioPago === 'EFECTIVO'">
                     {{ venta.medioPago }}
                   </span>
-
                 </td>
 
-
                 <td>
-
-                  <strong>
-
-                    S/
-                    {{
-                      venta.total
-                        | number:'1.2-2'
-                    }}
-
-                  </strong>
-
+                  <strong>S/ {{ venta.total | number:'1.2-2' }}</strong>
                 </td>
 
-
                 <td>
-
-                  <span class="status">
-                    {{ venta.estado }}
-                  </span>
-
+                  <span class="status">{{ venta.estado }}</span>
                 </td>
 
-
                 <td>
-
-                  <button
-                    type="button"
-                    class="detail-button"
-                    (click)="verDetalle(venta)"
-                  >
+                  <button type="button" class="detail-button" (click)="verDetalle(venta)">
                     VER DETALLE
                   </button>
-
                 </td>
-
               </tr>
-
             }
-
           </tbody>
-
         </table>
-
       </div>
-
     }
-
   </section>
 
 </section>
 
-
 <!-- MODAL DETALLE -->
 
 @if (ventaSeleccionada) {
-
-  <div
-    class="modal-backdrop"
-    (click)="cerrarDetalle()"
-  >
-
-    <section
-      class="modal"
-      (click)="$event.stopPropagation()"
-    >
-
+  <div class="modal-backdrop" (click)="cerrarDetalle()">
+    <section class="modal" (click)="$event.stopPropagation()">
       <header class="modal-header">
-
         <div>
-
-          <p>
-            DETALLE DE VENTA
-          </p>
-
-          <h2>
-            Venta #{{ ventaSeleccionada.idVenta }}
-          </h2>
-
+          <p>DETALLE DE VENTA</p>
+          <h2>Venta #{{ ventaSeleccionada.idVenta }}</h2>
         </div>
 
-
-        <button
-          type="button"
-          class="close-button"
-          (click)="cerrarDetalle()"
-        >
+        <button type="button" class="close-button" (click)="cerrarDetalle()">
           ×
         </button>
-
       </header>
 
-
       <div class="sale-channel">
-
         <span
           class="sale-type"
-          [class.presencial]="
-            ventaSeleccionada.tipoVenta ===
-            'PRESENCIAL'
-          "
-          [class.online]="
-            ventaSeleccionada.tipoVenta ===
-            'ONLINE'
-          "
-        >
-          {{
-            tipoVentaTexto(
-              ventaSeleccionada
-            )
-          }}
+          [class.presencial]="ventaSeleccionada.tipoVenta === 'PRESENCIAL'"
+          [class.online]="ventaSeleccionada.tipoVenta === 'ONLINE'">
+          {{ tipoVentaTexto(ventaSeleccionada) }}
         </span>
 
         <small>
-          {{
-            ventaSeleccionada.tipoVenta ===
-              'PRESENCIAL'
-              ? 'Venta realizada en tienda'
-              : 'Venta realizada por la web'
-          }}
+          {{ ventaSeleccionada.tipoVenta === 'PRESENCIAL'
+            ? 'Venta realizada en tienda'
+            : 'Venta realizada por la web' }}
         </small>
-
       </div>
-
 
       <div class="sale-info">
-
         <div>
-
           <span>CLIENTE</span>
-
-          <strong>
-            {{
-              nombreCliente(
-                ventaSeleccionada
-              )
-            }}
-          </strong>
-
-          <small>
-            {{
-              informacionCliente(
-                ventaSeleccionada
-              )
-            }}
-          </small>
-
+          <strong>{{ nombreCliente(ventaSeleccionada) }}</strong>
+          <small>{{ informacionCliente(ventaSeleccionada) }}</small>
         </div>
 
-
         <div>
-
           <span>FECHA</span>
-
-          <strong>
-            {{
-              ventaSeleccionada
-                .fechaVenta
-                | date:'dd/MM/yyyy HH:mm'
-            }}
-          </strong>
-
+          <strong>{{ ventaSeleccionada.fechaVenta | date:'dd/MM/yyyy HH:mm' }}</strong>
         </div>
 
-
         <div>
-
           <span>PAGO</span>
-
-          <strong>
-            {{ ventaSeleccionada.medioPago }}
-          </strong>
-
+          <strong>{{ ventaSeleccionada.medioPago }}</strong>
         </div>
-
 
         <div>
-
           <span>ESTADO</span>
-
-          <strong>
-            {{
-              ventaSeleccionada.estadoPedido ||
-              ventaSeleccionada.estado
-            }}
-          </strong>
-
+          <strong>{{ ventaSeleccionada.estadoPedido || ventaSeleccionada.estado }}</strong>
         </div>
-
       </div>
 
-
       @if (cargandoDetalle) {
-
-        <div class="modal-message">
-          Cargando detalle...
-        </div>
-
-      }
-
-      @else if (errorDetalle) {
-
-        <div class="modal-message error">
-          {{ errorDetalle }}
-        </div>
-
-      }
-
-      @else if (detalleSeleccionado) {
-
+        <div class="modal-message">Cargando detalle...</div>
+      } @else if (errorDetalle) {
+        <div class="modal-message error">{{ errorDetalle }}</div>
+      } @else if (detalleSeleccionado) {
 
         <!-- ENTREGA ONLINE -->
 
         @if (detalleSeleccionado.direccionEnvio) {
-
           <section class="delivery-info">
-
             <div class="delivery-title">
-
               <span>ENTREGA</span>
-
-              <strong>
-                Dirección de despacho
-              </strong>
-
+              <strong>Dirección de despacho</strong>
             </div>
-
 
             <div class="delivery-grid">
-
               <div>
-
                 <span>DIRECCIÓN</span>
-
-                <strong>
-                  {{
-                    detalleSeleccionado
-                      .direccionEnvio
-                      .direccionExacta
-                  }}
-                </strong>
-
-                <small>
-                  {{ ubicacionEntrega }}
-                </small>
-
+                <strong>{{ detalleSeleccionado.direccionEnvio.direccionExacta }}</strong>
+                <small>{{ ubicacionEntrega }}</small>
               </div>
-
 
               <div>
-
                 <span>REFERENCIA</span>
-
-                <strong>
-
-                  {{
-                    detalleSeleccionado
-                      .direccionEnvio
-                      .referencia ||
-                    'Sin referencia'
-                  }}
-
-                </strong>
-
+                <strong>{{ detalleSeleccionado.direccionEnvio.referencia || 'Sin referencia' }}</strong>
               </div>
-
             </div>
-
           </section>
-
-        }
-
-        @else if (
-          detalleSeleccionado.tipoVenta ===
-          'PRESENCIAL'
-        ) {
-
+        } @else if (detalleSeleccionado.tipoVenta === 'PRESENCIAL') {
           <section class="pos-info">
-
             <span>VENTA PRESENCIAL</span>
-
-            <strong>
-              Entrega inmediata en tienda
-            </strong>
-
-            <small>
-              Esta venta no genera costo de delivery.
-            </small>
-
+            <strong>Entrega inmediata en tienda</strong>
+            <small>Esta venta no genera costo de delivery.</small>
           </section>
-
         }
-
 
         <!-- PRODUCTOS -->
 
         <div class="detail-table">
-
           <table>
-
             <thead>
-
               <tr>
-
                 <th>PRODUCTO</th>
-
                 <th>TALLA</th>
-
                 <th>CANT.</th>
-
                 <th>PRECIO</th>
-
                 <th>SUBTOTAL</th>
-
               </tr>
-
             </thead>
 
-
             <tbody>
-
-              @for (
-                detalle of detalles;
-                track detalle.idDetalleVenta
-              ) {
-
+              @for (detalle of detalles; track detalle.idDetalleVenta) {
                 <tr>
-
                   <td>
-
-                    <strong>
-
-                      {{
-                        detalle
-                          .productoTalla
-                          .producto
-                          .nombre
-                      }}
-
-                    </strong>
-
+                    <strong>{{ detalle.productoTalla.producto.nombre }}</strong>
                   </td>
 
-
                   <td>
-
-                    {{
-                      detalle
-                        .productoTalla
-                        .talla
-                        .nombreTalla
-                    }}
-
+                    {{ detalle.productoTalla.talla.nombreTalla }}
                   </td>
-
 
                   <td>
                     {{ detalle.cantidad }}
                   </td>
 
-
                   <td>
-
-                    S/
-                    {{
-                      detalle
-                        .precioUnitario
-                        | number:'1.2-2'
-                    }}
-
+                    S/ {{ detalle.precioUnitario | number:'1.2-2' }}
                   </td>
 
-
                   <td>
-
-                    <strong>
-
-                      S/
-                      {{
-                        detalle
-                          .subtotal
-                          | number:'1.2-2'
-                      }}
-
-                    </strong>
-
+                    <strong>S/ {{ detalle.subtotal | number:'1.2-2' }}</strong>
                   </td>
-
                 </tr>
-
               }
-
             </tbody>
-
           </table>
-
         </div>
-
 
         <!-- RESUMEN -->
 
         <section class="sale-summary">
-
           <div>
-
             <span>PRODUCTOS</span>
-
-            <strong>
-              {{ cantidadProductosDetalle }}
-            </strong>
-
+            <strong>{{ cantidadProductosDetalle }}</strong>
           </div>
 
-
           <div>
-
             <span>SUBTOTAL</span>
-
-            <strong>
-
-              S/
-              {{
-                subtotalDetalle
-                  | number:'1.2-2'
-              }}
-
-            </strong>
-
+            <strong>S/ {{ subtotalDetalle | number:'1.2-2' }}</strong>
           </div>
-
 
           <div>
-
             <span>DELIVERY</span>
-
-            <strong>
-
-              S/
-              {{
-                costoDeliveryDetalle
-                  | number:'1.2-2'
-              }}
-
-            </strong>
-
+            <strong>S/ {{ costoDeliveryDetalle | number:'1.2-2' }}</strong>
           </div>
-
 
           <div class="summary-total">
-
             <span>TOTAL</span>
-
-            <strong>
-
-              S/
-              {{
-                totalDetalle
-                  | number:'1.2-2'
-              }}
-
-            </strong>
-
+            <strong>S/ {{ totalDetalle | number:'1.2-2' }}</strong>
           </div>
-
         </section>
-
       }
-
     </section>
-
   </div>
-
 }

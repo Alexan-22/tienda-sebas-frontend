@@ -1,66 +1,33 @@
 <app-promo-bar></app-promo-bar>
-
 <app-navbar></app-navbar>
 
+<main class="min-h-screen bg-neutral-50">
+  <section class="mx-auto max-w-[1400px] px-5 py-14 lg:px-10 lg:py-20">
 
-<main
-  class="min-h-screen bg-neutral-50">
-
-  <section
-    class="mx-auto max-w-[1400px] px-5 py-14 lg:px-10 lg:py-20">
-
-
-    <div
-      class="mb-10">
-
-      <p
-        class="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
-
+    <div class="mb-10">
+      <p class="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
         Finalizar pedido
-
       </p>
 
-      <h1
-        class="mt-3 text-5xl font-black uppercase tracking-[-0.06em]">
-
+      <h1 class="mt-3 text-5xl font-black uppercase tracking-[-0.06em]">
         Checkout
-
       </h1>
-
     </div>
 
-
-    <div
-      class="grid gap-10 lg:grid-cols-[1fr_420px]">
-
+    <div class="grid gap-10 lg:grid-cols-[1fr_420px]">
 
       <!-- DATOS DE ENTREGA -->
 
       <div class="space-y-7">
-
-
-        <section
-          class="bg-white p-7 lg:p-10">
-
-          <p
-            class="text-[10px] font-black uppercase tracking-[0.2em]">
-
+        <section class="bg-white p-7 lg:p-10">
+          <p class="text-[10px] font-black uppercase tracking-[0.2em]">
             01 · Datos de entrega
-
           </p>
 
-
-          <div
-            class="mt-7 grid gap-5 sm:grid-cols-2">
-
-
+          <div class="mt-7 grid gap-5 sm:grid-cols-2">
             <div>
-
-              <label
-                class="text-[9px] font-black uppercase tracking-[0.15em]">
-
+              <label class="text-[9px] font-black uppercase tracking-[0.15em]">
                 Nombres *
-
               </label>
 
               <input
@@ -69,17 +36,11 @@
                 [(ngModel)]="datos.nombres"
                 autocomplete="given-name"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
-
             </div>
 
-
             <div>
-
-              <label
-                class="text-[9px] font-black uppercase tracking-[0.15em]">
-
+              <label class="text-[9px] font-black uppercase tracking-[0.15em]">
                 Apellidos *
-
               </label>
 
               <input
@@ -88,17 +49,11 @@
                 [(ngModel)]="datos.apellidos"
                 autocomplete="family-name"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
-
             </div>
 
-
             <div>
-
-              <label
-                class="text-[9px] font-black uppercase tracking-[0.15em]">
-
+              <label class="text-[9px] font-black uppercase tracking-[0.15em]">
                 Teléfono *
-
               </label>
 
               <input
@@ -110,17 +65,11 @@
                 placeholder="999999999"
                 autocomplete="tel"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
-
             </div>
 
-
             <div>
-
-              <label
-                class="text-[9px] font-black uppercase tracking-[0.15em]">
-
+              <label class="text-[9px] font-black uppercase tracking-[0.15em]">
                 Departamento *
-
               </label>
 
               <input
@@ -130,17 +79,11 @@
                 placeholder="Lima"
                 autocomplete="address-level1"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
-
             </div>
 
-
             <div>
-
-              <label
-                class="text-[9px] font-black uppercase tracking-[0.15em]">
-
+              <label class="text-[9px] font-black uppercase tracking-[0.15em]">
                 Provincia *
-
               </label>
 
               <input
@@ -150,17 +93,11 @@
                 placeholder="Lima"
                 autocomplete="address-level2"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
-
             </div>
 
-
             <div>
-
-              <label
-                class="text-[9px] font-black uppercase tracking-[0.15em]">
-
+              <label class="text-[9px] font-black uppercase tracking-[0.15em]">
                 Distrito *
-
               </label>
 
               <input
@@ -170,18 +107,11 @@
                 placeholder="San Juan de Lurigancho"
                 autocomplete="address-level3"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
-
             </div>
 
-
-            <div
-              class="sm:col-span-2">
-
-              <label
-                class="text-[9px] font-black uppercase tracking-[0.15em]">
-
+            <div class="sm:col-span-2">
+              <label class="text-[9px] font-black uppercase tracking-[0.15em]">
                 Dirección exacta *
-
               </label>
 
               <input
@@ -191,18 +121,11 @@
                 placeholder="Av. / Jr. / Calle, número, interior"
                 autocomplete="street-address"
                 class="mt-3 h-14 w-full border border-neutral-300 px-4 text-sm outline-none focus:border-black">
-
             </div>
 
-
-            <div
-              class="sm:col-span-2">
-
-              <label
-                class="text-[9px] font-black uppercase tracking-[0.15em]">
-
+            <div class="sm:col-span-2">
+              <label class="text-[9px] font-black uppercase tracking-[0.15em]">
                 Referencia
-
               </label>
 
               <textarea
@@ -212,66 +135,35 @@
                 placeholder="Ej. Frente al parque, puerta negra..."
                 class="mt-3 w-full resize-none border border-neutral-300 p-4 text-sm outline-none focus:border-black">
               </textarea>
-
             </div>
-
           </div>
 
-
-          <div
-            class="mt-6 border border-neutral-200 bg-neutral-50 p-5">
-
-            <p
-              class="text-[9px] font-black uppercase tracking-[0.15em] text-neutral-500">
-
+          <div class="mt-6 border border-neutral-200 bg-neutral-50 p-5">
+            <p class="text-[9px] font-black uppercase tracking-[0.15em] text-neutral-500">
               Tarifa de envío estimada
-
             </p>
 
-            <p
-              class="mt-2 text-sm text-neutral-600">
-
+            <p class="mt-2 text-sm text-neutral-600">
               Lima / Lima:
-              <strong class="text-black">
-                S/ 10.00
-              </strong>
-
+              <strong class="text-black">S/ 10.00</strong>
               · Otras provincias:
-              <strong class="text-black">
-                S/ 20.00
-              </strong>
-
+              <strong class="text-black">S/ 20.00</strong>
             </p>
 
-            <p
-              class="mt-2 text-[10px] text-neutral-400">
-
+            <p class="mt-2 text-[10px] text-neutral-400">
               El monto definitivo es calculado y validado por el servidor al registrar la compra.
-
             </p>
-
           </div>
-
         </section>
-
 
         <!-- PAGO -->
 
-        <section
-          class="bg-white p-7 lg:p-10">
-
-          <p
-            class="text-[10px] font-black uppercase tracking-[0.2em]">
-
+        <section class="bg-white p-7 lg:p-10">
+          <p class="text-[10px] font-black uppercase tracking-[0.2em]">
             02 · Método de pago
-
           </p>
 
-
-          <div
-            class="mt-7 grid gap-4 sm:grid-cols-2">
-
-
+          <div class="mt-7 grid gap-4 sm:grid-cols-2">
             <button
               type="button"
               (click)="seleccionarPago('YAPE')"
@@ -281,22 +173,9 @@
               [class.border]="datos.metodoPago !== 'YAPE'"
               [class.border-neutral-200]="datos.metodoPago !== 'YAPE'">
 
-              <p
-                class="text-lg font-black">
-
-                YAPE
-
-              </p>
-
-              <p
-                class="mt-2 text-xs text-neutral-500">
-
-                Pago mediante Yape.
-
-              </p>
-
+              <p class="text-lg font-black">YAPE</p>
+              <p class="mt-2 text-xs text-neutral-500">Pago mediante Yape.</p>
             </button>
-
 
             <button
               type="button"
@@ -307,202 +186,70 @@
               [class.border]="datos.metodoPago !== 'TARJETA'"
               [class.border-neutral-200]="datos.metodoPago !== 'TARJETA'">
 
-              <p
-                class="text-lg font-black">
-
-                TARJETA
-
-              </p>
-
-              <p
-                class="mt-2 text-xs text-neutral-500">
-
-                Pago con tarjeta.
-
-              </p>
-
+              <p class="text-lg font-black">TARJETA</p>
+              <p class="mt-2 text-xs text-neutral-500">Pago con tarjeta.</p>
             </button>
-
           </div>
-
         </section>
 
-
         @if (error) {
-
-          <div
-            class="border border-red-200 bg-red-50 p-5">
-
-            <p
-              class="text-xs text-red-700">
-
-              {{ error }}
-
-            </p>
-
+          <div class="border border-red-200 bg-red-50 p-5">
+            <p class="text-xs text-red-700">{{ error }}</p>
           </div>
-
         }
-
       </div>
-
 
       <!-- RESUMEN -->
 
       <aside>
-
-        <div
-          class="sticky top-[110px] bg-white p-7">
-
-
-          <p
-            class="text-[10px] font-black uppercase tracking-[0.2em]">
-
+        <div class="sticky top-[110px] bg-white p-7">
+          <p class="text-[10px] font-black uppercase tracking-[0.2em]">
             Tu pedido
-
           </p>
 
-
-          <div
-            class="mt-7 space-y-5">
-
-
-            @for (
-              item of items();
-              track item.idProductoTalla
-            ) {
-
-              <div
-                class="flex justify-between gap-5 border-b border-neutral-100 pb-5">
-
+          <div class="mt-7 space-y-5">
+            @for (item of items(); track item.idProductoTalla) {
+              <div class="flex justify-between gap-5 border-b border-neutral-100 pb-5">
                 <div>
+                  <p class="text-xs font-bold">{{ item.nombre }}</p>
 
-                  <p
-                    class="text-xs font-bold">
-
-                    {{ item.nombre }}
-
+                  <p class="mt-1 text-[9px] text-neutral-400">
+                    Talla {{ item.talla }} · Cant. {{ item.cantidad }}
                   </p>
-
-                  <p
-                    class="mt-1 text-[9px] text-neutral-400">
-
-                    Talla {{ item.talla }}
-                    ·
-                    Cant. {{ item.cantidad }}
-
-                  </p>
-
                 </div>
 
-
-                <strong
-                  class="whitespace-nowrap text-xs">
-
-                  S/
-                  {{
-                    item.precio *
-                    item.cantidad
-                      | number:'1.2-2'
-                  }}
-
+                <strong class="whitespace-nowrap text-xs">
+                  S/ {{ item.precio * item.cantidad | number:'1.2-2' }}
                 </strong>
-
               </div>
-
             }
-
           </div>
 
-
-          <div
-            class="mt-6 flex justify-between text-sm">
-
-            <span
-              class="text-neutral-500">
-
-              Subtotal
-
-            </span>
-
-            <strong>
-
-              S/
-              {{
-                subtotal()
-                  | number:'1.2-2'
-              }}
-
-            </strong>
-
+          <div class="mt-6 flex justify-between text-sm">
+            <span class="text-neutral-500">Subtotal</span>
+            <strong>S/ {{ subtotal() | number:'1.2-2' }}</strong>
           </div>
 
-
-          <div
-            class="mt-5 flex justify-between text-sm">
-
-            <span
-              class="text-neutral-500">
-
-              Delivery
-
-            </span>
+          <div class="mt-5 flex justify-between text-sm">
+            <span class="text-neutral-500">Delivery</span>
 
             <strong>
-
-              @if (
-                datos.departamento.trim() &&
-                datos.provincia.trim()
-              ) {
-
-                S/
-                {{
-                  costoDeliveryEstimado
-                    | number:'1.2-2'
-                }}
-
+              @if (datos.departamento.trim() && datos.provincia.trim()) {
+                S/ {{ costoDeliveryEstimado | number:'1.2-2' }}
               } @else {
-
                 Por calcular
-
               }
-
             </strong>
-
           </div>
 
-
-          <div
-            class="mt-6 flex justify-between border-t border-neutral-200 pt-6">
-
-            <span
-              class="font-black uppercase">
-
-              Total
-
-            </span>
-
-            <strong
-              class="text-xl">
-
-              S/
-              {{
-                totalEstimado
-                  | number:'1.2-2'
-              }}
-
-            </strong>
-
+          <div class="mt-6 flex justify-between border-t border-neutral-200 pt-6">
+            <span class="font-black uppercase">Total</span>
+            <strong class="text-xl">S/ {{ totalEstimado | number:'1.2-2' }}</strong>
           </div>
 
-
-          <p
-            class="mt-3 text-[9px] leading-4 text-neutral-400">
-
+          <p class="mt-3 text-[9px] leading-4 text-neutral-400">
             El total final será confirmado por el servidor al procesar tu compra.
-
           </p>
-
 
           <button
             type="button"
@@ -511,42 +258,23 @@
             class="mt-7 h-16 w-full bg-black text-[10px] font-black uppercase tracking-[0.2em] text-white disabled:bg-neutral-400">
 
             @if (procesando) {
-
               Procesando...
-
-            } @else if (
-              datos.metodoPago ===
-              'YAPE'
-            ) {
-
+            } @else if (datos.metodoPago === 'YAPE') {
               Continuar con Yape
-
             } @else {
-
               Continuar con tarjeta
-
             }
-
           </button>
-
 
           <a
             routerLink="/carrito"
             class="mt-5 block text-center text-[9px] font-black uppercase tracking-[0.15em] underline">
-
             Volver al carrito
-
           </a>
-
         </div>
-
       </aside>
-
     </div>
-
   </section>
-
 </main>
-
 
 <app-footer></app-footer>

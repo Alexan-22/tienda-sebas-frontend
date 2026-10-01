@@ -481,19 +481,38 @@ html {
    ========================================================= */
 
 @media (max-width: 520px) {
-
   .hero-slide {
-    min-height: 620px;
+    min-height: 590px;
+  }
+
+  .hero-content h1 {
+    font-size: 46px;
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+  }
+
+  .hero-content a {
+    min-height: 52px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 
   .collection-public-card {
-    min-height: 470px;
+    min-height: 460px;
+  }
+
+  .collection-public-card > div:last-child {
+    padding: 24px;
+  }
+
+  .collection-public-card h3 {
+    font-size: 32px;
+    line-height: 1;
   }
 
   .carousel-arrow {
     width: 38px;
     height: 38px;
-
     font-size: 24px;
   }
 
@@ -508,7 +527,6 @@ html {
   .carousel-dots {
     bottom: 34px;
   }
-
 }
 
 

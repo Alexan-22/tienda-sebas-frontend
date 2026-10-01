@@ -2,7 +2,6 @@
   display: block;
 }
 
-
 /* ==========================================
    CABECERA
 ========================================== */
@@ -15,9 +14,7 @@
 .title p,
 .modal-header p {
   margin: 0 0 7px;
-
   color: #999;
-
   font-size: 8px;
   font-weight: 900;
   letter-spacing: .2em;
@@ -25,7 +22,6 @@
 
 h1 {
   margin: 0;
-
   font-size: 34px;
   font-weight: 900;
   text-transform: uppercase;
@@ -33,14 +29,10 @@ h1 {
 
 .page-header span {
   display: block;
-
   margin-top: 8px;
-
   color: #777;
-
   font-size: 10px;
 }
-
 
 /* ==========================================
    ESTADÍSTICAS
@@ -48,26 +40,19 @@ h1 {
 
 .stats {
   display: grid;
-
-  grid-template-columns:
-    repeat(3, 1fr);
-
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-
   margin-bottom: 18px;
 }
 
 .stats article {
   padding: 22px;
-
   background: white;
-
   border: 1px solid #e5e5e5;
 }
 
 .stats span {
   color: #999;
-
   font-size: 8px;
   font-weight: 900;
   letter-spacing: .12em;
@@ -75,25 +60,18 @@ h1 {
 
 .stats strong {
   display: block;
-
   margin-top: 12px;
-
   color: #111;
-
   font-size: 28px;
   font-weight: 900;
 }
 
 .stats small {
   display: block;
-
   margin-top: 7px;
-
   color: #aaa;
-
   font-size: 8px;
 }
-
 
 /* ==========================================
    PANEL
@@ -101,20 +79,15 @@ h1 {
 
 .panel {
   background: white;
-
   border: 1px solid #e5e5e5;
 }
 
 .panel-header {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
   gap: 20px;
-
   padding: 20px 22px;
-
   border-bottom: 1px solid #eee;
 }
 
@@ -124,18 +97,15 @@ h1 {
 
 .title {
   padding: 0;
-
   border: 0;
 }
 
 .title h2 {
   margin: 0;
-
   font-size: 15px;
   font-weight: 900;
   text-transform: uppercase;
 }
-
 
 /* ==========================================
    FILTROS
@@ -143,24 +113,17 @@ h1 {
 
 .filters {
   display: flex;
-
   gap: 8px;
 }
 
 .filters input,
 .filters select {
   height: 42px;
-
   padding: 0 13px;
-
   background: white;
-
   border: 1px solid #ddd;
-
   outline: none;
-
   color: #333;
-
   font-size: 9px;
 }
 
@@ -177,18 +140,14 @@ h1 {
   border-color: #111;
 }
 
-
 /* ==========================================
    MENSAJES
 ========================================== */
 
 .message {
   padding: 70px 20px;
-
   color: #888;
-
   text-align: center;
-
   font-size: 10px;
 }
 
@@ -197,20 +156,17 @@ h1 {
   color: #c62828;
 }
 
-
 /* ==========================================
    TABLA
 ========================================== */
 
 .table-wrapper {
   width: 100%;
-
   overflow-x: auto;
 }
 
 table {
   width: 100%;
-
   border-collapse: collapse;
 }
 
@@ -220,27 +176,19 @@ thead {
 
 th {
   padding: 15px 18px;
-
   color: #999;
-
   text-align: left;
-
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .15em;
-
   border-bottom: 1px solid #eee;
 }
 
 td {
   padding: 17px 18px;
-
   color: #333;
-
   font-size: 10px;
-
   border-bottom: 1px solid #eee;
-
   vertical-align: middle;
 }
 
@@ -254,14 +202,10 @@ tbody tr:hover {
 
 .time {
   display: block;
-
   margin-top: 4px;
-
   color: #aaa;
-
   font-size: 8px;
 }
-
 
 /* ==========================================
    CLIENTE
@@ -269,22 +213,16 @@ tbody tr:hover {
 
 .customer strong {
   display: block;
-
   color: #111;
-
   font-size: 10px;
 }
 
 .customer span {
   display: block;
-
   margin-top: 4px;
-
   color: #999;
-
   font-size: 8px;
 }
-
 
 /* ==========================================
    BADGES
@@ -292,13 +230,9 @@ tbody tr:hover {
 
 .payment {
   display: inline-block;
-
   padding: 6px 9px;
-
   background: #f2f2f2;
-
   color: #222;
-
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .08em;
@@ -306,18 +240,13 @@ tbody tr:hover {
 
 .status {
   display: inline-block;
-
   padding: 6px 9px;
-
   background: #e9faf2;
-
   color: #08794f;
-
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .08em;
 }
-
 
 /* ==========================================
    BOTÓN DETALLE
@@ -325,15 +254,10 @@ tbody tr:hover {
 
 .detail-button {
   min-width: 100px;
-
   padding: 11px 14px;
-
   background: #0b0b0b;
-
   border: 1px solid #0b0b0b;
-
   color: white;
-
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .05em;
@@ -343,60 +267,40 @@ tbody tr:hover {
   background: #292929;
 }
 
-
 /* ==========================================
    MODAL
 ========================================== */
 
 .modal-backdrop {
   position: fixed;
-
   inset: 0;
-
   z-index: 1000;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   padding: 25px;
-
-  background:
-    rgba(0, 0, 0, .55);
+  background: rgba(0, 0, 0, .55);
 }
 
 .modal {
-  width: min(
-    900px,
-    100%
-  );
-
+  width: min(900px, 100%);
   max-height: 90vh;
-
   overflow-y: auto;
-
   background: white;
-
   border: 1px solid #ddd;
 }
 
 .modal-header {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
   padding: 22px 25px;
-
   border-bottom: 1px solid #eee;
 }
 
 .modal-header h2 {
   margin: 0;
-
   color: #111;
-
   font-size: 20px;
   font-weight: 900;
   text-transform: uppercase;
@@ -405,23 +309,17 @@ tbody tr:hover {
 .close-button {
   width: 38px;
   height: 38px;
-
   background: white;
-
   border: 1px solid #ddd;
-
   color: #111;
-
   font-size: 22px;
   line-height: 1;
 }
 
 .close-button:hover {
   background: #111;
-
   color: white;
 }
-
 
 /* ==========================================
    INFO DE LA VENTA
@@ -429,18 +327,13 @@ tbody tr:hover {
 
 .sale-info {
   display: grid;
-
-  grid-template-columns:
-    2fr 1fr 1fr 1fr;
-
+  grid-template-columns: 2fr 1fr 1fr 1fr;
   border-bottom: 1px solid #eee;
 }
 
 .sale-info > div {
   min-height: 90px;
-
   padding: 20px;
-
   border-right: 1px solid #eee;
 }
 
@@ -450,11 +343,8 @@ tbody tr:hover {
 
 .sale-info span {
   display: block;
-
   margin-bottom: 8px;
-
   color: #999;
-
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .13em;
@@ -462,22 +352,16 @@ tbody tr:hover {
 
 .sale-info strong {
   display: block;
-
   color: #111;
-
   font-size: 10px;
 }
 
 .sale-info small {
   display: block;
-
   margin-top: 5px;
-
   color: #999;
-
   font-size: 8px;
 }
-
 
 /* ==========================================
    DETALLE
@@ -485,11 +369,8 @@ tbody tr:hover {
 
 .modal-message {
   padding: 60px 20px;
-
   color: #888;
-
   text-align: center;
-
   font-size: 10px;
 }
 
@@ -499,22 +380,16 @@ tbody tr:hover {
 
 .modal-total {
   display: flex;
-
   align-items: center;
   justify-content: flex-end;
-
   gap: 30px;
-
   padding: 22px 25px;
-
   background: #fafafa;
-
   border-top: 1px solid #eee;
 }
 
 .modal-total span {
   color: #777;
-
   font-size: 8px;
   font-weight: 900;
   letter-spacing: .15em;
@@ -522,20 +397,15 @@ tbody tr:hover {
 
 .modal-total strong {
   color: #111;
-
   font-size: 24px;
   font-weight: 900;
 }
-
 
 /* ==========================================
    RESPONSIVE
 ========================================== */
 
-@media (
-  max-width: 1000px
-) {
-
+@media (max-width: 1000px) {
   .panel-header {
     align-items: stretch;
     flex-direction: column;
@@ -549,14 +419,9 @@ tbody tr:hover {
     flex: 1;
     min-width: 220px;
   }
-
 }
 
-
-@media (
-  max-width: 700px
-) {
-
+@media (max-width: 700px) {
   .stats {
     grid-template-columns: 1fr;
   }
@@ -571,22 +436,15 @@ tbody tr:hover {
   }
 
   .sale-info {
-    grid-template-columns:
-      1fr 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 
   .sale-info > div {
-    border-bottom:
-      1px solid #eee;
+    border-bottom: 1px solid #eee;
   }
-
 }
 
-
-@media (
-  max-width: 480px
-) {
-
+@media (max-width: 480px) {
   h1 {
     font-size: 28px;
   }
@@ -598,7 +456,6 @@ tbody tr:hover {
   .modal-backdrop {
     padding: 10px;
   }
-
 }
 
 /* ==========================================
@@ -607,9 +464,7 @@ tbody tr:hover {
 
 .delivery-info {
   padding: 22px 25px;
-
   background: #fafafa;
-
   border-bottom: 1px solid #eee;
 }
 
@@ -621,11 +476,8 @@ tbody tr:hover {
 .delivery-grid span,
 .sale-summary span {
   display: block;
-
   margin-bottom: 7px;
-
   color: #999;
-
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .13em;
@@ -633,7 +485,6 @@ tbody tr:hover {
 
 .delivery-title strong {
   color: #111;
-
   font-size: 13px;
   font-weight: 900;
   text-transform: uppercase;
@@ -641,39 +492,28 @@ tbody tr:hover {
 
 .delivery-grid {
   display: grid;
-
-  grid-template-columns:
-    2fr 1fr;
-
+  grid-template-columns: 2fr 1fr;
   gap: 12px;
 }
 
 .delivery-grid > div {
   padding: 16px;
-
   background: white;
-
   border: 1px solid #e5e5e5;
 }
 
 .delivery-grid strong {
   display: block;
-
   color: #111;
-
   font-size: 10px;
 }
 
 .delivery-grid small {
   display: block;
-
   margin-top: 6px;
-
   color: #888;
-
   font-size: 8px;
 }
-
 
 /* ==========================================
    RESUMEN DE VENTA
@@ -681,20 +521,14 @@ tbody tr:hover {
 
 .sale-summary {
   display: grid;
-
-  grid-template-columns:
-    repeat(4, 1fr);
-
+  grid-template-columns: repeat(4, 1fr);
   background: #fafafa;
-
   border-top: 1px solid #eee;
 }
 
 .sale-summary > div {
   min-height: 80px;
-
   padding: 18px 20px;
-
   border-right: 1px solid #eee;
 }
 
@@ -704,9 +538,7 @@ tbody tr:hover {
 
 .sale-summary strong {
   display: block;
-
   color: #111;
-
   font-size: 14px;
   font-weight: 900;
 }
@@ -721,46 +553,32 @@ tbody tr:hover {
 
 .sale-summary .summary-total strong {
   color: white;
-
   font-size: 19px;
 }
-
 
 /* ==========================================
    RESPONSIVE DELIVERY
 ========================================== */
 
-@media (
-  max-width: 700px
-) {
-
+@media (max-width: 700px) {
   .delivery-grid {
     grid-template-columns: 1fr;
   }
 
   .sale-summary {
-    grid-template-columns:
-      1fr 1fr;
+    grid-template-columns: 1fr 1fr;
   }
-
 }
 
-
-@media (
-  max-width: 480px
-) {
-
+@media (max-width: 480px) {
   .sale-summary {
     grid-template-columns: 1fr;
   }
 
   .sale-summary > div {
     border-right: 0;
-
-    border-bottom:
-      1px solid #eee;
+    border-bottom: 1px solid #eee;
   }
-
 }
 
 /* ==========================================
@@ -769,28 +587,20 @@ tbody tr:hover {
 
 .channel-stats {
   display: grid;
-
-  grid-template-columns:
-    repeat(5, 1fr);
-
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
-
   margin-bottom: 18px;
 }
 
 .channel-stats article {
   padding: 16px 18px;
-
   background: white;
-
   border: 1px solid #e5e5e5;
 }
 
 .channel-stats span {
   display: block;
-
   color: #999;
-
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .13em;
@@ -798,25 +608,18 @@ tbody tr:hover {
 
 .channel-stats strong {
   display: block;
-
   margin-top: 8px;
-
   color: #111;
-
   font-size: 21px;
   font-weight: 900;
 }
 
 .channel-stats small {
   display: block;
-
   margin-top: 5px;
-
   color: #aaa;
-
   font-size: 7px;
 }
-
 
 /* ==========================================
    TIPO DE VENTA
@@ -824,9 +627,7 @@ tbody tr:hover {
 
 .sale-type {
   display: inline-block;
-
   padding: 6px 9px;
-
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .08em;
@@ -835,16 +636,13 @@ tbody tr:hover {
 
 .sale-type.online {
   background: #eef4ff;
-
   color: #2457a7;
 }
 
 .sale-type.presencial {
   background: #fff4e5;
-
   color: #9a5a00;
 }
-
 
 /* ==========================================
    EFECTIVO
@@ -852,10 +650,8 @@ tbody tr:hover {
 
 .payment.cash {
   background: #eef8ee;
-
   color: #28752d;
 }
-
 
 /* ==========================================
    LIMPIAR FILTROS
@@ -863,19 +659,13 @@ tbody tr:hover {
 
 .clear-button {
   height: 42px;
-
   padding: 0 15px;
-
   background: #111;
-
   border: 1px solid #111;
-
   color: white;
-
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .08em;
-
   cursor: pointer;
 }
 
@@ -883,31 +673,23 @@ tbody tr:hover {
   background: #333;
 }
 
-
 /* ==========================================
    CANAL EN MODAL
 ========================================== */
 
 .sale-channel {
   display: flex;
-
   align-items: center;
-
   gap: 12px;
-
   padding: 14px 25px;
-
   background: #fafafa;
-
   border-bottom: 1px solid #eee;
 }
 
 .sale-channel small {
   color: #888;
-
   font-size: 8px;
 }
-
 
 /* ==========================================
    INFORMACIÓN POS
@@ -915,19 +697,14 @@ tbody tr:hover {
 
 .pos-info {
   padding: 22px 25px;
-
   background: #fafafa;
-
   border-bottom: 1px solid #eee;
 }
 
 .pos-info span {
   display: block;
-
   margin-bottom: 7px;
-
   color: #999;
-
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .13em;
@@ -935,9 +712,7 @@ tbody tr:hover {
 
 .pos-info strong {
   display: block;
-
   color: #111;
-
   font-size: 13px;
   font-weight: 900;
   text-transform: uppercase;
@@ -945,51 +720,32 @@ tbody tr:hover {
 
 .pos-info small {
   display: block;
-
   margin-top: 6px;
-
   color: #888;
-
   font-size: 8px;
 }
-
 
 /* ==========================================
    RESPONSIVE CANALES
 ========================================== */
 
-@media (
-  max-width: 1000px
-) {
-
+@media (max-width: 1000px) {
   .channel-stats {
-    grid-template-columns:
-      repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
-
 }
 
-
-@media (
-  max-width: 700px
-) {
-
+@media (max-width: 700px) {
   .channel-stats {
-    grid-template-columns:
-      1fr 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 
   .clear-button {
     width: 100%;
   }
-
 }
 
-
-@media (
-  max-width: 480px
-) {
-
+@media (max-width: 480px) {
   .channel-stats {
     grid-template-columns: 1fr;
   }
@@ -998,5 +754,4 @@ tbody tr:hover {
     align-items: flex-start;
     flex-direction: column;
   }
-
 }

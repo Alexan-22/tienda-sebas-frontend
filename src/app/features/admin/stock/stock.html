@@ -2,221 +2,121 @@
 
   <header class="page-header">
     <div>
-      <p class="eyebrow">
-        INVENTARIO
-      </p>
-
-      <h1>
-        Stock y tallas
-      </h1>
-
-      <span>
-        Controla las existencias disponibles
-        de cada producto.
-      </span>
+      <p class="eyebrow">INVENTARIO</p>
+      <h1>Stock y tallas</h1>
+      <span>Controla las existencias disponibles de cada producto.</span>
     </div>
   </header>
-
 
   <!-- ===================================================== -->
   <!-- ESTADÍSTICAS -->
   <!-- ===================================================== -->
 
   <section class="stats">
-
     <article>
-      <div class="stat-icon">
-        ▣
-      </div>
+      <div class="stat-icon">▣</div>
 
       <div>
         <span>PRODUCTOS</span>
-
-        <strong>
-          {{ inventario.length }}
-        </strong>
-
-        <small>
-          Productos registrados
-        </small>
+        <strong>{{ inventario.length }}</strong>
+        <small>Productos registrados</small>
       </div>
     </article>
 
-
     <article>
-      <div class="stat-icon">
-        ≡
-      </div>
+      <div class="stat-icon">≡</div>
 
       <div>
         <span>UNIDADES</span>
-
-        <strong>
-          {{ stockTotal }}
-        </strong>
-
-        <small>
-          Stock total disponible
-        </small>
+        <strong>{{ stockTotal }}</strong>
+        <small>Stock total disponible</small>
       </div>
     </article>
 
-
     <article>
-      <div class="stat-icon warning">
-        !
-      </div>
+      <div class="stat-icon warning">!</div>
 
       <div>
         <span>STOCK BAJO</span>
-
-        <strong>
-          {{ productosStockBajo }}
-        </strong>
-
-        <small>
-          Tallas con 5 o menos
-        </small>
+        <strong>{{ productosStockBajo }}</strong>
+        <small>Tallas con 5 o menos</small>
       </div>
     </article>
 
-
     <article>
-      <div class="stat-icon danger">
-        ×
-      </div>
+      <div class="stat-icon danger">×</div>
 
       <div>
         <span>SIN STOCK</span>
-
-        <strong>
-          {{ productosSinStock }}
-        </strong>
-
-        <small>
-          Productos agotados
-        </small>
+        <strong>{{ productosSinStock }}</strong>
+        <small>Productos agotados</small>
       </div>
     </article>
-
   </section>
-
 
   <!-- ===================================================== -->
   <!-- PANEL -->
   <!-- ===================================================== -->
 
   <section class="panel">
-
     <div class="panel-header">
-
       <div>
-        <p class="eyebrow">
-          CONTROL DE INVENTARIO
-        </p>
-
-        <h2>
-          Productos
-        </h2>
+        <p class="eyebrow">CONTROL DE INVENTARIO</p>
+        <h2>Productos</h2>
       </div>
-
 
       <div class="search">
         <span>⌕</span>
-
         <input
           type="search"
           [(ngModel)]="busqueda"
           (ngModelChange)="aplicarFiltro()"
-          placeholder="Buscar producto..."
-        >
+          placeholder="Buscar producto...">
       </div>
-
     </div>
-
 
     <!-- =================================================== -->
     <!-- CARGANDO -->
     <!-- =================================================== -->
 
     @if (cargando) {
-
       <div class="message">
-
         <div class="loader"></div>
-
-        <strong>
-          Cargando inventario
-        </strong>
-
-        <span>
-          Consultando productos y tallas...
-        </span>
-
+        <strong>Cargando inventario</strong>
+        <span>Consultando productos y tallas...</span>
       </div>
-
 
     <!-- =================================================== -->
     <!-- ERROR -->
     <!-- =================================================== -->
 
     } @else if (error) {
-
       <div class="message error">
+        <strong>No pudimos cargar el inventario</strong>
+        <span>{{ error }}</span>
 
-        <strong>
-          No pudimos cargar el inventario
-        </strong>
-
-        <span>
-          {{ error }}
-        </span>
-
-        <button
-          type="button"
-          (click)="cargarInventario()"
-        >
+        <button type="button" (click)="cargarInventario()">
           REINTENTAR
         </button>
-
       </div>
-
 
     <!-- =================================================== -->
     <!-- SIN RESULTADOS -->
     <!-- =================================================== -->
 
-    } @else if (
-      inventarioFiltrado.length === 0
-    ) {
-
+    } @else if (inventarioFiltrado.length === 0) {
       <div class="message">
-
-        <strong>
-          SIN RESULTADOS
-        </strong>
-
-        <span>
-          No encontramos productos
-          con ese criterio.
-        </span>
-
+        <strong>SIN RESULTADOS</strong>
+        <span>No encontramos productos con ese criterio.</span>
       </div>
-
 
     <!-- =================================================== -->
     <!-- PRODUCTOS -->
     <!-- =================================================== -->
 
     } @else {
-
       <div class="inventory-list">
-
-        @for (
-          item of inventarioFiltrado;
-          track item.producto.idProducto
-        ) {
-
+        @for (item of inventarioFiltrado; track item.producto.idProducto) {
           <article class="product-card">
 
             <!-- =========================================== -->
@@ -224,435 +124,191 @@
             <!-- =========================================== -->
 
             <div class="product-header">
-
               <div class="product-info">
-
                 <div class="product-image">
-
-                  @if (
-                    imagenUrl(item.producto)
-                  ) {
-
-                    <img
-                      [src]="imagenUrl(item.producto)"
-                      [alt]="item.producto.nombre"
-                    >
-
+                  @if (imagenUrl(item.producto)) {
+                    <img [src]="imagenUrl(item.producto)" [alt]="item.producto.nombre">
                   } @else {
-
-                    <span>
-                      TS
-                    </span>
-
+                    <span>TS</span>
                   }
-
                 </div>
-
 
                 <div>
-
                   <div class="product-title">
+                    <h3>{{ item.producto.nombre }}</h3>
 
-                    <h3>
-                      {{ item.producto.nombre }}
-                    </h3>
-
-                    <span
-                      class="status"
-                      [class.inactive]="
-                        !item.producto.estado
-                      "
-                    >
-                      {{
-                        item.producto.estado
-                          ? 'ACTIVO'
-                          : 'INACTIVO'
-                      }}
+                    <span class="status" [class.inactive]="!item.producto.estado">
+                      {{ item.producto.estado ? 'ACTIVO' : 'INACTIVO' }}
                     </span>
-
                   </div>
 
-
                   <p>
-                    {{
-                      item.producto.categoria
-                        .nombreCategoria
-                    }}
-
+                    {{ item.producto.categoria.nombreCategoria }}
                     <span>•</span>
-
-                    {{
-                      item.producto.genero
-                        .nombreGenero
-                    }}
+                    {{ item.producto.genero.nombreGenero }}
                   </p>
-
                 </div>
-
               </div>
-
 
               <div class="product-stock">
-
-                <span>
-                  STOCK TOTAL
-                </span>
-
-                <strong>
-                  {{ stockProducto(item) }}
-                </strong>
-
-                <small>
-                  unidades
-                </small>
-
+                <span>STOCK TOTAL</span>
+                <strong>{{ stockProducto(item) }}</strong>
+                <small>unidades</small>
               </div>
-
             </div>
-
 
             <!-- =========================================== -->
             <!-- TALLAS ASIGNADAS -->
             <!-- =========================================== -->
 
-            @if (
-              item.tallas.length === 0
-            ) {
-
+            @if (item.tallas.length === 0) {
               <div class="no-sizes">
+                <strong>SIN TALLAS ASIGNADAS</strong>
+                <span>Este producto todavía no tiene tallas ni stock registrados.</span>
 
-                <strong>
-                  SIN TALLAS ASIGNADAS
-                </strong>
-
-                <span>
-                  Este producto todavía no tiene
-                  tallas ni stock registrados.
-                </span>
-
-                @if (
-                  tallasNoAsignadas(item).length > 0
-                ) {
-
+                @if (tallasNoAsignadas(item).length > 0) {
                   <button
                     type="button"
                     class="add-size-button"
-                    (click)="abrirAsignacion(item)"
-                  >
+                    (click)="abrirAsignacion(item)">
                     + ASIGNAR PRIMERA TALLA
                   </button>
-
                 }
-
               </div>
-
             } @else {
-
               <div class="sizes-table">
-
                 <div class="table-head">
-
-                  <span>
-                    TALLA
-                  </span>
-
-                  <span>
-                    ESTADO
-                  </span>
-
-                  <span>
-                    CANTIDAD
-                  </span>
-
-                  <span>
-                    ACCIÓN
-                  </span>
-
+                  <span>TALLA</span>
+                  <span>ESTADO</span>
+                  <span>CANTIDAD</span>
+                  <span>ACCIÓN</span>
                 </div>
 
-
-                @for (
-                  productoTalla of item.tallas;
-                  track productoTalla.idProductoTalla
-                ) {
-
+                @for (productoTalla of item.tallas; track productoTalla.idProductoTalla) {
                   <div class="size-row">
 
                     <!-- TALLA -->
 
                     <div>
-
                       <strong class="size-name">
-                        {{
-                          productoTalla
-                            .talla
-                            .nombreTalla
-                        }}
+                        {{ productoTalla.talla.nombreTalla }}
                       </strong>
-
                     </div>
-
 
                     <!-- ESTADO -->
 
                     <div>
-
-                      @if (
-                        productoTalla.stock === 0
-                      ) {
-
-                        <span
-                          class="stock-status out"
-                        >
-                          SIN STOCK
-                        </span>
-
-                      } @else if (
-                        productoTalla.stock <= 5
-                      ) {
-
-                        <span
-                          class="stock-status low"
-                        >
-                          STOCK BAJO
-                        </span>
-
+                      @if (productoTalla.stock === 0) {
+                        <span class="stock-status out">SIN STOCK</span>
+                      } @else if (productoTalla.stock <= 5) {
+                        <span class="stock-status low">STOCK BAJO</span>
                       } @else {
-
-                        <span
-                          class="stock-status available"
-                        >
-                          DISPONIBLE
-                        </span>
-
+                        <span class="stock-status available">DISPONIBLE</span>
                       }
-
                     </div>
-
 
                     <!-- CANTIDAD -->
 
                     <div class="quantity">
-
-                      <button
-                        type="button"
-                        (click)="
-                          disminuir(
-                            productoTalla
-                          )
-                        "
-                      >
+                      <button type="button" (click)="disminuir(productoTalla)">
                         −
                       </button>
 
                       <input
                         type="number"
                         min="0"
-                        [(ngModel)]="
-                          productoTalla.stock
-                        "
-                      >
+                        [(ngModel)]="productoTalla.stock">
 
-                      <button
-                        type="button"
-                        (click)="
-                          aumentar(
-                            productoTalla
-                          )
-                        "
-                      >
+                      <button type="button" (click)="aumentar(productoTalla)">
                         +
                       </button>
-
                     </div>
-
 
                     <!-- ACTUALIZAR -->
 
                     <div>
-
                       <button
                         type="button"
                         class="save-button"
-                        [disabled]="
-                          guardandoId ===
-                          productoTalla
-                            .idProductoTalla
-                        "
-                        (click)="
-                          actualizarStock(
-                            productoTalla
-                          )
-                        "
-                      >
-                        {{
-                          guardandoId ===
-                          productoTalla
-                            .idProductoTalla
-                            ? 'GUARDANDO...'
-                            : 'ACTUALIZAR'
-                        }}
+                        [disabled]="guardandoId === productoTalla.idProductoTalla"
+                        (click)="actualizarStock(productoTalla)">
+                        {{ guardandoId === productoTalla.idProductoTalla ? 'GUARDANDO...' : 'ACTUALIZAR' }}
                       </button>
-
                     </div>
-
                   </div>
-
                 }
-
               </div>
-
             }
-
 
             <!-- =========================================== -->
             <!-- ACCIONES DE TALLAS -->
             <!-- =========================================== -->
 
-            @if (
-              item.tallas.length > 0
-            ) {
-
+            @if (item.tallas.length > 0) {
               <div class="size-actions">
-
                 <div>
-
-                  <strong>
-                    GESTIÓN DE TALLAS
-                  </strong>
-
-                  <span>
-                    Asigna otra talla disponible
-                    a este producto.
-                  </span>
-
+                  <strong>GESTIÓN DE TALLAS</strong>
+                  <span>Asigna otra talla disponible a este producto.</span>
                 </div>
 
-
-                @if (
-                  tallasNoAsignadas(item).length > 0
-                ) {
-
+                @if (tallasNoAsignadas(item).length > 0) {
                   <button
                     type="button"
                     class="add-size-button"
-                    (click)="abrirAsignacion(item)"
-                  >
-                    {{
-                      productoAsignandoId ===
-                      item.producto.idProducto
-                        ? 'CERRAR'
-                        : '+ ASIGNAR NUEVA TALLA'
-                    }}
+                    (click)="abrirAsignacion(item)">
+                    {{ productoAsignandoId === item.producto.idProducto ? 'CERRAR' : '+ ASIGNAR NUEVA TALLA' }}
                   </button>
-
                 } @else {
-
-                  <span class="all-sizes">
-                    TODAS LAS TALLAS ASIGNADAS
-                  </span>
-
+                  <span class="all-sizes">TODAS LAS TALLAS ASIGNADAS</span>
                 }
-
               </div>
-
             }
-
 
             <!-- =========================================== -->
             <!-- FORMULARIO NUEVA TALLA -->
             <!-- =========================================== -->
 
-            @if (
-              productoAsignandoId ===
-              item.producto.idProducto
-            ) {
-
+            @if (productoAsignandoId === item.producto.idProducto) {
               <div class="assign-size">
-
                 <div class="assign-title">
-
                   <div>
-
-                    <p class="eyebrow">
-                      NUEVA TALLA
-                    </p>
-
-                    <h4>
-                      Asignar talla a
-                      {{ item.producto.nombre }}
-                    </h4>
-
+                    <p class="eyebrow">NUEVA TALLA</p>
+                    <h4>Asignar talla a {{ item.producto.nombre }}</h4>
                   </div>
 
                   <button
                     type="button"
                     class="close-assign"
                     (click)="cancelarAsignacion()"
-                    [disabled]="guardandoNuevaTalla"
-                  >
+                    [disabled]="guardandoNuevaTalla">
                     ×
                   </button>
-
                 </div>
-
 
                 <div class="assign-form">
 
                   <!-- SELECT TALLA -->
 
                   <label>
+                    <span>TALLA</span>
 
-                    <span>
-                      TALLA
-                    </span>
-
-                    <select
-                      [(ngModel)]="nuevaTallaId"
-                      [disabled]="guardandoNuevaTalla"
-                    >
-
-                      @for (
-                        talla of tallasNoAsignadas(item);
-                        track talla.idTalla
-                      ) {
-
-                        <option
-                          [ngValue]="talla.idTalla"
-                        >
-                          {{ talla.nombreTalla }}
-                        </option>
-
+                    <select [(ngModel)]="nuevaTallaId" [disabled]="guardandoNuevaTalla">
+                      @for (talla of tallasNoAsignadas(item); track talla.idTalla) {
+                        <option [ngValue]="talla.idTalla">{{ talla.nombreTalla }}</option>
                       }
-
                     </select>
-
                   </label>
-
 
                   <!-- STOCK INICIAL -->
 
                   <label>
-
-                    <span>
-                      STOCK INICIAL
-                    </span>
+                    <span>STOCK INICIAL</span>
 
                     <div class="initial-stock">
-
                       <button
                         type="button"
-                        [disabled]="
-                          guardandoNuevaTalla ||
-                          nuevoStock <= 0
-                        "
-                        (click)="
-                          nuevoStock =
-                            nuevoStock > 0
-                              ? nuevoStock - 1
-                              : 0
-                        "
-                      >
+                        [disabled]="guardandoNuevaTalla || nuevoStock <= 0"
+                        (click)="nuevoStock = nuevoStock > 0 ? nuevoStock - 1 : 0">
                         −
                       </button>
 
@@ -660,69 +316,43 @@
                         type="number"
                         min="0"
                         [(ngModel)]="nuevoStock"
-                        [disabled]="guardandoNuevaTalla"
-                      >
+                        [disabled]="guardandoNuevaTalla">
 
                       <button
                         type="button"
                         [disabled]="guardandoNuevaTalla"
-                        (click)="
-                          nuevoStock =
-                            (+nuevoStock || 0) + 1
-                        "
-                      >
+                        (click)="nuevoStock = (+nuevoStock || 0) + 1">
                         +
                       </button>
-
                     </div>
-
                   </label>
-
 
                   <!-- BOTONES -->
 
                   <div class="assign-buttons">
-
                     <button
                       type="button"
                       class="cancel-button"
                       [disabled]="guardandoNuevaTalla"
-                      (click)="cancelarAsignacion()"
-                    >
+                      (click)="cancelarAsignacion()">
                       CANCELAR
                     </button>
-
 
                     <button
                       type="button"
                       class="confirm-button"
-                      [disabled]="
-                        guardandoNuevaTalla ||
-                        nuevaTallaId === null
-                      "
-                      (click)="asignarTalla(item)"
-                    >
-                      {{
-                        guardandoNuevaTalla
-                          ? 'ASIGNANDO...'
-                          : 'ASIGNAR TALLA'
-                      }}
+                      [disabled]="guardandoNuevaTalla || nuevaTallaId === null"
+                      (click)="asignarTalla(item)">
+                      {{ guardandoNuevaTalla ? 'ASIGNANDO...' : 'ASIGNAR TALLA' }}
                     </button>
-
                   </div>
-
                 </div>
-
               </div>
-
             }
 
           </article>
-
         }
-
       </div>
-
     }
 
   </section>

@@ -1,99 +1,58 @@
 <app-promo-bar></app-promo-bar>
-
 <app-navbar></app-navbar>
 
-
 <main class="cart-page">
-
   <section class="cart-container">
-
 
     <!-- =========================================
          ENCABEZADO
     ========================================== -->
 
     <div class="cart-header">
-
-      <p class="cart-eyebrow">
-        Tu selección
-      </p>
-
-      <h1 class="cart-title">
-        Carrito
-      </h1>
+      <p class="cart-eyebrow">Tu selección</p>
+      <h1 class="cart-title">Carrito</h1>
 
       @if (items().length > 0) {
-
         <p class="cart-description">
           Revisa tus productos antes de continuar con la compra.
         </p>
-
       }
-
     </div>
-
 
     <!-- =========================================
          CARRITO VACÍO
     ========================================== -->
 
     @if (items().length === 0) {
-
       <div class="empty-cart">
+        <div class="empty-cart-icon">🛍</div>
 
-        <div class="empty-cart-icon">
-          🛍
-        </div>
-
-        <h2>
-          Tu carrito está vacío
-        </h2>
+        <h2>Tu carrito está vacío</h2>
 
         <p>
-          Descubre nuestros productos
-          y encuentra tu próximo look.
+          Descubre nuestros productos y encuentra tu próximo look.
         </p>
 
-        <a
-          routerLink="/"
-          class="btn-shop">
-
+        <a routerLink="/" class="btn-shop">
           Seguir comprando
-
         </a>
-
       </div>
-
     } @else {
-
 
       <!-- =========================================
            SINCRONIZANDO STOCK
       ========================================== -->
 
       @if (sincronizandoStock) {
-
         <div class="stock-sync">
-
           <span class="stock-sync-spinner"></span>
 
           <div>
-
-            <strong>
-              Verificando disponibilidad
-            </strong>
-
-            <p>
-              Estamos consultando el stock actual
-              de tus productos.
-            </p>
-
+            <strong>Verificando disponibilidad</strong>
+            <p>Estamos consultando el stock actual de tus productos.</p>
           </div>
-
         </div>
-
       }
-
 
       <!-- =========================================
            CONTENIDO
@@ -101,335 +60,163 @@
 
       <div class="cart-grid">
 
-
         <!-- =========================================
              PRODUCTOS
         ========================================== -->
 
         <div class="cart-products">
-
-          @for (
-            item of items();
-            track item.idProductoTalla
-          ) {
-
+          @for (item of items(); track item.idProductoTalla) {
             <article
               class="cart-item"
               [class.cart-item-out]="item.stock <= 0">
 
-
               <!-- IMAGEN -->
 
               <a
-                [routerLink]="[
-                  '/producto',
-                  item.idProducto
-                ]"
+                [routerLink]="['/producto', item.idProducto]"
                 class="product-image">
 
                 @if (imagenUrl(item.imagen)) {
-
                   <img
                     [src]="imagenUrl(item.imagen)"
                     [alt]="item.nombre">
-
                 } @else {
-
                   <div class="image-placeholder">
-
-                    <span>
-                      TS
-                    </span>
-
+                    <span>TS</span>
                   </div>
-
                 }
-
 
                 @if (item.stock <= 0) {
-
                   <div class="image-out-overlay">
-
-                    <span>
-                      Agotado
-                    </span>
-
+                    <span>Agotado</span>
                   </div>
-
                 }
-
               </a>
-
 
               <!-- INFORMACIÓN -->
 
               <div class="product-info">
-
                 <div class="product-meta">
-
                   <span class="size-label">
                     Talla {{ item.talla }}
                   </span>
 
-
                   @if (item.stock <= 0) {
-
                     <span class="stock-badge stock-out">
                       Agotado
                     </span>
-
                   } @else if (item.stock <= 3) {
-
                     <span class="stock-badge stock-low">
                       Últimas {{ item.stock }}
                     </span>
-
                   } @else {
-
                     <span class="stock-badge stock-available">
                       {{ item.stock }} disponibles
                     </span>
-
                   }
-
                 </div>
 
-
                 <a
-                  [routerLink]="[
-                    '/producto',
-                    item.idProducto
-                  ]"
+                  [routerLink]="['/producto', item.idProducto]"
                   class="product-name-link">
-
-                  <h2 class="product-name">
-                    {{ item.nombre }}
-                  </h2>
-
+                  <h2 class="product-name">{{ item.nombre }}</h2>
                 </a>
 
-
                 <p class="product-price">
-
-                  S/
-                  {{
-                    item.precio
-                      | number:'1.2-2'
-                  }}
-
+                  S/ {{ item.precio | number:'1.2-2' }}
                 </p>
-
 
                 <!-- CANTIDAD -->
 
                 @if (item.stock > 0) {
-
                   <div class="quantity-section">
-
-                    <p class="quantity-label">
-                      Cantidad
-                    </p>
-
+                    <p class="quantity-label">Cantidad</p>
 
                     <div class="quantity-control">
-
                       <button
                         type="button"
-                        (click)="
-                          disminuir(
-                            item.idProductoTalla,
-                            item.cantidad
-                          )
-                        "
-                        [disabled]="
-                          item.cantidad <= 1 ||
-                          sincronizandoStock
-                        "
+                        (click)="disminuir(item.idProductoTalla, item.cantidad)"
+                        [disabled]="item.cantidad <= 1 || sincronizandoStock"
                         aria-label="Disminuir cantidad">
-
                         −
-
                       </button>
-
 
                       <div class="quantity-value">
-
                         {{ item.cantidad }}
-
                       </div>
-
 
                       <button
                         type="button"
-                        (click)="
-                          aumentar(
-                            item.idProductoTalla,
-                            item.cantidad
-                          )
-                        "
-                        [disabled]="
-                          item.cantidad >= item.stock ||
-                          sincronizandoStock
-                        "
+                        (click)="aumentar(item.idProductoTalla, item.cantidad)"
+                        [disabled]="item.cantidad >= item.stock || sincronizandoStock"
                         aria-label="Aumentar cantidad">
-
                         +
-
                       </button>
-
                     </div>
 
-
                     @if (item.cantidad >= item.stock) {
-
                       <p class="quantity-limit">
                         Cantidad máxima disponible
                       </p>
-
                     }
-
                   </div>
-
                 } @else {
-
                   <div class="out-message">
-
-                    Este producto ya no tiene
-                    stock en la talla seleccionada.
-
+                    Este producto ya no tiene stock en la talla seleccionada.
                   </div>
-
                 }
-
 
                 <button
                   type="button"
-                  (click)="
-                    eliminar(
-                      item.idProductoTalla
-                    )
-                  "
+                  (click)="eliminar(item.idProductoTalla)"
                   class="remove-button">
-
                   Eliminar
-
                 </button>
-
               </div>
-
 
               <!-- SUBTOTAL DEL PRODUCTO -->
 
               <div class="item-total">
-
-                <p class="item-total-label">
-                  Subtotal
-                </p>
+                <p class="item-total-label">Subtotal</p>
 
                 <p class="item-total-price">
-
-                  S/
-                  {{
-                    item.precio *
-                    item.cantidad
-                      | number:'1.2-2'
-                  }}
-
+                  S/ {{ item.precio * item.cantidad | number:'1.2-2' }}
                 </p>
-
               </div>
-
             </article>
-
           }
-
         </div>
-
 
         <!-- =========================================
              RESUMEN
         ========================================== -->
 
         <aside class="summary-column">
-
           <div class="summary-card">
-
-            <p class="summary-eyebrow">
-              Tu pedido
-            </p>
-
-            <h2 class="summary-title">
-              Resumen
-            </h2>
-
+            <p class="summary-eyebrow">Tu pedido</p>
+            <h2 class="summary-title">Resumen</h2>
 
             <div class="summary-lines">
-
               <div class="summary-row">
-
-                <span>
-                  Productos
-                </span>
-
-                <strong>
-                  {{ items().length }}
-                </strong>
-
+                <span>Productos</span>
+                <strong>{{ items().length }}</strong>
               </div>
 
-
               <div class="summary-row">
-
-                <span>
-                  Subtotal
-                </span>
-
-                <strong>
-
-                  S/
-                  {{
-                    subtotal()
-                      | number:'1.2-2'
-                  }}
-
-                </strong>
-
+                <span>Subtotal</span>
+                <strong>S/ {{ subtotal() | number:'1.2-2' }}</strong>
               </div>
 
-
               <div class="summary-row">
-
-                <span>
-                  Envío
-                </span>
-
-                <span>
-                  Se calcula después
-                </span>
-
+                <span>Envío</span>
+                <span>Se calcula después</span>
               </div>
-
             </div>
-
 
             <div class="summary-total">
-
-              <span>
-                Total
-              </span>
-
-              <strong>
-
-                S/
-                {{
-                  subtotal()
-                    | number:'1.2-2'
-                }}
-
-              </strong>
-
+              <span>Total</span>
+              <strong>S/ {{ subtotal() | number:'1.2-2' }}</strong>
             </div>
-
 
             <!-- BOTÓN CHECKOUT -->
 
@@ -440,47 +227,25 @@
               class="checkout-button">
 
               @if (sincronizandoStock) {
-
                 <span class="button-spinner"></span>
-
                 Verificando stock...
-
               } @else {
-
                 Continuar compra
-
               }
-
             </button>
 
-
             <p class="checkout-note">
-
-              El stock será validado nuevamente
-              antes de registrar tu compra.
-
+              El stock será validado nuevamente antes de registrar tu compra.
             </p>
 
-
-            <a
-              routerLink="/"
-              class="continue-shopping">
-
+            <a routerLink="/" class="continue-shopping">
               Seguir comprando
-
             </a>
-
           </div>
-
         </aside>
-
       </div>
-
     }
-
   </section>
-
 </main>
-
 
 <app-footer></app-footer>

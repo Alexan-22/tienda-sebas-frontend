@@ -4,12 +4,8 @@
        PANEL IZQUIERDO
        ========================================= -->
   <section class="registro-hero">
-
     <div class="hero-content">
-
-      <p class="hero-brand">
-        TIENDA SEBAS
-      </p>
+      <p class="hero-brand">TIENDA SEBAS</p>
 
       <h1>
         CREA TU<br>
@@ -20,55 +16,30 @@
         Regístrate para comprar tus productos favoritos,
         realizar pedidos y consultar tus compras.
       </p>
-
     </div>
-
   </section>
-
 
   <!-- =========================================
        FORMULARIO
        ========================================= -->
   <section class="registro-form-section">
-
     <div class="registro-form-container">
 
-      <a
-        routerLink="/"
-        class="volver-link"
-      >
+      <a routerLink="/" class="volver-link">
         ← VOLVER A LA TIENDA
       </a>
 
-
       <div class="form-heading">
-
-        <span>
-          MI CUENTA
-        </span>
-
-        <h2>
-          CREAR UNA CUENTA
-        </h2>
-
+        <span>MI CUENTA</span>
+        <h2>CREAR UNA CUENTA</h2>
       </div>
 
-
-      <form
-        #registroForm="ngForm"
-        (ngSubmit)="registrar()"
-        novalidate
-      >
+      <form #registroForm="ngForm" (ngSubmit)="registrar()" novalidate>
 
         <!-- NOMBRE + APELLIDO -->
         <div class="form-row">
-
           <div class="form-group">
-
-            <label for="nombre">
-              NOMBRE
-            </label>
-
+            <label for="nombre">NOMBRE</label>
             <input
               id="nombre"
               name="nombre"
@@ -76,19 +47,14 @@
               [(ngModel)]="nombre"
               placeholder="Dario"
               autocomplete="given-name"
+              maxlength="100"
               required
               [disabled]="cargando"
             >
-
           </div>
 
-
           <div class="form-group">
-
-            <label for="apellido">
-              APELLIDO
-            </label>
-
+            <label for="apellido">APELLIDO</label>
             <input
               id="apellido"
               name="apellido"
@@ -96,22 +62,16 @@
               [(ngModel)]="apellido"
               placeholder="Administrador"
               autocomplete="family-name"
+              maxlength="100"
               required
               [disabled]="cargando"
             >
-
           </div>
-
         </div>
-
 
         <!-- CORREO -->
         <div class="form-group">
-
-          <label for="correo">
-            CORREO ELECTRÓNICO
-          </label>
-
+          <label for="correo">CORREO ELECTRÓNICO</label>
           <input
             id="correo"
             name="correo"
@@ -119,31 +79,27 @@
             [(ngModel)]="correo"
             placeholder="dario@tiendasebas.com"
             autocomplete="email"
+            maxlength="150"
             required
             [disabled]="cargando"
           >
-
         </div>
-
 
         <!-- CONTRASEÑA -->
         <div class="form-group">
-
-          <label for="password">
-            CONTRASEÑA
-          </label>
+          <label for="password">CONTRASEÑA</label>
 
           <div class="password-field">
-
             <input
               id="password"
               name="password"
               [type]="mostrarPassword ? 'text' : 'password'"
               [(ngModel)]="password"
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Mínimo 8 caracteres"
               autocomplete="new-password"
+              minlength="8"
+              maxlength="100"
               required
-              minlength="6"
               [disabled]="cargando"
             >
 
@@ -154,19 +110,12 @@
             >
               {{ mostrarPassword ? 'OCULTAR' : 'VER' }}
             </button>
-
           </div>
-
         </div>
-
 
         <!-- CONFIRMAR CONTRASEÑA -->
         <div class="form-group">
-
-          <label for="confirmarPassword">
-            CONFIRMAR CONTRASEÑA
-          </label>
-
+          <label for="confirmarPassword">CONFIRMAR CONTRASEÑA</label>
           <input
             id="confirmarPassword"
             name="confirmarPassword"
@@ -174,32 +123,26 @@
             [(ngModel)]="confirmarPassword"
             placeholder="Repite tu contraseña"
             autocomplete="new-password"
+            minlength="8"
+            maxlength="100"
             required
             [disabled]="cargando"
           >
-
         </div>
-
 
         <!-- ERROR -->
         @if (error) {
-
           <div class="alert alert-error">
             {{ error }}
           </div>
-
         }
-
 
         <!-- ÉXITO -->
         @if (mensaje) {
-
           <div class="alert alert-success">
             {{ mensaje }}
           </div>
-
         }
-
 
         <!-- BOTÓN -->
         <button
@@ -207,32 +150,21 @@
           class="register-button"
           [disabled]="cargando"
         >
-
           @if (cargando) {
             CREANDO CUENTA...
           } @else {
             CREAR CUENTA
           }
-
         </button>
 
       </form>
 
-
       <div class="login-section">
-
-        <p>
-          ¿Ya tienes una cuenta?
-        </p>
-
-        <a routerLink="/login">
-          INICIAR SESIÓN
-        </a>
-
+        <p>¿Ya tienes una cuenta?</p>
+        <a routerLink="/login">INICIAR SESIÓN</a>
       </div>
 
     </div>
-
   </section>
 
 </div>

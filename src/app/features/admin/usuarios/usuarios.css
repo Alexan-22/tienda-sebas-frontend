@@ -2,7 +2,6 @@
   display: block;
 }
 
-
 /* =========================================================
    HEADER
 ========================================================= */
@@ -15,9 +14,7 @@
 .panel-title p,
 .stat-card p {
   margin: 0 0 8px;
-
   color: #999;
-
   font-size: 8px;
   font-weight: 900;
   letter-spacing: .18em;
@@ -25,9 +22,7 @@
 
 .page-header h1 {
   margin: 0;
-
   color: #050505;
-
   font-size: 34px;
   font-weight: 900;
   line-height: 1;
@@ -36,14 +31,10 @@
 
 .page-header span {
   display: block;
-
   margin-top: 12px;
-
   color: #777;
-
   font-size: 10px;
 }
-
 
 /* =========================================================
    ESTADÍSTICAS
@@ -51,46 +42,33 @@
 
 .stats-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
-
   margin-bottom: 18px;
 }
 
 .stat-card {
   min-height: 116px;
-
   padding: 26px 22px;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   background: #fff;
-
   border: 1px solid #e3e3e3;
 }
 
 .stat-card strong {
   display: block;
-
   margin: 6px 0 12px;
-
   color: #050505;
-
   font-size: 30px;
   font-weight: 900;
 }
 
 .stat-card span {
   color: #aaa;
-
   font-size: 8px;
 }
-
 
 /* =========================================================
    PANEL
@@ -98,21 +76,16 @@
 
 .panel {
   background: #fff;
-
   border: 1px solid #e3e3e3;
 }
 
 .panel-header {
   min-height: 80px;
-
   padding: 18px 22px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 20px;
-
   border-bottom: 1px solid #eee;
 }
 
@@ -122,14 +95,11 @@
 
 .panel-title h2 {
   margin: 0;
-
   color: #050505;
-
   font-size: 16px;
   font-weight: 900;
   text-transform: uppercase;
 }
-
 
 /* =========================================================
    FILTROS
@@ -137,26 +107,18 @@
 
 .filters {
   display: flex;
-
   gap: 8px;
 }
 
 .filters input,
 .filters select {
   height: 42px;
-
   padding: 0 14px;
-
   background: #fff;
-
   border: 1px solid #ddd;
-
   border-radius: 0;
-
   outline: none;
-
   color: #222;
-
   font-size: 9px;
 }
 
@@ -173,20 +135,17 @@
   border-color: #111;
 }
 
-
 /* =========================================================
    TABLA
 ========================================================= */
 
 .table-wrapper {
   width: 100%;
-
   overflow-x: auto;
 }
 
 table {
   width: 100%;
-
   border-collapse: collapse;
 }
 
@@ -196,34 +155,25 @@ thead {
 
 th {
   padding: 16px 20px;
-
   color: #999;
-
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .16em;
-
   text-align: left;
-
   white-space: nowrap;
 }
 
 td {
   padding: 17px 20px;
-
   color: #111;
-
   font-size: 9px;
-
   border-top: 1px solid #eee;
-
   vertical-align: middle;
 }
 
 tbody tr:hover {
   background: #fcfcfc;
 }
-
 
 /* =========================================================
    USUARIO
@@ -232,51 +182,39 @@ tbody tr:hover {
 .user-cell {
   display: flex;
   align-items: center;
-
   gap: 12px;
 }
 
 .user-avatar {
   width: 38px;
   height: 38px;
-
   flex-shrink: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   background: #111;
-
   border-radius: 50%;
-
   color: #fff;
-
   font-size: 10px;
   font-weight: 900;
 }
 
 .user-cell strong {
   display: block;
-
   margin-bottom: 5px;
-
   font-size: 10px;
   font-weight: 800;
 }
 
 .user-cell span {
   color: #aaa;
-
   font-size: 8px;
 }
 
 .email {
   color: #666;
-
   font-size: 9px;
 }
-
 
 /* =========================================================
    ROL
@@ -284,25 +222,18 @@ tbody tr:hover {
 
 .role-badge {
   display: inline-block;
-
   padding: 7px 10px;
-
   background: #f1f1f1;
-
   color: #333;
-
   font-size: 7px;
   font-weight: 900;
-
   text-transform: uppercase;
 }
 
 .role-badge.admin {
   background: #111;
-
   color: #fff;
 }
-
 
 /* =========================================================
    ESTADO
@@ -310,31 +241,23 @@ tbody tr:hover {
 
 .status {
   display: inline-block;
-
   min-width: 68px;
-
   padding: 7px 10px;
-
   text-align: center;
-
   font-size: 7px;
   font-weight: 900;
-
   text-transform: uppercase;
 }
 
 .status.active {
   background: #e5f8ef;
-
   color: #00864b;
 }
 
 .status.inactive {
   background: #fbeaea;
-
   color: #b42318;
 }
-
 
 /* =========================================================
    BOTONES
@@ -343,51 +266,36 @@ tbody tr:hover {
 .action-button {
   min-width: 105px;
   height: 35px;
-
   padding: 0 14px;
-
   background: #111;
-
   border: 1px solid #111;
-
   color: #fff;
-
   cursor: pointer;
-
   font-size: 7px;
   font-weight: 900;
-
   text-transform: uppercase;
-
-  transition:
-    background .2s ease,
-    color .2s ease;
+  transition: background .2s ease, color .2s ease;
 }
 
 .action-button:hover:not(:disabled) {
   background: #fff;
-
   color: #111;
 }
 
 .action-button.activate {
   background: #fff;
-
   color: #111;
 }
 
 .action-button.activate:hover:not(:disabled) {
   background: #111;
-
   color: #fff;
 }
 
 .action-button:disabled {
   cursor: not-allowed;
-
   opacity: .5;
 }
-
 
 /* =========================================================
    CARGANDO / VACÍO / ERROR
@@ -395,89 +303,64 @@ tbody tr:hover {
 
 .state-message {
   min-height: 280px;
-
   display: flex;
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
-
   gap: 10px;
-
   text-align: center;
 }
 
 .state-message strong {
   color: #ddd;
-
   font-size: 42px;
   font-weight: 900;
 }
 
 .state-message p {
   margin: 0;
-
   color: #888;
-
   font-size: 9px;
 }
 
 .state-message button {
   margin-top: 8px;
-
   padding: 11px 18px;
-
   background: #111;
-
   border: 1px solid #111;
-
   color: #fff;
-
   cursor: pointer;
-
   font-size: 8px;
   font-weight: 900;
 }
 
 .state-message.error strong {
   color: #b42318;
-
   font-size: 12px;
 }
 
 .loader {
   width: 25px;
   height: 25px;
-
   border: 2px solid #eee;
   border-top-color: #111;
-
   border-radius: 50%;
-
-  animation:
-    spin .7s linear infinite;
+  animation: spin .7s linear infinite;
 }
 
 @keyframes spin {
-
   to {
     transform: rotate(360deg);
   }
-
 }
-
 
 /* =========================================================
    RESPONSIVE
 ========================================================= */
 
-@media (
-  max-width: 1100px
-) {
-
+@media (max-width: 1100px) {
   .stats-grid {
-    grid-template-columns:
-      repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .panel-header {
@@ -491,17 +374,11 @@ tbody tr:hover {
 
   .filters input {
     flex: 1;
-
     width: auto;
   }
-
 }
 
-
-@media (
-  max-width: 700px
-) {
-
+@media (max-width: 700px) {
   .stats-grid {
     grid-template-columns: 1fr;
   }
@@ -518,5 +395,4 @@ tbody tr:hover {
   .page-header h1 {
     font-size: 28px;
   }
-
 }

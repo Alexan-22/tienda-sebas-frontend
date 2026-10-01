@@ -4,32 +4,15 @@
        SIDEBAR
        ===================================================== -->
 
-  <aside
-    class="admin-sidebar"
-    [class.mobile-open]="menuAbierto"
-  >
+  <aside class="admin-sidebar" [class.mobile-open]="menuAbierto">
 
     <!-- LOGO -->
-
     <div class="admin-brand">
-
-      <a
-        routerLink="/admin/dashboard"
-        (click)="cerrarMenu()"
-      >
-
-        <strong>
-          TIENDA SEBAS
-        </strong>
-
-        <span>
-          ADMINISTRACIÓN
-        </span>
-
+      <a routerLink="/admin/dashboard" (click)="cerrarMenu()">
+        <strong>TIENDA SEBAS</strong>
+        <span>ADMINISTRACIÓN</span>
       </a>
-
     </div>
-
 
     <!-- ===================================================
          NAVEGACIÓN
@@ -37,190 +20,77 @@
 
     <nav class="admin-navigation">
 
-
       <!-- GENERAL -->
+      <p class="navigation-title">GENERAL</p>
 
-      <p class="navigation-title">
-        GENERAL
-      </p>
-
-
-      <a
-        routerLink="/admin/dashboard"
-        routerLinkActive="active"
-        (click)="cerrarMenu()"
-      >
-
-        <span class="nav-icon">
-          ◫
-        </span>
-
+      <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="cerrarMenu()">
+        <span class="nav-icon">◫</span>
         Dashboard
-
       </a>
-
 
       <!-- CONTENIDO -->
+      <p class="navigation-title">CONTENIDO</p>
 
-      <p class="navigation-title">
-        CONTENIDO
-      </p>
-
-
-      <a
-        routerLink="/admin/home"
-        routerLinkActive="active"
-        (click)="cerrarMenu()"
-      >
-
-        <span class="nav-icon">
-          ◈
-        </span>
-
+      <a routerLink="/admin/home" routerLinkActive="active" (click)="cerrarMenu()">
+        <span class="nav-icon">◈</span>
         Página principal
-
       </a>
-
 
       <!-- CATÁLOGO -->
+      <p class="navigation-title">CATÁLOGO</p>
 
-      <p class="navigation-title">
-        CATÁLOGO
-      </p>
-
-
-      <a
-        routerLink="/admin/productos"
-        routerLinkActive="active"
-        (click)="cerrarMenu()"
-      >
-
-        <span class="nav-icon">
-          □
-        </span>
-
+      <a routerLink="/admin/productos" routerLinkActive="active" (click)="cerrarMenu()">
+        <span class="nav-icon">□</span>
         Productos
-
       </a>
 
-
-      <a
-        routerLink="/admin/stock"
-        routerLinkActive="active"
-        (click)="cerrarMenu()"
-      >
-
-        <span class="nav-icon">
-          ≡
-        </span>
-
+      <a routerLink="/admin/stock" routerLinkActive="active" (click)="cerrarMenu()">
+        <span class="nav-icon">≡</span>
         Stock y tallas
-
       </a>
-
 
       <!-- NEGOCIO -->
-
-      <p class="navigation-title">
-        NEGOCIO
-      </p>
-
+      <p class="navigation-title">NEGOCIO</p>
 
       <!-- VENDER / POS -->
-
-      <a
-        routerLink="/admin/vender"
-        routerLinkActive="active"
-        (click)="cerrarMenu()"
-      >
-
-        <span class="nav-icon">
-          $
-        </span>
-
+      <a routerLink="/admin/vender" routerLinkActive="active" (click)="cerrarMenu()">
+        <span class="nav-icon">$</span>
         Vender
-
       </a>
-
 
       <!-- VENTAS -->
-
-      <a
-        routerLink="/admin/ventas"
-        routerLinkActive="active"
-        (click)="cerrarMenu()"
-      >
-
-        <span class="nav-icon">
-          $
-        </span>
-
+      <a routerLink="/admin/ventas" routerLinkActive="active" (click)="cerrarMenu()">
+        <span class="nav-icon">$</span>
         Ventas
-
       </a>
-
 
       <!-- USUARIOS -->
-
-      <a
-        routerLink="/admin/usuarios"
-        routerLinkActive="active"
-        (click)="cerrarMenu()"
-      >
-
-        <span class="nav-icon">
-          ○
-        </span>
-
+      <a routerLink="/admin/usuarios" routerLinkActive="active" (click)="cerrarMenu()">
+        <span class="nav-icon">○</span>
         Usuarios
-
       </a>
 
-
       <!-- REPORTES -->
-
-      <a
-        routerLink="/admin/reportes"
-        routerLinkActive="active"
-        (click)="cerrarMenu()"
-      >
-
-        <span class="nav-icon">
-          ↗
-        </span>
-
+      <a routerLink="/admin/reportes" routerLinkActive="active" (click)="cerrarMenu()">
+        <span class="nav-icon">↗</span>
         Reportes
-
       </a>
 
     </nav>
-
 
     <!-- ===================================================
          PARTE INFERIOR
          =================================================== -->
 
     <div class="sidebar-footer">
+      <a routerLink="/" class="store-link">← Ver tienda</a>
 
-      <a
-        routerLink="/"
-        class="store-link"
-      >
-        ← Ver tienda
-      </a>
-
-
-      <button
-        type="button"
-        (click)="cerrarSesion()"
-      >
+      <button type="button" (click)="cerrarSesion()">
         Cerrar sesión
       </button>
-
     </div>
 
   </aside>
-
 
   <!-- =====================================================
        CONTENIDO PRINCIPAL
@@ -228,78 +98,43 @@
 
   <div class="admin-main">
 
-
     <!-- ===================================================
          TOPBAR
          =================================================== -->
 
     <header class="admin-topbar">
-
       <div class="topbar-left">
-
         <button
           type="button"
           class="mobile-menu-button"
           (click)="toggleMenu()"
-          aria-label="Abrir menú"
-        >
+          aria-label="Abrir menú">
           ☰
         </button>
 
-
         <div>
-
-          <p>
-            PANEL ADMINISTRATIVO
-          </p>
-
-          <strong>
-            TIENDA SEBAS
-          </strong>
-
+          <p>PANEL ADMINISTRATIVO</p>
+          <strong>TIENDA SEBAS</strong>
         </div>
-
       </div>
-
 
       <!-- USUARIO -->
-
       <div class="admin-user">
-
         <div class="admin-user-text">
-
-          <span>
-            ADMINISTRADOR
-          </span>
-
-          <strong>
-            {{
-              authService.obtenerCorreo()
-              || 'Administrador'
-            }}
-          </strong>
-
+          <span>ADMINISTRADOR</span>
+          <strong>{{ authService.obtenerCorreo() || 'Administrador' }}</strong>
         </div>
 
-
-        <div class="admin-avatar">
-          A
-        </div>
-
+        <div class="admin-avatar">A</div>
       </div>
-
     </header>
-
 
     <!-- ===================================================
          PÁGINA
          =================================================== -->
 
     <main class="admin-content">
-
-      <router-outlet>
-      </router-outlet>
-
+      <router-outlet></router-outlet>
     </main>
 
   </div>

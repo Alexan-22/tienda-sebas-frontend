@@ -1,145 +1,68 @@
-<article class="group">
+<article class="product-card group">
+  <a [routerLink]="['/producto', producto.idProducto]" class="product-link">
 
-  <a
-    [routerLink]="[
-      '/producto',
-      producto.idProducto
-    ]"
-    class="block cursor-pointer">
-
-
-    <div
-      class="relative aspect-[3/4] overflow-hidden bg-neutral-100">
-
+    <!-- IMAGEN -->
+    <div class="product-image-container">
       @if (imagenUrl) {
-
         <img
           [src]="imagenUrl"
           [alt]="producto.nombre"
-          class="h-full w-full object-cover transition duration-700 group-hover:scale-105">
-
+          (error)="onImagenError()"
+          class="product-image">
       } @else {
-
-        <div
-          class="flex h-full w-full items-center justify-center">
-
-          <div class="text-center">
-
-            <span
-              class="text-4xl font-black text-neutral-200">
-
-              TS
-
-            </span>
-
-            <p
-              class="mt-2 text-[9px] font-bold uppercase tracking-[0.25em] text-neutral-300">
-
-              Sin imagen
-
-            </p>
-
+        <div class="product-placeholder">
+          <div class="product-placeholder-content">
+            <span class="product-placeholder-logo">TS</span>
+            <span class="product-placeholder-line"></span>
+            <p class="product-placeholder-text">Imagen no disponible</p>
           </div>
-
         </div>
-
       }
 
-
+      <!-- NUEVO -->
       @if (producto.nuevo) {
-
-        <span
-          class="absolute left-3 top-3 bg-black px-3 py-2 text-[9px] font-bold uppercase tracking-[0.15em] text-white">
-
-          Nuevo
-
-        </span>
-
+        <span class="badge badge-new">Nuevo</span>
       }
 
-
+      <!-- DESCUENTO -->
       @if (tieneOferta) {
-
-        <span
-          class="absolute right-3 top-3 bg-white px-3 py-2 text-[9px] font-black uppercase tracking-[0.15em] text-black">
-
-          Oferta
-
-        </span>
-
+        <span class="badge badge-discount">-{{ porcentajeDescuento }}%</span>
       }
 
+      <!-- OVERLAY -->
+      <div class="product-overlay">
+        <span>Ver producto</span>
+      </div>
     </div>
 
+    <!-- INFORMACIÓN -->
+    <div class="product-info">
+      <div class="product-meta">
+        <p class="product-category">{{ producto.categoria?.nombreCategoria }}</p>
 
-    <div class="pt-4">
-
-      <p
-        class="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
-
-        {{
-          producto
-            .categoria
-            .nombreCategoria
-        }}
-
-      </p>
-
-
-      <h3
-        class="mt-1 text-sm font-semibold">
-
-        {{ producto.nombre }}
-
-      </h3>
-
-
-      <div
-        class="mt-2 flex items-center gap-3">
-
-        @if (tieneOferta) {
-
-          <span
-            class="text-sm font-bold">
-
-            S/
-            {{
-              producto.precioOferta
-                | number:'1.2-2'
-            }}
-
-          </span>
-
-          <span
-            class="text-xs text-neutral-400 line-through">
-
-            S/
-            {{
-              producto.precio
-                | number:'1.2-2'
-            }}
-
-          </span>
-
-        } @else {
-
-          <span
-            class="text-sm font-bold">
-
-            S/
-            {{
-              producto.precio
-                | number:'1.2-2'
-            }}
-
-          </span>
-
+        @if (producto.genero?.nombreGenero) {
+          <p class="product-gender">{{ producto.genero.nombreGenero }}</p>
         }
-
       </div>
 
+      <h3 class="product-name">{{ producto.nombre }}</h3>
+
+      <div class="product-price">
+        @if (tieneOferta) {
+          <span class="current-price">
+            S/ {{ producto.precioOferta | number:'1.2-2' }}
+          </span>
+
+          <span class="old-price">
+            S/ {{ producto.precio | number:'1.2-2' }}
+          </span>
+        } @else {
+          <span class="current-price">
+            S/ {{ producto.precio | number:'1.2-2' }}
+          </span>
+        }
+      </div>
     </div>
 
   </a>
-
 </article>
