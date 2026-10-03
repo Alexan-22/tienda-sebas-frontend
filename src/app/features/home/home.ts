@@ -36,7 +36,7 @@ export class Home implements OnInit, OnDestroy {
   errorBanners = false;
 
   private intervaloCarrusel: ReturnType<typeof setInterval> | null = null;
-  private readonly tiempoCarrusel = 5000;
+  private readonly tiempoCarrusel = 3000;
 
   // =========================================================
   // COLECCIONES
@@ -81,30 +81,19 @@ export class Home implements OnInit, OnDestroy {
     this.cargando = true;
     this.errorCarga = false;
 
-    this.productoService
-      .listar()
-      .subscribe({
-        next: (productos: Producto[]) => {
-          console.log(
-            'Productos recibidos:',
-            productos
-          );
-
-          this.productos = productos.slice(0, 8);
-          this.cargando = false;
-        },
-
-        error: error => {
-          console.error(
-            'Error cargando productos:',
-            error
-          );
-
-          this.productos = [];
-          this.errorCarga = true;
-          this.cargando = false;
-        }
-      });
+    this.productoService.listar().subscribe({
+      next: (productos: Producto[]) => {
+        console.log('Productos recibidos:', productos);
+        this.productos = productos.slice(0, 8);
+        this.cargando = false;
+      },
+      error: error => {
+        console.error('Error cargando productos:', error);
+        this.productos = [];
+        this.errorCarga = true;
+        this.cargando = false;
+      }
+    });
   }
 
   // =========================================================
@@ -115,33 +104,23 @@ export class Home implements OnInit, OnDestroy {
     this.cargandoBanners = true;
     this.errorBanners = false;
 
-    this.homeContenidoService
-      .listarBannersPublicos()
-      .subscribe({
-        next: (banners: HomeBanner[]) => {
-          this.banners = [...banners].sort(
-            (a, b) => a.orden - b.orden
-          );
+    this.homeContenidoService.listarBannersPublicos().subscribe({
+      next: (banners: HomeBanner[]) => {
+        this.banners = [...banners].sort((a, b) => a.orden - b.orden);
+        this.bannerActual = 0;
+        this.cargandoBanners = false;
 
-          this.bannerActual = 0;
-          this.cargandoBanners = false;
-
-          if (this.banners.length > 1) {
-            this.iniciarCarrusel();
-          }
-        },
-
-        error: error => {
-          console.error(
-            'Error cargando banners:',
-            error
-          );
-
-          this.banners = [];
-          this.errorBanners = true;
-          this.cargandoBanners = false;
+        if (this.banners.length > 1) {
+          this.iniciarCarrusel();
         }
-      });
+      },
+      error: error => {
+        console.error('Error cargando banners:', error);
+        this.banners = [];
+        this.errorBanners = true;
+        this.cargandoBanners = false;
+      }
+    });
   }
 
   // =========================================================
@@ -152,28 +131,18 @@ export class Home implements OnInit, OnDestroy {
     this.cargandoColecciones = true;
     this.errorColecciones = false;
 
-    this.homeContenidoService
-      .listarColeccionesPublicas()
-      .subscribe({
-        next: (colecciones: HomeColeccion[]) => {
-          this.colecciones = [...colecciones].sort(
-            (a, b) => a.orden - b.orden
-          );
-
-          this.cargandoColecciones = false;
-        },
-
-        error: error => {
-          console.error(
-            'Error cargando colecciones:',
-            error
-          );
-
-          this.colecciones = [];
-          this.errorColecciones = true;
-          this.cargandoColecciones = false;
-        }
-      });
+    this.homeContenidoService.listarColeccionesPublicas().subscribe({
+      next: (colecciones: HomeColeccion[]) => {
+        this.colecciones = [...colecciones].sort((a, b) => a.orden - b.orden);
+        this.cargandoColecciones = false;
+      },
+      error: error => {
+        console.error('Error cargando colecciones:', error);
+        this.colecciones = [];
+        this.errorColecciones = true;
+        this.cargandoColecciones = false;
+      }
+    });
   }
 
   // =========================================================
@@ -210,10 +179,7 @@ export class Home implements OnInit, OnDestroy {
       return;
     }
 
-    this.bannerActual =
-      (this.bannerActual - 1 + this.banners.length) %
-      this.banners.length;
-
+    this.bannerActual = (this.bannerActual - 1 + this.banners.length) % this.banners.length;
     this.reiniciarCarrusel();
   }
 
@@ -241,14 +207,9 @@ export class Home implements OnInit, OnDestroy {
       return;
     }
 
-    this.intervaloCarrusel = setInterval(
-      () => {
-        this.bannerActual =
-          (this.bannerActual + 1) %
-          this.banners.length;
-      },
-      this.tiempoCarrusel
-    );
+    this.intervaloCarrusel = setInterval(() => {
+      this.bannerActual = (this.bannerActual + 1) % this.banners.length;
+    }, this.tiempoCarrusel);
   }
 
   // =========================================================

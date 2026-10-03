@@ -57,3 +57,19 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Exportación de reportes
+
+El módulo administrativo de Reportes permite exportar información de ventas en formato PDF y Excel.
+
+Dependencias utilizadas:
+
+- jspdf: generación de archivos PDF.
+- jspdf-autotable: generación de tablas dentro de los reportes PDF.
+- xlsx: generación y exportación de archivos Excel (.xlsx).
+
+Estas dependencias se instalan automáticamente al ejecutar `npm install`.
+
+Si se requiere instalarlas manualmente:
+
+`npm install jspdf jspdf-autotable xlsx`

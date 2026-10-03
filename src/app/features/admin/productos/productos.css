@@ -11,7 +11,9 @@
   margin: 0 auto;
 }
 
-/* HEADER */
+/* =========================================
+   HEADER
+   ========================================= */
 
 .header {
   display: flex;
@@ -66,7 +68,9 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
 }
 
-/* ESTADÍSTICAS */
+/* =========================================
+   ESTADÍSTICAS
+   ========================================= */
 
 .stats {
   display: grid;
@@ -99,7 +103,9 @@
   font-weight: 900;
 }
 
-/* PANEL */
+/* =========================================
+   PANEL
+   ========================================= */
 
 .panel {
   overflow: hidden;
@@ -109,7 +115,9 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.025);
 }
 
-/* BUSCADOR */
+/* =========================================
+   BUSCADOR
+   ========================================= */
 
 .toolbar {
   min-height: 78px;
@@ -145,7 +153,9 @@
   font-weight: 800;
 }
 
-/* TABLA */
+/* =========================================
+   TABLA
+   ========================================= */
 
 .table-wrapper {
   overflow-x: auto;
@@ -171,7 +181,7 @@ th {
 
 td {
   padding: 14px 18px;
-  border-top: 1px solid #eeeeee;
+  border-top: 1px solid #eee;
   color: #333;
   font-size: 11px;
   vertical-align: middle;
@@ -185,7 +195,9 @@ tbody tr:hover {
   background: #fafafa;
 }
 
-/* PRODUCTO */
+/* =========================================
+   PRODUCTO
+   ========================================= */
 
 .product {
   min-width: 230px;
@@ -232,7 +244,9 @@ tbody tr:hover {
   font-size: 9px;
 }
 
-/* ESTADO */
+/* =========================================
+   ESTADO
+   ========================================= */
 
 .status {
   display: inline-flex;
@@ -251,7 +265,9 @@ tbody tr:hover {
   color: #777;
 }
 
-/* ACCIONES */
+/* =========================================
+   ACCIONES
+   ========================================= */
 
 .actions {
   display: flex;
@@ -294,7 +310,9 @@ tbody tr:hover {
   cursor: not-allowed;
 }
 
-/* MENSAJES */
+/* =========================================
+   MENSAJES
+   ========================================= */
 
 .message {
   padding: 70px 20px;
@@ -307,7 +325,9 @@ tbody tr:hover {
   color: #b91c1c;
 }
 
-/* RESPONSIVE */
+/* =========================================
+   RESPONSIVE
+   ========================================= */
 
 @media (max-width: 800px) {
   .header {
@@ -325,12 +345,146 @@ tbody tr:hover {
 }
 
 @media (max-width: 600px) {
+  .header {
+    gap: 18px;
+    margin-bottom: 20px;
+  }
+
+  .header h1 {
+    font-size: 32px;
+  }
+
+  .header > a {
+    min-height: 44px;
+    padding: 0 18px;
+  }
+
+  .stats {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .stats article {
+    min-height: 96px;
+    padding: 18px;
+  }
+
+  .stats strong {
+    margin-top: 10px;
+    font-size: 27px;
+  }
+
   .toolbar {
+    min-height: auto;
     align-items: stretch;
     flex-direction: column;
+    gap: 10px;
+    padding: 14px;
   }
 
   .toolbar input {
     width: 100%;
+  }
+
+  .table-wrapper {
+    overflow: visible;
+  }
+
+  table,
+  tbody {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+    padding: 16px;
+    border-top: 1px solid #eee;
+  }
+
+  tbody tr:first-child {
+    border-top: 0;
+  }
+
+  tbody tr:hover {
+    background: transparent;
+  }
+
+  td {
+    display: block;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    font-size: 11px;
+  }
+
+  td:nth-child(1) {
+    grid-column: 1 / -1;
+  }
+
+  td:nth-child(2)::before {
+    content: 'CATEGORÍA';
+  }
+
+  td:nth-child(3)::before {
+    content: 'GÉNERO';
+  }
+
+  td:nth-child(4)::before {
+    content: 'PRECIO';
+  }
+
+  td:nth-child(5)::before {
+    content: 'ESTADO';
+  }
+
+  td:nth-child(2)::before,
+  td:nth-child(3)::before,
+  td:nth-child(4)::before,
+  td:nth-child(5)::before {
+    display: block;
+    margin-bottom: 5px;
+    color: #aaa;
+    font-size: 7px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+  }
+
+  td:nth-child(6) {
+    grid-column: 1 / -1;
+    padding-top: 4px;
+  }
+
+  .product {
+    min-width: 0;
+    gap: 12px;
+  }
+
+  .image {
+    width: 52px;
+    height: 64px;
+  }
+
+  .product strong {
+    font-size: 12px;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+  }
+
+  .actions a,
+  .actions button {
+    width: 100%;
+    min-height: 36px;
+    padding: 0 6px;
   }
 }

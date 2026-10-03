@@ -1,10 +1,7 @@
 <section class="reportes-page">
-
-  <!-- =====================================================
-       ENCABEZADO Y FILTROS
-  ====================================================== -->
+  <!-- ENCABEZADO Y FILTROS -->
   <header class="page-header">
-    <div>
+    <div class="page-title">
       <p class="eyebrow">ANÁLISIS</p>
       <h1>REPORTES</h1>
       <span>Indicadores comerciales de Tienda Sebas.</span>
@@ -14,10 +11,15 @@
       <div class="filter-control">
         <label>PERÍODO</label>
         <select [(ngModel)]="periodo" (change)="aplicarPeriodo()">
-          <option value="TODO">Todo el período</option>
+          <option value="HOY">Hoy</option>
+          <option value="AYER">Ayer</option>
           <option value="7">Últimos 7 días</option>
+          <option value="15">Últimos 15 días</option>
           <option value="30">Últimos 30 días</option>
           <option value="MES">Este mes</option>
+          <option value="ANIO">Este año</option>
+          <option value="ULTIMO_ANIO">Último año</option>
+          <option value="TODO">Todo el período</option>
         </select>
       </div>
 
@@ -29,12 +31,29 @@
           <option value="PRESENCIAL">Presencial</option>
         </select>
       </div>
+
+      <div class="export-control">
+        <label>EXPORTAR</label>
+        <div class="export-actions">
+          <button type="button" class="export-button" (click)="exportarPDF()" [disabled]="cargando || !!error">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3v12m0 0 5-5m-5 5-5-5M5 19h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>PDF</span>
+          </button>
+
+          <button type="button" class="export-button export-button-excel" (click)="exportarExcel()" [disabled]="cargando || !!error">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3v12m0 0 5-5m-5 5-5-5M5 19h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>EXCEL</span>
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
-  <!-- =====================================================
-       ESTADOS
-  ====================================================== -->
+  <!-- ESTADOS -->
   @if (cargando) {
     <div class="estado-pagina">
       <strong>CARGANDO REPORTES...</strong>
@@ -48,9 +67,7 @@
     </div>
   } @else {
 
-    <!-- =====================================================
-         INDICADORES PRINCIPALES
-    ====================================================== -->
+    <!-- INDICADORES PRINCIPALES -->
     <section class="stats-grid">
       <article class="stat-card">
         <p>VENTAS TOTALES</p>
@@ -77,9 +94,7 @@
       </article>
     </section>
 
-    <!-- =====================================================
-         CANALES
-    ====================================================== -->
+    <!-- CANALES -->
     <section class="channel-summary">
       <article class="channel-card">
         <div>
@@ -98,9 +113,7 @@
       </article>
     </section>
 
-    <!-- =====================================================
-         MEDIOS DE PAGO Y CANALES
-    ====================================================== -->
+    <!-- MEDIOS DE PAGO Y CANALES -->
     <section class="summary-grid">
       <article class="panel">
         <div class="panel-header">
@@ -124,6 +137,7 @@
                   </div>
                   <strong>S/ {{ medio.total | number:'1.2-2' }}</strong>
                 </div>
+
                 <div class="bar-background">
                   <div class="bar-value" [style.width.%]="medio.porcentaje"></div>
                 </div>
@@ -156,6 +170,7 @@
                   </div>
                   <strong>S/ {{ item.total | number:'1.2-2' }}</strong>
                 </div>
+
                 <div class="bar-background">
                   <div class="bar-value" [style.width.%]="item.porcentaje"></div>
                 </div>
@@ -167,9 +182,7 @@
       </article>
     </section>
 
-    <!-- =====================================================
-         CATEGORÍAS
-    ====================================================== -->
+    <!-- CATEGORÍAS -->
     <section class="panel category-panel">
       <div class="panel-header">
         <div>
@@ -192,6 +205,7 @@
                 </div>
                 <strong>S/ {{ categoria.ingresos | number:'1.2-2' }}</strong>
               </div>
+
               <div class="bar-background">
                 <div class="bar-value" [style.width.%]="categoria.porcentaje"></div>
               </div>
@@ -201,9 +215,7 @@
       </div>
     </section>
 
-    <!-- =====================================================
-         PRODUCTOS MÁS VENDIDOS
-    ====================================================== -->
+    <!-- PRODUCTOS MÁS VENDIDOS -->
     <section class="panel products-panel">
       <div class="panel-header">
         <div>
@@ -251,9 +263,7 @@
       }
     </section>
 
-    <!-- =====================================================
-         INVENTARIO Y CLIENTES
-    ====================================================== -->
+    <!-- INVENTARIO Y CLIENTES -->
     <section class="summary-grid bottom-grid">
       <article class="panel">
         <div class="panel-header">
@@ -270,19 +280,16 @@
             <strong>{{ stockTotal }}</strong>
             <small>Unidades disponibles</small>
           </div>
-
           <div class="metric">
             <span>STOCK BAJO</span>
             <strong>{{ stockBajo }}</strong>
             <small>Tallas con 1 a 5 unidades</small>
           </div>
-
           <div class="metric">
             <span>SIN STOCK</span>
             <strong>{{ sinStock }}</strong>
             <small>Tallas agotadas</small>
           </div>
-
           <div class="metric">
             <span>PRODUCTOS ACTIVOS</span>
             <strong>{{ productosActivos }}</strong>
