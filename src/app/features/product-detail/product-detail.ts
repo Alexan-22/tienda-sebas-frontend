@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -42,7 +43,7 @@ export class ProductDetail implements OnInit {
   errorCarga = false;
   productoAgregado = false;
 
-  private readonly uploadsUrl = 'http://localhost:8080/uploads/';
+  private readonly uploadsUrl = `${environment.apiUrl}/uploads/`;
 
   constructor(
     private route: ActivatedRoute,

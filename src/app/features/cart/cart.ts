@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -23,7 +24,7 @@ export class Cart implements OnInit {
 
   sincronizandoStock = false;
 
-  private readonly uploadsUrl = 'http://localhost:8080/uploads/';
+  private readonly uploadsUrl = `${environment.apiUrl}/uploads/`;
 
   constructor(
     public carritoService: CarritoService,

@@ -1,3 +1,4 @@
+import { environment } from '../../../../environments/environment';
 import { Component, Input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -16,7 +17,7 @@ export class ProductCard {
 
   imagenError = false;
 
-  private readonly uploadsUrl = 'http://localhost:8080/uploads/';
+  private readonly uploadsUrl = `${environment.apiUrl}/uploads/`;
 
   get imagenUrl(): string | null {
     if (!this.producto?.imagen || this.imagenError) {

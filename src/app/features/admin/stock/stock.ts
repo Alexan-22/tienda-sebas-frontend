@@ -1,3 +1,4 @@
+import { environment } from '../../../../environments/environment';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
@@ -38,7 +39,7 @@ export class Stock implements OnInit {
   nuevoStock = 0;
   guardandoNuevaTalla = false;
 
-  private readonly uploadsUrl = 'http://localhost:8080/uploads/';
+  private readonly uploadsUrl = `${environment.apiUrl}/uploads/`;
 
   constructor(
     private productoService: ProductoService,

@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProductoService } from '../../core/services/producto';
 import { HomeContenidoService } from '../../core/services/home-contenido';
@@ -16,7 +17,7 @@ import { ProductCard } from '../../shared/components/product-card/product-card';
   styleUrl: './home.css'
 })
 export class Home implements OnInit, OnDestroy {
-  private readonly uploadsUrl = 'http://localhost:8080/uploads/';
+  private readonly uploadsUrl = `${environment.apiUrl}/uploads/`;
 
   // =========================================================
   // PRODUCTOS

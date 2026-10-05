@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
@@ -7,7 +8,7 @@ import { LoginRequest, LoginResponse, RegistroRequest } from '../models/auth';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:8080/api/auth';
+  private readonly apiUrl = `${environment.apiUrl}/api/auth`;
   private readonly tokenKey = 'tienda-sebas-token';
 
   private readonly tokenSignal = signal<string | null>(

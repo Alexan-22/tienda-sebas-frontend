@@ -1,4 +1,5 @@
-﻿import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { environment } from '../../../../environments/environment';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HomeBanner, HomeColeccion } from '../../../core/models/home-contenido';
 import { HomeContenidoService } from '../../../core/services/home-contenido';
@@ -11,7 +12,7 @@ import { HomeContenidoService } from '../../../core/services/home-contenido';
   styleUrl: './home-admin.css'
 })
 export class HomeAdmin implements OnInit, OnDestroy {
-  private readonly uploadsUrl = 'http://localhost:8080/uploads/';
+  private readonly uploadsUrl = `${environment.apiUrl}/uploads/`;
 
   // =========================================================
   // ESTADOS GENERALES

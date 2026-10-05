@@ -1,3 +1,4 @@
+import { environment } from '../../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -30,7 +31,7 @@ export class Productos implements OnInit {
   eliminandoId: number | null = null;
 
   private readonly uploadsUrl =
-    'http://localhost:8080/uploads/';
+    `${environment.apiUrl}/uploads/`;
 
   constructor(
     private productoService: ProductoService

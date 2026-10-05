@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { HomeBanner, HomeColeccion } from '../models/home-contenido';
   providedIn: 'root'
 })
 export class HomeContenidoService {
-  private readonly apiUrl = 'http://localhost:8080/api/home';
+  private readonly apiUrl = `${environment.apiUrl}/api/home`;
 
   constructor(
     private http: HttpClient

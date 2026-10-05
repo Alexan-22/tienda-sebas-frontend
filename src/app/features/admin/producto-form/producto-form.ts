@@ -1,3 +1,4 @@
+import { environment } from '../../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -33,7 +34,7 @@ export class ProductoForm implements OnInit {
   destacado = false;
   estado = true;
 
-  private readonly uploadsUrl = 'http://localhost:8080/uploads/';
+  private readonly uploadsUrl = `${environment.apiUrl}/uploads/`;
 
   generos: Genero[] = [
     { idGenero: 1, nombreGenero: 'Hombre', estado: true },
