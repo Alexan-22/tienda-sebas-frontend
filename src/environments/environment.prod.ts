@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://API-PENDIENTE'
+  apiUrl: 'https://tiendasebas-api-dkdpbvfh dqaszfzb.westus-01.azurewebsites.net'
 };
