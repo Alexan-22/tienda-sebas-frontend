@@ -3,72 +3,113 @@
 }
 
 .promo-bar {
-  width: 100%;
-  min-height: 32px;
   display: flex;
   align-items: center;
+  width: 100%;
+  min-height: 38px;
   overflow: hidden;
-  background: #000;
-  color: #fff;
+  background: linear-gradient(110deg, #101010, #242424, #101010);
+  color: #f5f5f5;
+  border-bottom: 1px solid #c9a45c40;
 }
 
 .promo-track {
-  width: max-content;
   display: flex;
   align-items: center;
-  animation: promoScroll 10s linear infinite;
+  width: max-content;
+  animation: promoScroll 32s linear infinite;
   will-change: transform;
 }
 
 .promo-group {
-  flex-shrink: 0;
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
+  justify-content: space-around;
+  min-width: max(680px, 50vw);
   white-space: nowrap;
 }
 
-.promo-group span {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+.promo-group > span:not(.promo-dot) {
+  padding: 0 24px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-.promo-group > span:not(.promo-dot) {
-  padding: 0 28px;
+.promo-dot {
+  padding: 0 10px;
+  color: #d3ad68;
+  font-size: 11px;
 }
 
-.promo-dot {
-  color: #666;
+@media (hover: hover) {
+  .promo-bar:hover .promo-track {
+    animation-play-state: paused;
+  }
 }
 
 @keyframes promoScroll {
   from {
     transform: translateX(0);
   }
-
   to {
     transform: translateX(-50%);
   }
 }
 
 @media (max-width: 600px) {
-  .promo-track {
-    animation-duration: 9s;
+  .promo-bar {
+    min-height: 34px;
   }
 
-  .promo-group span {
-    font-size: 9px;
-    letter-spacing: 0.5em;
+  .promo-track {
+    animation-duration: 28s;
+  }
+
+  .promo-group {
+    min-width: 540px;
   }
 
   .promo-group > span:not(.promo-dot) {
-    padding: 0 20px;
+    padding: 0 16px;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+
+  .promo-dot {
+    padding: 0 6px;
+    font-size: 9px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .promo-track {
+    width: 100%;
     animation: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  .promo-group {
+    flex: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+    min-width: 0;
+    gap: 6px 12px;
+    padding: 10px 12px;
+    white-space: normal;
+  }
+
+  .promo-group[aria-hidden="true"],
+  .promo-dot {
+    display: none;
+  }
+
+  .promo-group > span:not(.promo-dot) {
+    padding: 0;
+    text-align: center;
   }
 }
