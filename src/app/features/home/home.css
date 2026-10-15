@@ -42,14 +42,12 @@ html {
 }
 
 /* =========================================================
-   GRADIENTE DEL BANNER
+   GRADIENTE DEL BANNER (CORREGIDO: Transparente para nitidez)
    ========================================================= */
 
 .hero-gradient {
   z-index: -1;
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.82) 28%, rgba(0, 0, 0, 0.48) 58%, rgba(0, 0, 0, 0.18) 100%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, transparent 45%);
+  background: transparent;
 }
 
 /* =========================================================
@@ -298,7 +296,7 @@ html {
 }
 
 /* =========================================================
-   TABLET / MÓVIL
+   TABLET / MÓVIL (CORREGIDO: Transparente)
    ========================================================= */
 
 @media (max-width: 768px) {
@@ -311,7 +309,7 @@ html {
   }
 
   .hero-gradient {
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.76) 48%, rgba(0, 0, 0, 0.35) 100%);
+    background: transparent;
   }
 
   .collections-public-grid {
