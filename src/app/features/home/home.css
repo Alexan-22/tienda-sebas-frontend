@@ -8,19 +8,23 @@ html {
 }
 
 /* =========================================================
-   HERO / CARRUSEL
+   HERO / CARRUSEL RESPONSIVO
    ========================================================= */
 
 .hero-carousel {
   position: relative;
   width: 100%;
   background: #000;
+  overflow: hidden;
 }
 
 .hero-slide {
   position: relative;
   width: 100%;
-  min-height: 680px;
+  /* Mantiene la proporción adaptable según el tamaño de pantalla */
+  aspect-ratio: 16 / 7;
+  min-height: 480px;
+  max-height: 720px;
   overflow: hidden;
   background: #000;
   isolation: isolate;
@@ -37,46 +41,39 @@ html {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  z-index: -3;
+  z-index: 1;
   animation: heroImageEnter 0.8s ease both;
 }
 
-/* =========================================================
-   GRADIENTE DEL BANNER (CORREGIDO: Transparente para nitidez)
-   ========================================================= */
-
 .hero-gradient {
-  z-index: -1;
+  z-index: 2;
   background: transparent;
 }
 
-/* =========================================================
-   CONTENIDO DEL HERO
-   ========================================================= */
-
+/* Ocultar el texto sobrepuesto "TIENDA SEBAS / FASHION STORE" */
 .hero-content {
-  animation: heroContentEnter 0.65s ease both;
+  display: none !important;
 }
 
 /* =========================================================
-   FLECHAS DEL CARRUSEL
+   CONTROLES (FLECHAS Y DOTS)
    ========================================================= */
 
 .carousel-arrow {
   position: absolute;
   top: 50%;
   z-index: 30;
-  width: 54px;
-  height: 54px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   transform: translateY(-50%);
   border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(0, 0, 0, 0.28);
+  background: rgba(0, 0, 0, 0.35);
   color: #fff;
   font-family: Arial, sans-serif;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 300;
   line-height: 1;
   cursor: pointer;
@@ -96,21 +93,17 @@ html {
 }
 
 .carousel-arrow-left {
-  left: 24px;
+  left: 20px;
 }
 
 .carousel-arrow-right {
-  right: 24px;
+  right: 20px;
 }
-
-/* =========================================================
-   INDICADORES / DOTS
-   ========================================================= */
 
 .carousel-dots {
   position: absolute;
   left: 50%;
-  bottom: 28px;
+  bottom: 20px;
   z-index: 30;
   display: flex;
   align-items: center;
@@ -120,11 +113,11 @@ html {
 }
 
 .carousel-dot {
-  width: 28px;
+  width: 24px;
   height: 3px;
   padding: 0;
   border: 0;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: width 0.25s ease, background 0.25s ease, opacity 0.25s ease;
 }
@@ -134,24 +127,20 @@ html {
 }
 
 .carousel-dot.active {
-  width: 48px;
+  width: 40px;
   background: #fff;
 }
 
-/* =========================================================
-   CONTADOR DEL CARRUSEL
-   ========================================================= */
-
 .carousel-counter {
   position: absolute;
-  right: 38px;
-  bottom: 25px;
+  right: 24px;
+  bottom: 18px;
   z-index: 30;
   display: flex;
   align-items: center;
   gap: 7px;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 9px;
   font-weight: 900;
   letter-spacing: 0.12em;
 }
@@ -171,10 +160,6 @@ html {
   gap: 16px;
 }
 
-/* =========================================================
-   TARJETA DE COLECCIÓN
-   ========================================================= */
-
 .collection-public-card {
   position: relative;
   min-height: 500px;
@@ -190,10 +175,6 @@ html {
   transform: scale(1.05);
 }
 
-/* =========================================================
-   EFECTO EXTRA EN COLECCIONES
-   ========================================================= */
-
 .collection-public-card::after {
   content: '';
   position: absolute;
@@ -208,10 +189,6 @@ html {
   border-color: rgba(255, 255, 255, 0.22);
 }
 
-/* =========================================================
-   CONTENIDO DE COLECCIONES
-   ========================================================= */
-
 .collection-public-card > div:last-child {
   z-index: 10;
 }
@@ -219,10 +196,6 @@ html {
 .collection-public-card h3 {
   word-break: break-word;
 }
-
-/* =========================================================
-   LINKS DEL HOME
-   ========================================================= */
 
 .hero-carousel a,
 .collection-public-card a {
@@ -238,32 +211,19 @@ html {
     opacity: 0;
     transform: scale(1.035);
   }
-
   to {
     opacity: 1;
     transform: scale(1);
   }
 }
 
-@keyframes heroContentEnter {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* =========================================================
-   PANTALLAS GRANDES
+   ADAPTACIÓN PARA PANTALLAS GRANDES (min-width: 1500px)
    ========================================================= */
 
 @media (min-width: 1500px) {
   .hero-slide {
-    min-height: 720px;
+    max-height: 800px;
   }
 
   .collection-public-card {
@@ -272,44 +232,37 @@ html {
 }
 
 /* =========================================================
-   TABLET GRANDE
+   ADAPTACIÓN PARA TABLETAS GRANDES (max-width: 1100px)
    ========================================================= */
 
 @media (max-width: 1100px) {
+  .hero-slide {
+    aspect-ratio: 16 / 8;
+    min-height: 380px;
+  }
+
   .collections-public-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .carousel-arrow {
-    width: 48px;
-    height: 48px;
-    font-size: 29px;
+    width: 44px;
+    height: 44px;
+    font-size: 26px;
   }
 
-  .carousel-arrow-left {
-    left: 14px;
-  }
-
-  .carousel-arrow-right {
-    right: 14px;
-  }
+  .carousel-arrow-left { left: 14px; }
+  .carousel-arrow-right { right: 14px; }
 }
 
 /* =========================================================
-   TABLET / MÓVIL (CORREGIDO: Transparente)
+   ADAPTACIÓN PARA TABLETAS / MÓVILES (max-width: 768px)
    ========================================================= */
 
 @media (max-width: 768px) {
   .hero-slide {
-    min-height: 650px;
-  }
-
-  .hero-image {
-    object-position: center;
-  }
-
-  .hero-gradient {
-    background: transparent;
+    aspect-ratio: 16 / 9;
+    min-height: 280px;
   }
 
   .collections-public-grid {
@@ -317,42 +270,29 @@ html {
   }
 
   .collection-public-card {
-    min-height: 540px;
+    min-height: 450px;
   }
 
   .carousel-arrow {
-    top: auto;
-    bottom: 18px;
-    width: 42px;
-    height: 42px;
-    transform: none;
-    font-size: 26px;
+    width: 38px;
+    height: 38px;
+    font-size: 22px;
   }
 
-  .carousel-arrow:active {
-    transform: scale(0.94);
-  }
-
-  .carousel-arrow-left {
-    left: 18px;
-  }
-
-  .carousel-arrow-right {
-    right: 18px;
-  }
+  .carousel-arrow-left { left: 10px; }
+  .carousel-arrow-right { right: 10px; }
 
   .carousel-dots {
-    bottom: 37px;
-    max-width: calc(100% - 150px);
-    gap: 5px;
+    bottom: 14px;
+    gap: 6px;
   }
 
   .carousel-dot {
-    width: 15px;
+    width: 18px;
   }
 
   .carousel-dot.active {
-    width: 28px;
+    width: 32px;
   }
 
   .carousel-counter {
@@ -361,60 +301,52 @@ html {
 }
 
 /* =========================================================
-   MÓVIL
+   ADAPTACIÓN EXCLUSIVA PARA MÓVILES (max-width: 520px)
    ========================================================= */
 
 @media (max-width: 520px) {
   .hero-slide {
-    min-height: 590px;
-  }
-
-  .hero-content h1 {
-    font-size: 46px;
-    line-height: 0.9;
-    letter-spacing: -0.055em;
-  }
-
-  .hero-content a {
-    min-height: 52px;
-    padding-left: 24px;
-    padding-right: 24px;
+    aspect-ratio: 16 / 10;
+    min-height: 220px;
   }
 
   .collection-public-card {
-    min-height: 460px;
+    min-height: 380px;
   }
 
   .collection-public-card > div:last-child {
-    padding: 24px;
+    padding: 20px;
   }
 
   .collection-public-card h3 {
-    font-size: 32px;
-    line-height: 1;
+    font-size: 28px;
   }
 
   .carousel-arrow {
-    width: 38px;
-    height: 38px;
-    font-size: 24px;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
   }
 
-  .carousel-arrow-left {
-    left: 12px;
-  }
-
-  .carousel-arrow-right {
-    right: 12px;
-  }
+  .carousel-arrow-left { left: 8px; }
+  .carousel-arrow-right { right: 8px; }
 
   .carousel-dots {
-    bottom: 34px;
+    bottom: 10px;
+  }
+
+  .carousel-dot {
+    width: 14px;
+    height: 2px;
+  }
+
+  .carousel-dot.active {
+    width: 24px;
   }
 }
 
 /* =========================================================
-   ACCESIBILIDAD - REDUCIR MOVIMIENTO
+   ACCESIBILIDAD
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -422,8 +354,7 @@ html {
     scroll-behavior: auto;
   }
 
-  .hero-image,
-  .hero-content {
+  .hero-image {
     animation: none;
   }
 
@@ -432,8 +363,4 @@ html {
   .carousel-dot {
     transition: none;
   }
-}
-/* Ocultar el texto sobrepuesto "TIENDA SEBAS / FASHION STORE" */
-.hero-content {
-  display: none !important;
 }
