@@ -179,11 +179,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
     this.error = '';
     this.mensaje = '';
 
-    if (!banner.titulo || !banner.titulo.trim()) {
-      this.error = 'El título del banner es obligatorio.';
-      this.actualizarVista();
-      return;
-    }
+    banner.titulo = banner.titulo?.trim() ?? '';
 
     if (banner.orden == null || banner.orden < 1) {
       this.error = 'El orden del banner debe ser mayor a 0.';
