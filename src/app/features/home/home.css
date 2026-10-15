@@ -433,3 +433,7 @@ html {
     transition: none;
   }
 }
+/* Ocultar el texto sobrepuesto "TIENDA SEBAS / FASHION STORE" */
+.hero-content {
+  display: none !important;
+}
