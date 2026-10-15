@@ -237,6 +237,19 @@
             <p class="checkout-note">
               El stock será validado nuevamente antes de registrar tu compra.
             </p>
+                        <!-- COMPRA POR WHATSAPP -->
+
+            <button
+              type="button"
+              (click)="comprarPorWhatsApp()"
+              [disabled]="sincronizandoStock"
+              class="whatsapp-buy-button">
+              Continuar compra con WhatsApp
+            </button>
+
+            <p class="checkout-note">
+              Sin registrarte. Coordina tu pago y envío por WhatsApp.
+            </p>
 
             <a routerLink="/" class="continue-shopping">
               Seguir comprando
