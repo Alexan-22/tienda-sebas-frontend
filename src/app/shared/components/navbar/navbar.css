@@ -524,3 +524,29 @@
     height: 38px;
   }
 }
+.brand-logo {
+  display: block;
+  width: auto;
+  height: 100px;
+  max-width: 280px;
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .brand-logo {
+    height: 70px;
+    max-width: 190px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

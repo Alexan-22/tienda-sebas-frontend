@@ -50,84 +50,61 @@ export class Cart implements OnInit {
     this.sincronizandoStock = true;
 
     const productosUnicos = [
-      ...new Set(
-        itemsActuales.map(item => item.idProducto)
-      )
+      ...new Set(itemsActuales.map(item => item.idProducto))
     ];
 
-    const consultas = productosUnicos.map(
-      idProducto =>
-        this.productoTallaService
-          .listarPorProducto(idProducto)
-          .pipe(
-            catchError(error => {
-              console.error(
-                'Error consultando stock del producto:',
-                idProducto,
-                error
-              );
-
-              return of([]);
-            })
-          )
-    );
-
-    forkJoin(consultas)
-      .subscribe({
-        next: respuestas => {
-          const tallas = respuestas.flat();
-
-          for (const item of itemsActuales) {
-            const productoTalla = tallas.find(
-              talla => talla.idProductoTalla === item.idProductoTalla
-            );
-
-            if (!productoTalla) {
-              continue;
-            }
-
-            this.carritoService.actualizarStock(
-              item.idProductoTalla,
-              productoTalla.stock
-            );
-          }
-
-          this.sincronizandoStock = false;
-        },
-
-        error: error => {
+    const consultas = productosUnicos.map(idProducto =>
+      this.productoTallaService.listarPorProducto(idProducto).pipe(
+        catchError(error => {
           console.error(
-            'Error sincronizando stock:',
+            'Error consultando stock del producto:',
+            idProducto,
             error
           );
 
-          this.sincronizandoStock = false;
-        }
-      });
-  }
-
-  aumentar(
-    idProductoTalla: number,
-    cantidad: number
-  ): void {
-    this.carritoService.cambiarCantidad(
-      idProductoTalla,
-      cantidad + 1
+          return of([]);
+        })
+      )
     );
+
+    forkJoin(consultas).subscribe({
+      next: respuestas => {
+        const tallas = respuestas.flat();
+
+        for (const item of itemsActuales) {
+          const productoTalla = tallas.find(
+            talla => talla.idProductoTalla === item.idProductoTalla
+          );
+
+          if (!productoTalla) {
+            continue;
+          }
+
+          this.carritoService.actualizarStock(
+            item.idProductoTalla,
+            productoTalla.stock
+          );
+        }
+
+        this.sincronizandoStock = false;
+      },
+      error: error => {
+        console.error('Error sincronizando stock:', error);
+        this.sincronizandoStock = false;
+      }
+    });
   }
 
-  disminuir(
-    idProductoTalla: number,
-    cantidad: number
-  ): void {
+  aumentar(idProductoTalla: number, cantidad: number): void {
+    this.carritoService.cambiarCantidad(idProductoTalla, cantidad + 1);
+  }
+
+  disminuir(idProductoTalla: number, cantidad: number): void {
     if (cantidad <= 1) {
       return;
     }
 
-    this.carritoService.cambiarCantidad(
-      idProductoTalla,
-      cantidad - 1
-    );
+    this.carritoService.cambiarCantidad(idProductoTalla, cantidad - 1);
   }
 
   eliminar(idProductoTalla: number): void {
@@ -149,27 +126,64 @@ export class Cart implements OnInit {
       return;
     }
 
-    const existeAgotado = itemsActuales.some(
-      item => item.stock <= 0
-    );
+    const existeAgotado = itemsActuales.some(item => item.stock <= 0);
 
     if (existeAgotado) {
       return;
     }
 
     if (!this.authService.autenticado()) {
-      this.router.navigate(
-        ['/login'],
-        {
-          queryParams: {
-            returnUrl: '/checkout'
-          }
+      this.router.navigate(['/login'], {
+        queryParams: {
+          returnUrl: '/checkout'
         }
-      );
+      });
 
       return;
     }
 
     this.router.navigate(['/checkout']);
   }
+
+  // COMPRA POR WHATSAPP SIN INICIAR SESIÓN
+  comprarPorWhatsApp(): void {
+    const productos = this.items();
+
+    if (!productos.length || this.sincronizandoStock) {
+      return;
+    }
+
+    if (productos.some(item => item.stock <= 0)) {
+      alert('Retira los productos agotados antes de continuar.');
+      return;
+    }
+
+    const detalle = productos.map(item =>
+      `• ${item.nombre}\n` +
+      `Talla: ${item.talla}\n` +
+      `Cantidad: ${item.cantidad}\n` +
+      `Precio unitario: S/ ${item.precio.toFixed(2)}\n` +
+      `Subtotal: S/ ${(item.precio * item.cantidad).toFixed(2)}`
+    ).join('\n\n');
+
+    const mensaje =
+      `Hola, Tienda Sebas. Quiero comprar:\n\n${detalle}\n\n` +
+      `Subtotal de productos: S/ ${this.subtotal().toFixed(2)}\n` +
+      `Envío pendiente de calcular.\n\n` +
+      `¿Me confirman disponibilidad, precio final y formas de pago?`;
+
+    window.open(
+      `https://wa.me/51935421403?text=${encodeURIComponent(mensaje)}`,
+      '_blank',
+      'noopener,noreferrer'
+    );
+  }
 }
+
+
+
+
+
+
+
+
