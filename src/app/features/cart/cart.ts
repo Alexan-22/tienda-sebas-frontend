@@ -173,3 +173,39 @@ export class Cart implements OnInit {
     this.router.navigate(['/checkout']);
   }
 }
+
+.whatsapp-buy-button {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 17px 12px;
+  border: none;
+  background: #128c4a;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.whatsapp-buy-button:hover {
+  background: #0e713c;
+}
+
+.whatsapp-buy-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.whatsapp-buy-button:focus-visible {
+  outline: 3px solid #128c4a;
+  outline-offset: 3px;
+}
+
+
+
+
+
+
+
+
