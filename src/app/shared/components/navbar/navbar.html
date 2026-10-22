@@ -2,18 +2,7 @@
   <div class="navbar-container">
 
     <!-- =====================================
-         1. LOGO (IZQUIERDA)
-    ====================================== -->
-    <a routerLink="/" class="brand" (click)="cerrarMenu()">
-      <img
-        src="/images/home/publiclogo-tienda.jpg.jpg"
-        alt="Tienda Sebas"
-        class="brand-logo"
-      />
-    </a>
-
-    <!-- =====================================
-         2. NAVEGACIÓN DESKTOP (CENTRO)
+         1. NAVEGACIÓN DESKTOP (IZQUIERDA)
     ====================================== -->
     <nav class="desktop-nav">
       <a routerLink="/tienda" [queryParams]="{ nuevo: true }" class="nav-link">Novedades</a>
@@ -25,18 +14,52 @@
     </nav>
 
     <!-- =====================================
+         2. LOGO (CENTRO)
+    ====================================== -->
+    <a routerLink="/" class="brand" (click)="cerrarMenu()">
+      <img
+        src="/images/home/publiclogo-tienda.jpg.jpg"
+        alt="Tienda Sebas"
+        class="brand-logo"
+      />
+    </a>
+
+    <!-- =====================================
          3. ACCIONES (DERECHA)
     ====================================== -->
     <div class="navbar-actions">
 
-      <!-- USUARIO AUTENTICADO -->
+      <!-- BARRA DE BÚSQUEDA COMPACTA -->
+      <div class="search-box">
+        <svg
+          class="search-icon"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input
+          type="text"
+          placeholder="Buscar productos..."
+          aria-label="Buscar productos"
+          class="search-input"
+        />
+      </div>
+
+      <!-- ===================================
+           PERFIL / USUARIO AUTENTICADO
+      ==================================== -->
       @if (authService.autenticado()) {
         <div class="account-wrapper" (click)="$event.stopPropagation()">
           <button
             type="button"
             class="account-button"
             (click)="toggleCuenta($event)"
-            aria-label="Abrir mi cuenta">
+            aria-label="Abrir mi perfil">
 
             <span class="account-info">
               <span class="account-role">
@@ -53,7 +76,7 @@
             <span class="account-avatar">{{ inicialUsuario }}</span>
           </button>
 
-          <!-- MENÚ DESPLEGABLE -->
+          <!-- MENÚ DESPLEGABLE DE PERFIL -->
           @if (cuentaAbierta) {
             <div class="account-dropdown">
               <div class="dropdown-user">
@@ -74,16 +97,20 @@
 
               <div class="dropdown-divider"></div>
 
+              <button type="button" class="dropdown-option" routerLink="/perfil">
+                <span class="dropdown-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </span>
+                Mi Perfil
+              </button>
+
               @if (esAdmin) {
                 <button type="button" class="dropdown-option" (click)="irAAdmin()">
                   <span class="dropdown-icon">
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.7">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
                       <rect x="3" y="3" width="7" height="7"></rect>
                       <rect x="14" y="3" width="7" height="7"></rect>
                       <rect x="3" y="14" width="7" height="7"></rect>
@@ -95,13 +122,7 @@
               } @else {
                 <button type="button" class="dropdown-option" (click)="irAMisCompras()">
                   <span class="dropdown-icon">
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.7">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
                       <path d="M6 2h12l2 5H4l2-5Z"></path>
                       <path d="M4 7v15h16V7"></path>
                       <path d="M9 11h6"></path>
@@ -113,13 +134,7 @@
 
               <button type="button" class="dropdown-option logout-option" (click)="cerrarSesion()">
                 <span class="dropdown-icon">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.7">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
                     <path d="M10 17l5-5-5-5"></path>
                     <path d="M15 12H3"></path>
                     <path d="M14 3h6v18h-6"></path>
@@ -132,15 +147,9 @@
         </div>
       } @else {
 
-        <!-- SIN SESIÓN -->
+        <!-- BOTÓN DE INICIAR SESIÓN / PERFIL -->
         <button type="button" class="login-button" (click)="irACuenta()">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
             <circle cx="12" cy="8" r="4"></circle>
             <path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"></path>
           </svg>
@@ -148,15 +157,9 @@
         </button>
       }
 
-      <!-- CARRITO -->
+      <!-- CARRITO DE COMPRAS -->
       <a routerLink="/carrito" class="icon-button cart-button" aria-label="Carrito" title="Carrito">
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.7">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
           <path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.5h7.8a2 2 0 0 0 2-1.6L21 7H7"></path>
           <circle cx="10" cy="20" r="1"></circle>
           <circle cx="18" cy="20" r="1"></circle>
@@ -167,7 +170,7 @@
         }
       </a>
 
-      <!-- MENÚ MÓVIL -->
+      <!-- BOTÓN MENÚ MÓVIL -->
       <button
         type="button"
         class="icon-button menu-button"
@@ -175,25 +178,13 @@
         (click)="toggleMenu()">
 
         @if (!menuAbierto) {
-          <svg
-            width="23"
-            height="23"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
             <path d="M4 7h16"></path>
             <path d="M4 12h16"></path>
             <path d="M4 17h16"></path>
           </svg>
         } @else {
-          <svg
-            width="23"
-            height="23"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
             <path d="M6 6l12 12"></path>
             <path d="M18 6L6 18"></path>
           </svg>
@@ -202,10 +193,19 @@
     </div>
   </div>
 
-  <!-- MENÚ MÓVIL -->
+  <!-- MENÚ MÓVIL DESPLEGABLE -->
   @if (menuAbierto) {
     <div class="mobile-menu">
       <nav class="mobile-nav">
+        <!-- BUSCADOR MÓVIL -->
+        <div class="mobile-search">
+          <input
+            type="text"
+            placeholder="Buscar productos..."
+            class="search-input"
+          />
+        </div>
+
         <a routerLink="/tienda" [queryParams]="{ nuevo: true }" class="mobile-link" (click)="cerrarMenu()">Novedades</a>
         <a routerLink="/tienda" [queryParams]="{ genero: 1 }" class="mobile-link" (click)="cerrarMenu()">Hombres</a>
         <a routerLink="/tienda" [queryParams]="{ genero: 2 }" class="mobile-link" (click)="cerrarMenu()">Mujeres</a>
@@ -229,6 +229,10 @@
               <strong>{{ correoUsuario }}</strong>
             </div>
           </div>
+
+          <button type="button" class="mobile-link mobile-button" routerLink="/perfil" (click)="cerrarMenu()">
+            Mi Perfil
+          </button>
 
           @if (esAdmin) {
             <button type="button" class="mobile-link mobile-button" (click)="irAAdmin()">
