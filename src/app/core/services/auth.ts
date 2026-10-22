@@ -30,7 +30,7 @@ export class AuthService {
   ) {}
 
   // ==========================================
-  // LOGIN
+  // LOGIN TRADICIONAL
   // ==========================================
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(
@@ -38,10 +38,31 @@ export class AuthService {
       request
     ).pipe(
       tap(response => {
-        localStorage.setItem(this.tokenKey, response.token);
-        this.tokenSignal.set(response.token);
+        this.guardarSesion(response.token);
       })
     );
+  }
+
+  // ==========================================
+  // LOGIN CON GOOGLE
+  // ==========================================
+  loginConGoogle(idToken: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
+      `${this.apiUrl}/google`,
+      { idToken }
+    ).pipe(
+      tap(response => {
+        this.guardarSesion(response.token);
+      })
+    );
+  }
+
+  // ==========================================
+  // GUARDAR SESIÓN
+  // ==========================================
+  private guardarSesion(token: string): void {
+    localStorage.setItem(this.tokenKey, token);
+    this.tokenSignal.set(token);
   }
 
   // ==========================================
