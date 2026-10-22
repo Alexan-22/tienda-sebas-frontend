@@ -46,16 +46,16 @@ export class AuthService {
   // ==========================================
   // LOGIN CON GOOGLE
   // ==========================================
-  loginConGoogle(idToken: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(
-      `${this.apiUrl}/google`,
-      { idToken }
-    ).pipe(
-      tap(response => {
-        this.guardarSesion(response.token);
-      })
-    );
-  }
+   loginConGoogle(idToken: string): Observable<LoginResponse> {
+  return this.http.post<LoginResponse>(
+    `${this.apiUrl}/google`,
+    { idToken }
+  ).pipe(
+    tap(response => {
+      this.guardarSesion(response.token);
+    })
+  );
+}
 
   // ==========================================
   // GUARDAR SESIÓN
