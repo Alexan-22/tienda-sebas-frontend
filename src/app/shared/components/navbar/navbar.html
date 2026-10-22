@@ -2,18 +2,7 @@
   <div class="navbar-container">
 
     <!-- =====================================
-         LOGO
-    ====================================== -->
-    <a routerLink="/" class="brand" (click)="cerrarMenu()">
-      <img
-        src="/images/home/publiclogo-tienda.jpg.jpg"
-        alt="Tienda Sebas"
-        class="brand-logo"
-     />
-   </a>
-
-    <!-- =====================================
-         NAVEGACIÓN DESKTOP
+         1. NAVEGACIÓN DESKTOP (IZQUIERDA)
     ====================================== -->
     <nav class="desktop-nav">
       <a routerLink="/tienda" [queryParams]="{ nuevo: true }" class="nav-link">Novedades</a>
@@ -25,13 +14,22 @@
     </nav>
 
     <!-- =====================================
-         ACCIONES
+         2. LOGO (CENTRO)
+    ====================================== -->
+    <a routerLink="/" class="brand brand-center" (click)="cerrarMenu()">
+      <img
+        src="/images/home/publiclogo-tienda.jpg.jpg"
+        alt="Tienda Sebas"
+        class="brand-logo"
+      />
+    </a>
+
+    <!-- =====================================
+         3. ACCIONES (DERECHA)
     ====================================== -->
     <div class="navbar-actions">
 
-      <!-- ===================================
-           USUARIO AUTENTICADO
-      ==================================== -->
+      <!-- USUARIO AUTENTICADO -->
       @if (authService.autenticado()) {
         <div class="account-wrapper" (click)="$event.stopPropagation()">
           <button
@@ -134,9 +132,7 @@
         </div>
       } @else {
 
-        <!-- ===================================
-             SIN SESIÓN
-        ==================================== -->
+        <!-- SIN SESIÓN -->
         <button type="button" class="login-button" (click)="irACuenta()">
           <svg
             width="20"
@@ -152,9 +148,7 @@
         </button>
       }
 
-      <!-- ===================================
-           CARRITO
-      ==================================== -->
+      <!-- CARRITO -->
       <a routerLink="/carrito" class="icon-button cart-button" aria-label="Carrito" title="Carrito">
         <svg
           width="22"
@@ -173,9 +167,7 @@
         }
       </a>
 
-      <!-- ===================================
-           MENÚ MÓVIL
-      ==================================== -->
+      <!-- MENÚ MÓVIL -->
       <button
         type="button"
         class="icon-button menu-button"
@@ -211,7 +203,7 @@
   </div>
 
   <!-- =====================================
-       MENÚ MÓVIL
+       MENÚ MÓVIL (DESPLEGABLE)
   ====================================== -->
   @if (menuAbierto) {
     <div class="mobile-menu">
@@ -223,7 +215,6 @@
         <a routerLink="/tienda" [queryParams]="{ genero: 4 }" class="mobile-link" (click)="cerrarMenu()">Niñas</a>
         <a routerLink="/tienda" class="mobile-link" (click)="cerrarMenu()">Colecciones</a>
 
-        <!-- CUENTA MÓVIL -->
         @if (authService.autenticado()) {
           <div class="mobile-user">
             <div class="mobile-avatar">{{ inicialUsuario }}</div>
