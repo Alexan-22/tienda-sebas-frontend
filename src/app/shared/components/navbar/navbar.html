@@ -2,7 +2,18 @@
   <div class="navbar-container">
 
     <!-- =====================================
-         1. NAVEGACIÓN DESKTOP (IZQUIERDA)
+         1. LOGO (IZQUIERDA)
+    ====================================== -->
+    <a routerLink="/" class="brand" (click)="cerrarMenu()">
+      <img
+        src="/images/home/publiclogo-tienda.jpg.jpg"
+        alt="Tienda Sebas"
+        class="brand-logo"
+      />
+    </a>
+
+    <!-- =====================================
+         2. NAVEGACIÓN DESKTOP (CENTRO)
     ====================================== -->
     <nav class="desktop-nav">
       <a routerLink="/tienda" [queryParams]="{ nuevo: true }" class="nav-link">Novedades</a>
@@ -12,17 +23,6 @@
       <a routerLink="/tienda" [queryParams]="{ genero: 4 }" class="nav-link">Niñas</a>
       <a routerLink="/tienda" class="nav-link">Colecciones</a>
     </nav>
-
-    <!-- =====================================
-         2. LOGO (CENTRO)
-    ====================================== -->
-    <a routerLink="/" class="brand brand-center" (click)="cerrarMenu()">
-      <img
-        src="/images/home/publiclogo-tienda.jpg.jpg"
-        alt="Tienda Sebas"
-        class="brand-logo"
-      />
-    </a>
 
     <!-- =====================================
          3. ACCIONES (DERECHA)
@@ -202,9 +202,7 @@
     </div>
   </div>
 
-  <!-- =====================================
-       MENÚ MÓVIL (DESPLEGABLE)
-  ====================================== -->
+  <!-- MENÚ MÓVIL -->
   @if (menuAbierto) {
     <div class="mobile-menu">
       <nav class="mobile-nav">
