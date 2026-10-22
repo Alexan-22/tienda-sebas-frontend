@@ -23,11 +23,17 @@ export const appConfig: ApplicationConfig = {
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '629721040219-i4rbp0uojnb0f3v2n97ua4s5rse6m2jc.apps.googleusercontent.com'
+              '629721040219-i4rbp0uojnb0f3v2n97ua4s5rse6m2jc.apps.googleusercontent.com',
+              {
+                oneTapEnabled: false,
+                scopes: 'email profile'
+              }
             )
           }
         ],
-        onError: (err) => console.error('Error Google Auth:', err)
+        onError: (err) => {
+          console.error('Error en autenticación de Google:', err);
+        }
       } as SocialAuthServiceConfig
     }
   ]
