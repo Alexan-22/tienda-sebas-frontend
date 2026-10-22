@@ -571,6 +571,26 @@
     display: none;
   }
 }
+/* boton de busqueda home */
+.search-button-icon {
+  position: absolute;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px;
+  color: #777777;
+  transition: color 150ms ease;
+  z-index: 2;
+}
+
+.search-button-icon:hover {
+  color: #000000;
+}
+
 
 
 

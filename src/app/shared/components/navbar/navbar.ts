@@ -21,6 +21,17 @@ export class Navbar {
   ) {}
 
   // ==========================================
+  // BÚSQUEDA DE PRODUCTOS
+  // ==========================================
+  ejecutarBusqueda(termino: string): void {
+    const query = termino.trim();
+    if (query.length > 0) {
+      this.cerrarMenu();
+      this.router.navigate(['/tienda'], { queryParams: { q: query } });
+    }
+  }
+
+  // ==========================================
   // MENÚ MÓVIL
   // ==========================================
   toggleMenu(): void {
