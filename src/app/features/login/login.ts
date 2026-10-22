@@ -1,16 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
+import { GoogleSigninButtonModule, SocialAuthService } from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [
+    FormsModule,
+    RouterLink,
+    GoogleSigninButtonModule // <-- ESTA LÍNEA ES ESENCIAL PARA RESOLVER EL ERROR NG8001
+  ],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
-export class Login {
+export class Login implements OnInit {
   correo = '';
   password = '';
   mostrarPassword = false;
@@ -21,21 +26,27 @@ export class Login {
 
   constructor(
     private authService: AuthService,
+    private socialAuthService: SocialAuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {
     const url = this.route.snapshot.queryParamMap.get('returnUrl');
 
-    if (
-      url &&
-      url.startsWith('/') &&
-      !url.startsWith('//')
-    ) {
+    if (url && url.startsWith('/') && !url.startsWith('//')) {
       this.returnUrl = url;
     }
 
     this.registroExitoso =
       this.route.snapshot.queryParamMap.get('registrado') === 'true';
+  }
+
+  ngOnInit(): void {
+    // Escuchar la respuesta de Google cuando el usuario interactúa con el botón
+    this.socialAuthService.authState.subscribe((user) => {
+      if (user && user.idToken) {
+        this.procesarLoginGoogle(user.idToken);
+      }
+    });
   }
 
   iniciarSesion(): void {
@@ -58,13 +69,8 @@ export class Login {
           this.cargando = false;
           this.router.navigateByUrl(this.returnUrl);
         },
-
         error: (error) => {
-          console.error(
-            'Error login:',
-            error
-          );
-
+          console.error('Error login:', error);
           this.cargando = false;
 
           if (typeof error.error === 'string') {
@@ -74,5 +80,22 @@ export class Login {
           }
         }
       });
+  }
+
+  procesarLoginGoogle(idToken: string): void {
+    this.cargando = true;
+    this.error = '';
+
+    this.authService.loginConGoogle(idToken).subscribe({
+      next: () => {
+        this.cargando = false;
+        this.router.navigateByUrl(this.returnUrl);
+      },
+      error: (err) => {
+        console.error('Error al iniciar sesión con Google:', err);
+        this.cargando = false;
+        this.error = 'No se pudo iniciar sesión con Google.';
+      }
+    });
   }
 }
