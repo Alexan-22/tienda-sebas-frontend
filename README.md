@@ -1,75 +1,240 @@
-# TiendaSebasPolvosFrontend
+# Sebas Collection | Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.8.
+Aplicación web de comercio electrónico y administración para una tienda de ropa, desarrollada con Angular, TypeScript y Tailwind CSS.
 
-## Development server
+Integra catálogo público, compras online, gestión administrativa, punto de venta presencial y reportes exportables.
 
-To start a local development server, run:
+**Sitio web:** [www.sebascollection.com](https://www.sebascollection.com/)
 
-```bash
-ng serve
+**Autor:** Alexander Ancori Conza  
+**Tipo de proyecto:** Full Stack — comercio electrónico y gestión de ventas.
+
+## Descripción
+
+Sebas Collection reúne las ventas online y presenciales en una misma plataforma.
+
+Los clientes pueden explorar prendas, seleccionar tallas, gestionar su carrito y consultar sus compras. El administrador dispone de herramientas para gestionar productos, inventario, usuarios, ventas y reportes.
+
+El nombre técnico original del proyecto es `TiendaSebasPolvosFrontend`. La marca pública utilizada es **Sebas Collection**.
+
+## Tecnologías
+
+- Angular y Angular Router.
+- TypeScript.
+- HTML y Tailwind CSS.
+- HttpClient para comunicación con la API REST.
+- Autenticación mediante JWT.
+- jsPDF y jspdf-autotable.
+- SheetJS (`xlsx`).
+- Git y GitHub.
+- Azure App Service.
+
+Proyecto generado originalmente con Angular CLI 22.1.8. Consultar `package.json` para las versiones actuales.
+
+## Funcionalidades
+
+### Tienda online
+
+- Catálogo de prendas para hombres, mujeres y niños.
+- Navegación por género y categoría.
+- Detalle de productos con imágenes, precio y tallas.
+- Consulta de stock por talla.
+- Visualización de ofertas.
+- Carrito de compras.
+- Checkout y confirmación de compra.
+- Historial de compras del cliente.
+- Consulta de detalle y comprobante imprimible.
+
+### Administración
+
+- Gestión de productos e imágenes.
+- Administración de tallas y existencias.
+- Gestión de usuarios.
+- Consulta de ventas online y presenciales.
+- Punto de venta para registrar ventas en tienda.
+- Registro de clientes presenciales.
+- Consulta e impresión de comprobantes.
+
+### Reportes
+
+- Resumen de ventas.
+- Ventas y detalle de ventas.
+- Productos vendidos.
+- Medios de pago.
+- Categorías.
+- Comparación por canal de venta.
+- Filtros por período y origen ONLINE/PRESENCIAL.
+- Exportación a PDF.
+- Exportación a Excel con importes numéricos y formato monetario en soles.
+
+## Arquitectura y despliegue
+
+| Componente | Tecnología | Alojamiento |
+|---|---|---|
+| Frontend | Angular | Azure App Service |
+| Backend | Java y Spring Boot | Azure App Service independiente |
+| Base de datos | PostgreSQL | Supabase |
+| Acceso público | Dominio propio y HTTPS | www.sebascollection.com |
+
+El navegador consume la API REST del backend. El frontend no se conecta directamente a PostgreSQL.
+
+Las credenciales de base de datos y la clave de firma JWT permanecen en el backend.
+
+## Roles
+
+| Rol | Acceso |
+|---|---|
+| CLIENTE | Tienda, carrito, checkout e historial de compras propias |
+| ADMIN | Administración, inventario, ventas, POS, usuarios y reportes |
+
+Los controles de navegación del frontend complementan la autorización aplicada por el backend.
+
+## Requisitos para desarrollo
+
+- Node.js compatible con la versión de Angular instalada.
+- npm.
+- Git.
+- Backend disponible.
+- Editor como Visual Studio Code.
+
+Comprobar herramientas:
+
+```powershell
+node --version
+npm --version
+git --version
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Instalación
 
-## Code scaffolding
+Clonar este repositorio e ingresar a su carpeta local.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Si existe `package-lock.json`, instalar las versiones registradas:
 
-```bash
-ng generate component component-name
+```powershell
+npm ci
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Si se necesita instalar o actualizar dependencias:
 
-```bash
-ng generate --help
+```powershell
+npm install
 ```
 
-## Building
+## Configuración de la API
 
-To build the project run:
+Revisar la configuración de conexión utilizada por el proyecto y establecer la URL del backend.
 
-```bash
-ng build
+Entornos habituales:
+
+| Entorno | Dirección |
+|---|---|
+| Desarrollo | http://localhost:8080 |
+| Producción | URL HTTPS del backend desplegado en Azure |
+
+Conservar el prefijo `/api` según la forma en que los servicios HTTP del proyecto construyen sus rutas.
+
+No incluir contraseñas, secretos JWT ni claves privadas en el código Angular: la configuración del frontend es visible para el navegador.
+
+## Ejecutar localmente
+
+```powershell
+npx ng serve --open
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Dirección:
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+```text
+http://localhost:4200
 ```
 
-## Running end-to-end tests
+La aplicación se actualiza al modificar los archivos de desarrollo.
 
-For end-to-end (e2e) testing, run:
+El backend debe estar iniciado y permitir el origen local mediante su configuración CORS.
 
-```bash
-ng e2e
+Para detener Angular:
+
+```text
+Ctrl + C
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Compilar
 
-## Additional Resources
+```powershell
+npx ng build --configuration production
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+La salida se genera en el directorio configurado en `angular.json`, normalmente dentro de `dist/`.
 
-## Exportaci�n de reportes
+Antes de publicar, comprobar:
 
-El m�dulo administrativo de Reportes permite exportar informaci�n de ventas en formato PDF y Excel.
+- URL HTTPS correcta de la API.
+- Ausencia de referencias accidentales a localhost.
+- Carga de imágenes.
+- Inicio de sesión y permisos.
+- Acceso directo y recarga de rutas Angular.
+
+El alojamiento debe redirigir las rutas del cliente a `index.html` cuando corresponda.
+
+## Exportación de reportes
 
 Dependencias utilizadas:
 
-- jspdf: generaci�n de archivos PDF.
-- jspdf-autotable: generaci�n de tablas dentro de los reportes PDF.
-- xlsx: generaci�n y exportaci�n de archivos Excel (.xlsx).
+| Paquete | Función |
+|---|---|
+| jspdf | Generación de documentos PDF |
+| jspdf-autotable | Tablas para reportes PDF |
+| xlsx | Generación de archivos Excel |
 
-Estas dependencias se instalan autom�ticamente al ejecutar `npm install`.
+Se instalan junto con las demás dependencias del proyecto.
 
-Si se requiere instalarlas manualmente:
+Instalación manual, cuando sea necesaria:
 
-`npm install jspdf jspdf-autotable xlsx`
+```powershell
+npm install jspdf jspdf-autotable xlsx
+```
+
+## Pruebas
+
+Ejecutar las pruebas unitarias configuradas:
+
+```powershell
+npx ng test
+```
+
+El proyecto original utiliza Vitest; revisar la configuración vigente y los scripts de `package.json`.
+
+La ejecución correcta de los comandos debe comprobarse en cada entorno. Este README no declara una cobertura de pruebas específica.
+
+Para pruebas de extremo a extremo, primero debe existir un framework y una configuración correspondiente. Angular CLI no incluye esa infraestructura de manera predeterminada.
+
+## Alcance de pagos
+
+El registro de un medio de pago no equivale a una confirmación automática del proveedor.
+
+El flujo actual de Yape requiere verificación manual. Las opciones de tarjeta de demostración no constituyen una pasarela de pagos real y no deben recibir datos reales de tarjetas.
+
+## Trabajo realizado
+
+- Desarrollo de la interfaz pública y administrativa.
+- Integración con API REST y autenticación JWT.
+- Implementación del flujo de compra.
+- Integración del punto de venta presencial.
+- Desarrollo de reportes con exportación PDF y Excel.
+- Adaptación de la interfaz para distintos tamaños de pantalla.
+- Configuración del despliegue en Azure y uso de dominio propio.
+
+## Mejoras pendientes
+
+- Pulir la presentación de algunas secciones en móvil.
+- Ampliar las pruebas automatizadas.
+- Integrar un proveedor de pagos para confirmación automática.
+- Mejorar la supervisión de errores y experiencia ante fallos de conexión.
+
+## Autor
+
+**Alexander Ancori Conza**
+
+GitHub: [Alexan-22](https://github.com/Alexan-22)
+
+Sitio web: [Sebas Collection](https://www.sebascollection.com/)
