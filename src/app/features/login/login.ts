@@ -2,15 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
-import { GoogleSigninButtonModule, SocialAuthService } from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     FormsModule,
-    RouterLink,
-    GoogleSigninButtonModule
+    RouterLink
   ],
   templateUrl: './login.html',
   styleUrl: './login.css'
@@ -26,7 +24,6 @@ export class Login implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private socialAuthService: SocialAuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -40,13 +37,7 @@ export class Login implements OnInit {
       this.route.snapshot.queryParamMap.get('registrado') === 'true';
   }
 
-  ngOnInit(): void {
-    this.socialAuthService.authState.subscribe((user) => {
-      if (user && user.idToken) {
-        this.procesarLoginGoogle(user.idToken);
-      }
-    });
-  }
+  ngOnInit(): void {}
 
   iniciarSesion(): void {
     this.error = '';
@@ -79,22 +70,5 @@ export class Login implements OnInit {
           }
         }
       });
-  }
-
-  procesarLoginGoogle(idToken: string): void {
-    this.cargando = true;
-    this.error = '';
-
-    this.authService.loginConGoogle(idToken).subscribe({
-      next: () => {
-        this.cargando = false;
-        this.router.navigateByUrl(this.returnUrl);
-      },
-      error: (err) => {
-        console.error('Error al iniciar sesión con Google:', err);
-        this.cargando = false;
-        this.error = 'No se pudo iniciar sesión con Google.';
-      }
-    });
   }
 }
