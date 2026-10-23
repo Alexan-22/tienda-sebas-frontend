@@ -28,47 +28,35 @@ export class Login implements OnInit {
     private route: ActivatedRoute
   ) {
     const url = this.route.snapshot.queryParamMap.get('returnUrl');
-
     if (url && url.startsWith('/') && !url.startsWith('//')) {
       this.returnUrl = url;
     }
-
-    this.registroExitoso =
-      this.route.snapshot.queryParamMap.get('registrado') === 'true';
+    this.registroExitoso = this.route.snapshot.queryParamMap.get('registrado') === 'true';
   }
 
   ngOnInit(): void {}
 
   iniciarSesion(): void {
     this.error = '';
-
     if (!this.correo.trim() || !this.password) {
       this.error = 'Ingresa tu correo y contraseña.';
       return;
     }
 
     this.cargando = true;
-
-    this.authService
-      .login({
-        correo: this.correo.trim().toLowerCase(),
-        password: this.password
-      })
-      .subscribe({
-        next: () => {
-          this.cargando = false;
-          this.router.navigateByUrl(this.returnUrl);
-        },
-        error: (error) => {
-          console.error('Error login:', error);
-          this.cargando = false;
-
-          if (typeof error.error === 'string') {
-            this.error = error.error;
-          } else {
-            this.error = 'Correo o contraseña incorrectos.';
-          }
-        }
-      });
+    this.authService.login({
+      correo: this.correo.trim().toLowerCase(),
+      password: this.password
+    }).subscribe({
+      next: () => {
+        this.cargando = false;
+        this.router.navigateByUrl(this.returnUrl);
+      },
+      error: (error) => {
+        console.error('Error login:', error);
+        this.cargando = false;
+        this.error = typeof error.error === 'string' ? error.error : 'Correo o contraseña incorrectos.';
+      }
+    });
   }
 }
