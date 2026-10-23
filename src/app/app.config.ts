@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
 import {
   GoogleLoginProvider,
-  SocialAuthServiceConfig
+  provideSocialAuthServiceConfig
 } from '@abacritt/angularx-social-login';
 
 export const appConfig: ApplicationConfig = {
@@ -15,22 +15,20 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([authInterceptor])
     ),
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              '629721040219-i4rbp0uojnb0f3v2n97ua4s5rse6m2jc.apps.googleusercontent.com'
-            )
-          }
-        ],
-        onError: (err) => {
-          console.error('Error Google Auth:', err);
+    // Proveedor funcional nativo para evitar fallos con NgZone
+    provideSocialAuthServiceConfig({
+      autoLogin: false,
+      providers: [
+        {
+          id: GoogleLoginProvider.PROVIDER_ID,
+          provider: new GoogleLoginProvider(
+            '629721040219-i4rbp0uojnb0f3v2n97ua4s5rse6m2jc.apps.googleusercontent.com'
+          )
         }
-      } as SocialAuthServiceConfig
-    }
+      ],
+      onError: (err) => {
+        console.error('Error Google Auth:', err);
+      }
+    })
   ]
 };
