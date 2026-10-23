@@ -20,7 +20,7 @@ export function getSocialAuthServiceConfig(): SocialAuthServiceConfig {
       }
     ],
     onError: (err) => {
-      console.error('Error Google Auth:', err);
+      console.error('Error en Google Auth:', err);
     }
   };
 }
