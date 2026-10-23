@@ -10,7 +10,7 @@ import { GoogleSigninButtonModule, SocialAuthService } from '@abacritt/angularx-
   imports: [
     FormsModule,
     RouterLink,
-    GoogleSigninButtonModule // <-- ESTA LÍNEA ES ESENCIAL PARA RESOLVER EL ERROR NG8001
+    GoogleSigninButtonModule
   ],
   templateUrl: './login.html',
   styleUrl: './login.css'
@@ -41,7 +41,6 @@ export class Login implements OnInit {
   }
 
   ngOnInit(): void {
-    // Escuchar la respuesta de Google cuando el usuario interactúa con el botón
     this.socialAuthService.authState.subscribe((user) => {
       if (user && user.idToken) {
         this.procesarLoginGoogle(user.idToken);
