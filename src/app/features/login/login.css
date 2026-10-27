@@ -11,24 +11,24 @@
   width: 100%;
   height: 50px;
   padding: 0 16px;
-  background-color: #fcfcfc;
-  border: 1px solid #e2e2e2;
-  border-radius: 2px;
-  color: #111111;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  color: #0f172a;
   font-size: 13px;
   font-weight: 500;
   outline: none;
-  transition: all 200ms ease;
+  transition: all 0.2s ease;
 }
 
 .custom-input:focus {
   background-color: #ffffff;
-  border-color: #000000;
-  box-shadow: 0 0 0 1px #000000;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
 }
 
 .custom-input::placeholder {
-  color: #a3a3a3;
+  color: #94a3b8;
   font-weight: 400;
 }
 
@@ -43,48 +43,19 @@
   transform: translateY(-50%);
   border: none;
   background: transparent;
-  color: #171717;
+  color: #6366f1;
   font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
-  padding: 4px;
-  transition: opacity 150ms ease;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
 }
 
 .toggle-password-btn:hover {
-  opacity: 0.6;
-}
-
-/* =========================================
-   SEPARADOR
-   ========================================= */
-
-.divider {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.divider::before {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 1px;
-  background-color: #eeeeee;
-}
-
-.divider span {
-  position: relative;
-  background-color: #ffffff;
-  padding: 0 14px;
-  color: #a3a3a3;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  background-color: #f1f5f9;
 }
 
 /* =========================================
@@ -93,42 +64,31 @@
 
 .submit-btn {
   width: 100%;
-  height: 54px;
-  background-color: #000000;
+  height: 52px;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   color: #ffffff;
   border: none;
-  border-radius: 2px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 0.2em;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background-color 200ms ease, transform 150ms ease;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .submit-btn:hover:not(:disabled) {
-  background-color: #262626;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
 }
 
 .submit-btn:active:not(:disabled) {
-  transform: scale(0.99);
+  transform: scale(0.98);
 }
 
 .submit-btn:disabled {
-  background-color: #d4d4d4;
+  background: #cbd5e1;
   cursor: not-allowed;
-}
-
-/* =========================================
-   BOTÓN DE GOOGLE
-   ========================================= */
-
-.google-btn-wrapper {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
-.google-btn-wrapper iframe {
-  margin: 0 auto !important;
+  box-shadow: none;
 }
