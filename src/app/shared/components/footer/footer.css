@@ -1,4 +1,263 @@
 :host {
   display: block;
   width: 100%;
+  font-family: inherit;
+}
+
+/* =========================================
+   ESTRUCTURA PRINCIPAL DEL FOOTER
+   ========================================= */
+.site-footer {
+  background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #090d16 70%, #020617 100%);
+  color: #f8fafc;
+  border-top: 1px solid rgba(99, 102, 241, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .footer-container {
+    padding: 6rem 2.5rem 3rem;
+  }
+}
+
+/* =========================================
+   GRID DE CONTENIDO
+   ========================================= */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+@media (min-width: 640px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1.5fr repeat(3, 1fr) 1.2fr;
+    gap: 2.5rem;
+  }
+}
+
+/* =========================================
+   COLUMNA 1: MARCA Y REDES
+   ========================================= */
+.footer-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.footer-brand-link:hover {
+  transform: scale(1.02);
+}
+
+.brand-badge {
+  display: flex;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 900;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.brand-title {
+  font-size: 15px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  background: linear-gradient(135deg, #ffffff 30%, #c7d2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-desc {
+  margin-top: 1rem;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #94a3b8;
+  max-width: 320px;
+}
+
+.footer-subtitle {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #c7d2fe;
+  margin-bottom: 1rem;
+}
+
+/* =========================================
+   BOTONES DE REDES SOCIALES COLORIDOS
+   ========================================= */
+.social-section {
+  margin-top: 1.5rem;
+}
+
+.social-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Estilos de colores específicos para cada red social al hacer hover */
+.instagram-btn:hover {
+  background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(253, 29, 29, 0.35);
+}
+
+.facebook-btn:hover {
+  background: #1877f2;
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(24, 119, 242, 0.35);
+}
+
+.tiktok-btn:hover {
+  background: #000000;
+  border-color: #25f4ee;
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(37, 244, 238, 0.3);
+}
+
+/* =========================================
+   COLUMNAS DE ENLACES
+   ========================================= */
+.footer-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footer-link {
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+  width: fit-content;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+/* =========================================
+   COLUMNA DE PAGOS
+   ========================================= */
+.pay-desc {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin-bottom: 1rem;
+}
+
+.pay-badges-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pay-badge {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.pay-badge:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #6366f1;
+  color: #ffffff;
+}
+
+/* =========================================
+   SECCIÓN INFERIOR (COPYRIGHT)
+   ========================================= */
+.footer-bottom {
+  margin-top: 4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .footer-bottom {
+    flex-direction: row;
+    text-align: left;
+  }
+}
+
+.copyright-text,
+.location-text {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #64748b;
+}
+
+/* =========================================
+   ADAPTABILIDAD RESPONSIVA ADICIONAL
+   ========================================= */
+@media (max-width: 640px) {
+  .footer-container {
+    padding-top: 3.5rem;
+    padding-bottom: 2rem;
+  }
+  
+  .footer-grid {
+    gap: 2.5rem;
+  }
 }

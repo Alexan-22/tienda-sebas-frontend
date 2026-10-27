@@ -5,7 +5,7 @@
          1. NAVEGACIÓN DESKTOP (IZQUIERDA)
     ====================================== -->
     <nav class="desktop-nav">
-      <a routerLink="/tienda" [queryParams]="{ nuevo: true }" class="nav-link">Novedades</a>
+      <a routerLink="/tienda" [queryParams]="{ nuevo: true }" class="nav-link">✦ Novedades</a>
       <a routerLink="/tienda" [queryParams]="{ genero: 1 }" class="nav-link">Hombres</a>
       <a routerLink="/tienda" [queryParams]="{ genero: 2 }" class="nav-link">Mujeres</a>
       <a routerLink="/tienda" [queryParams]="{ genero: 3 }" class="nav-link">Niños</a>
@@ -16,7 +16,7 @@
     <!-- =====================================
          2. LOGO DINÁMICO (CENTRO)
     ====================================== -->
-    <a routerLink="/" class="brand" (click)="cerrarMenu()">
+    <a routerLink="/" class="brand" (click)="cerrarMenu()" aria-label="Ir al inicio">
       <img
         [src]="tiendaService.tiendaActual()?.logoUrl || '/images/home/publiclogo-tienda.jpg.jpg'"
         [alt]="tiendaService.tiendaActual()?.nombre || 'Tienda Sebas'"
@@ -43,14 +43,14 @@
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="1.8">
+            stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.35-4.35"></path>
           </svg>
         </button>
         <input
           #buscarInput
-          type="text"
+          type="search"
           placeholder="Buscar productos..."
           aria-label="Buscar productos"
           class="search-input"
@@ -70,12 +70,11 @@
             <span class="account-info">
               <span class="account-role">
                 @if (esAdmin) {
-                  Administrador
+                  Admin
                 } @else {
                   Cliente
                 }
               </span>
-
               <span class="account-email">{{ correoUsuario }}</span>
             </span>
 
@@ -84,28 +83,26 @@
 
           <!-- MENÚ DESPLEGABLE DE PERFIL -->
           @if (cuentaAbierta) {
-            <div class="account-dropdown">
+            <div class="account-dropdown animate-fade-in">
               <div class="dropdown-user">
                 <div class="dropdown-avatar">{{ inicialUsuario }}</div>
-
                 <div class="dropdown-user-info">
                   <span class="dropdown-role">
                     @if (esAdmin) {
-                      Administrador
+                      Panel Administrador
                     } @else {
-                      Cliente
+                      Cuenta de Cliente
                     }
                   </span>
-
                   <strong>{{ correoUsuario }}</strong>
                 </div>
               </div>
 
               <div class="dropdown-divider"></div>
 
-              <button type="button" class="dropdown-option" routerLink="/perfil">
+              <button type="button" class="dropdown-option" routerLink="/perfil" (click)="cerrarCuenta()">
                 <span class="dropdown-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                   </svg>
@@ -114,9 +111,9 @@
               </button>
 
               @if (esAdmin) {
-                <button type="button" class="dropdown-option" (click)="irAAdmin()">
+                <button type="button" class="dropdown-option admin-option" (click)="irAAdmin()">
                   <span class="dropdown-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <rect x="3" y="3" width="7" height="7"></rect>
                       <rect x="14" y="3" width="7" height="7"></rect>
                       <rect x="3" y="14" width="7" height="7"></rect>
@@ -128,7 +125,7 @@
               } @else {
                 <button type="button" class="dropdown-option" (click)="irAMisCompras()">
                   <span class="dropdown-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M6 2h12l2 5H4l2-5Z"></path>
                       <path d="M4 7v15h16V7"></path>
                       <path d="M9 11h6"></path>
@@ -140,7 +137,7 @@
 
               <button type="button" class="dropdown-option logout-option" (click)="cerrarSesion()">
                 <span class="dropdown-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M10 17l5-5-5-5"></path>
                     <path d="M15 12H3"></path>
                     <path d="M14 3h6v18h-6"></path>
@@ -152,27 +149,26 @@
           }
         </div>
       } @else {
-
-        <!-- BOTÓN DE INICIAR SESIÓN / PERFIL -->
+        <!-- BOTÓN DE INICIAR SESIÓN -->
         <button type="button" class="login-button" (click)="irACuenta()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="8" r="4"></circle>
             <path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"></path>
           </svg>
-          <span>Iniciar sesión</span>
+          <span>Ingresar</span>
         </button>
       }
 
       <!-- CARRITO DE COMPRAS -->
-      <a routerLink="/carrito" class="icon-button cart-button" aria-label="Carrito" title="Carrito">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+      <a routerLink="/carrito" class="icon-button cart-button" aria-label="Carrito" title="Ver Carrito">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.5h7.8a2 2 0 0 0 2-1.6L21 7H7"></path>
-          <circle cx="10" cy="20" r="1"></circle>
-          <circle cx="18" cy="20" r="1"></circle>
+          <circle cx="10" cy="20" r="1.5"></circle>
+          <circle cx="18" cy="20" r="1.5"></circle>
         </svg>
 
         @if (carritoService.cantidadTotal() > 0) {
-          <span class="cart-count">{{ carritoService.cantidadTotal() }}</span>
+          <span class="cart-count animate-bounce-subtle">{{ carritoService.cantidadTotal() }}</span>
         }
       </a>
 
@@ -182,15 +178,14 @@
         class="icon-button menu-button"
         aria-label="Abrir menú"
         (click)="toggleMenu()">
-
         @if (!menuAbierto) {
-          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 7h16"></path>
             <path d="M4 12h16"></path>
             <path d="M4 17h16"></path>
           </svg>
         } @else {
-          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M6 6l12 12"></path>
             <path d="M18 6L6 18"></path>
           </svg>
@@ -199,66 +194,61 @@
     </div>
   </div>
 
-  <!-- MENÚ MÓVIL DESPLEGABLE -->
+  <!-- MENÚ MÓVIL DESPLEGABLE CON EFECTO VIDRIO -->
   @if (menuAbierto) {
-    <div class="mobile-menu">
+    <div class="mobile-menu animate-slide-down">
       <nav class="mobile-nav">
         <!-- BUSCADOR MÓVIL -->
         <div class="mobile-search">
           <input
-            type="text"
+            #buscarMovilInput
+            type="search"
             placeholder="Buscar productos..."
-            class="search-input"
+            class="search-input mobile-search-input"
+            (keyup.enter)="ejecutarBusqueda(buscarMovilInput.value); cerrarMenu()"
           />
         </div>
 
-        <a routerLink="/tienda" [queryParams]="{ nuevo: true }" class="mobile-link" (click)="cerrarMenu()">Novedades</a>
+        <a routerLink="/tienda" [queryParams]="{ nuevo: true }" class="mobile-link" (click)="cerrarMenu()">✦ Novedades</a>
         <a routerLink="/tienda" [queryParams]="{ genero: 1 }" class="mobile-link" (click)="cerrarMenu()">Hombres</a>
         <a routerLink="/tienda" [queryParams]="{ genero: 2 }" class="mobile-link" (click)="cerrarMenu()">Mujeres</a>
         <a routerLink="/tienda" [queryParams]="{ genero: 3 }" class="mobile-link" (click)="cerrarMenu()">Niños</a>
         <a routerLink="/tienda" [queryParams]="{ genero: 4 }" class="mobile-link" (click)="cerrarMenu()">Niñas</a>
         <a routerLink="/tienda" class="mobile-link" (click)="cerrarMenu()">Colecciones</a>
 
+        <div class="mobile-divider"></div>
+
         @if (authService.autenticado()) {
           <div class="mobile-user">
             <div class="mobile-avatar">{{ inicialUsuario }}</div>
-
             <div>
-              <span>
-                @if (esAdmin) {
-                  Administrador
-                } @else {
-                  Cliente
-                }
+              <span class="mobile-role-tag">
+                @if (esAdmin) { Administrador } @else { Cliente }
               </span>
-
               <strong>{{ correoUsuario }}</strong>
             </div>
           </div>
 
-          <button type="button" class="mobile-link mobile-button" routerLink="/perfil" (click)="cerrarMenu()">
+          <button type="button" class="mobile-link mobile-action-btn" routerLink="/perfil" (click)="cerrarMenu()">
             Mi Perfil
           </button>
 
           @if (esAdmin) {
-            <button type="button" class="mobile-link mobile-button" (click)="irAAdmin()">
+            <button type="button" class="mobile-link mobile-action-btn admin-mobile-btn" (click)="irAAdmin()">
               Panel administrativo
             </button>
           } @else {
-            <button type="button" class="mobile-link mobile-button" (click)="irAMisCompras()">
+            <button type="button" class="mobile-link mobile-action-btn" (click)="irAMisCompras()">
               Mis compras
             </button>
           }
 
-          <button
-            type="button"
-            class="mobile-link mobile-button logout-button"
-            (click)="cerrarSesion()">
+          <button type="button" class="mobile-link mobile-action-btn logout-mobile-btn" (click)="cerrarSesion()">
             Cerrar sesión
           </button>
         } @else {
-          <button type="button" class="mobile-link mobile-button" (click)="irACuenta()">
-            Iniciar sesión
+          <button type="button" class="mobile-link mobile-action-btn login-mobile-btn" (click)="irACuenta()">
+            Iniciar sesión / Registrarse
           </button>
         }
       </nav>

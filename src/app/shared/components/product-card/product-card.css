@@ -1,31 +1,44 @@
 :host {
   display: block;
+  font-family: inherit;
 }
 
 /* =========================================
-   TARJETA
+   TARJETA PRINCIPAL
    ========================================= */
-
 .product-card {
   width: 100%;
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  overflow: hidden;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
 }
 
 .product-link {
   display: block;
   color: inherit;
   text-decoration: none;
+  padding: 12px;
 }
 
 /* =========================================
-   IMAGEN
+   CONTENEDOR DE IMAGEN
    ========================================= */
-
 .product-image-container {
   position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
   overflow: hidden;
-  background: #f5f5f5;
+  background: #f8fafc;
+  border-radius: 18px;
 }
 
 .product-image {
@@ -37,20 +50,19 @@
 }
 
 .product-card:hover .product-image {
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 
 /* =========================================
-   PLACEHOLDER
+   PLACEHOLDER (IMAGEN NO DISPONIBLE)
    ========================================= */
-
 .product-placeholder {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f7f7f7 0%, #eeeeee 100%);
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
 }
 
 .product-placeholder-content {
@@ -61,59 +73,60 @@
 }
 
 .product-placeholder-logo {
-  color: #d4d4d4;
-  font-size: 34px;
+  color: #94a3b8;
+  font-size: 32px;
   font-weight: 900;
   letter-spacing: -0.08em;
 }
 
 .product-placeholder-line {
   width: 28px;
-  height: 1px;
-  margin: 12px 0;
-  background: #d4d4d4;
+  height: 2px;
+  margin: 8px 0;
+  background: #cbd5e1;
+  border-radius: 999px;
 }
 
 .product-placeholder-text {
   margin: 0;
-  color: #b5b5b5;
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
 }
 
 /* =========================================
-   BADGES
+   BADGES (ETIQUETAS COLORIDAS)
    ========================================= */
-
 .badge {
   position: absolute;
   top: 12px;
   z-index: 2;
-  padding: 8px 10px;
-  font-size: 8px;
+  padding: 6px 10px;
+  font-size: 9px;
   font-weight: 900;
-  letter-spacing: 0.13em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  border-radius: 999px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .badge-new {
   left: 12px;
-  background: #000;
-  color: #fff;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #ffffff;
 }
 
 .badge-discount {
   right: 12px;
-  background: #fff;
-  color: #000;
+  background: linear-gradient(135deg, #f43f5e 0%, #fb7185 100%);
+  color: #ffffff;
 }
 
 /* =========================================
-   HOVER
+   OVERLAY FLOTANTE (HOVER)
    ========================================= */
-
 .product-overlay {
   position: absolute;
   right: 12px;
@@ -123,17 +136,19 @@
   align-items: center;
   justify-content: center;
   height: 42px;
-  background: #000;
-  color: #fff;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  border-radius: 12px;
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 220ms ease, transform 220ms ease;
+  transform: translateY(12px);
+  transition: opacity 250ms ease, transform 250ms ease;
 }
 
 .product-overlay span {
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 900;
-  letter-spacing: 0.17em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
 }
 
@@ -143,98 +158,99 @@
 }
 
 /* =========================================
-   INFORMACIÓN
+   INFORMACIÓN DE TEXTO
    ========================================= */
-
 .product-info {
-  padding-top: 14px;
+  padding: 14px 6px 4px 6px;
 }
 
 .product-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 }
 
 .product-category,
 .product-gender {
   margin: 0;
-  color: #a3a3a3;
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .product-gender {
   text-align: right;
+  color: #6366f1;
 }
 
 .product-name {
   margin: 6px 0 0;
-  color: #000;
+  color: #0f172a;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* =========================================
-   PRECIO
+   PRECIOS
    ========================================= */
-
 .product-price {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: 10px;
   flex-wrap: wrap;
 }
 
 .current-price {
-  color: #000;
-  font-size: 13px;
-  font-weight: 800;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 900;
 }
 
 .old-price {
-  color: #a3a3a3;
+  color: #94a3b8;
   font-size: 11px;
+  font-weight: 700;
   text-decoration: line-through;
 }
 
 /* =========================================
-   RESPONSIVE
+   RESPONSIVO (MÓVILES Y TABLETS)
    ========================================= */
-
 @media (max-width: 639px) {
+  .product-link {
+    padding: 8px;
+  }
+
   .product-overlay {
-    display: none;
+    display: none; /* Se oculta overlay táctil para dejar espacio directo al toque */
   }
 
   .product-info {
-    padding-top: 12px;
-  }
-
-  .product-meta {
-    gap: 6px;
+    padding: 10px 4px 2px 4px;
   }
 
   .product-category,
   .product-gender {
     font-size: 8px;
-    letter-spacing: 0.12em;
   }
 
   .product-name {
-    margin-top: 7px;
-    font-size: 13px;
-    line-height: 1.35;
+    margin-top: 4px;
+    font-size: 12px;
   }
 
   .product-price {
-    gap: 7px;
-    margin-top: 7px;
+    gap: 8px;
+    margin-top: 8px;
   }
 
   .current-price {
@@ -247,9 +263,8 @@
 
   .badge {
     top: 8px;
-    padding: 7px 8px;
-    font-size: 7px;
-    letter-spacing: 0.1em;
+    padding: 5px 8px;
+    font-size: 8px;
   }
 
   .badge-new {
@@ -264,15 +279,11 @@
 @media (max-width: 380px) {
   .product-category,
   .product-gender {
-    font-size: 7px;
+    font-size: 7.5px;
   }
 
   .product-name,
   .current-price {
-    font-size: 12px;
-  }
-
-  .old-price {
-    font-size: 9px;
+    font-size: 11.5px;
   }
 }

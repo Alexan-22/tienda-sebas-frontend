@@ -1,56 +1,80 @@
 :host {
   display: block;
+  font-family: inherit;
 }
 
+/* =========================================
+   BARRA DE PROMOS PRINCIPAL (GRADIENTE VIVO)
+   ========================================= */
 .promo-bar {
   display: flex;
   align-items: center;
   width: 100%;
-  min-height: 38px;
+  min-height: 42px;
   overflow: hidden;
-  background: linear-gradient(110deg, #101010, #242424, #101010);
-  color: #f5f5f5;
-  border-bottom: 1px solid #c9a45c40;
+  background: linear-gradient(135deg, #0f172a 0%, #312e81 50%, #4c1d95 100%);
+  color: #f8fafc;
+  border-bottom: 1px solid rgba(199, 210, 254, 0.2);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.1);
 }
 
+/* Pista de desplazamiento continuo */
 .promo-track {
   display: flex;
   align-items: center;
   width: max-content;
-  animation: promoScroll 20s linear infinite;
+  animation: promoScroll 25s linear infinite;
   will-change: transform;
 }
 
+/* Grupo de elementos repetidos para fluidez infinita */
 .promo-group {
   display: flex;
   flex: 0 0 auto;
   align-items: center;
   justify-content: space-around;
-  min-width: max(680px, 50vw);
+  min-width: max(800px, 50vw);
   white-space: nowrap;
 }
 
-.promo-group > span:not(.promo-dot) {
+/* Estilo de los textos promocionales */
+.promo-text {
   padding: 0 24px;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 800;
   line-height: 1.5;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  color: #e2e8f0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: color 0.2s ease;
 }
 
+/* Destellos de color específicos para destacar beneficios */
+.highlight-yape {
+  color: #fbcfe8 !important; /* Tono rosado elegante */
+}
+
+.highlight-wsp {
+  color: #a7f3d0 !important; /* Tono verde esmeralda elegante */
+}
+
+/* Puntos o íconos separadores coloridos */
 .promo-dot {
-  padding: 0 10px;
-  color: #d3ad68;
-  font-size: 11px;
+  padding: 0 12px;
+  color: #818cf8;
+  font-size: 12px;
+  text-shadow: 0 0 10px rgba(129, 140, 248, 0.6);
 }
 
+/* Pausar animación al colocar el cursor encima en desktop */
 @media (hover: hover) {
   .promo-bar:hover .promo-track {
     animation-play-state: paused;
   }
 }
 
+/* Animación de desplazamiento infinito */
 @keyframes promoScroll {
   from {
     transform: translateX(0);
@@ -60,31 +84,46 @@
   }
 }
 
-@media (max-width: 600px) {
+/* =========================================
+   ADAPTABILIDAD RESPONSIVA (TABLETS Y MÓVILES)
+   ========================================= */
+@media (max-width: 768px) {
   .promo-bar {
-    min-height: 34px;
+    min-height: 38px;
   }
 
   .promo-track {
-  animation-duration: 18s;
-}
-
-  .promo-group {
-    min-width: 540px;
+    animation-duration: 20s;
   }
 
-  .promo-group > span:not(.promo-dot) {
+  .promo-group {
+    min-width: 600px;
+  }
+
+  .promo-text {
     padding: 0 16px;
     font-size: 9px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
   }
 
   .promo-dot {
-    padding: 0 6px;
-    font-size: 9px;
+    padding: 0 8px;
+    font-size: 10px;
   }
 }
 
+@media (max-width: 480px) {
+  .promo-group {
+    min-width: 500px;
+  }
+  .promo-text {
+    padding: 0 12px;
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+  }
+}
+
+/* Accesibilidad: Respetar preferencias de movimiento reducido del usuario */
 @media (prefers-reduced-motion: reduce) {
   .promo-track {
     width: 100%;
@@ -99,7 +138,7 @@
     justify-content: center;
     min-width: 0;
     gap: 6px 12px;
-    padding: 10px 12px;
+    padding: 8px 12px;
     white-space: normal;
   }
 
@@ -108,7 +147,7 @@
     display: none;
   }
 
-  .promo-group > span:not(.promo-dot) {
+  .promo-text {
     padding: 0;
     text-align: center;
   }
