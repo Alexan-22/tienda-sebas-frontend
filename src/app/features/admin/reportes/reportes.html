@@ -107,9 +107,7 @@
     </div>
   } @else {
 
-    <!-- =========================================================
-         PESTAÑA 1: VENTAS E INGRESOS
-    ========================================================= -->
+    <!-- PESTAÑA 1: VENTAS E INGRESOS -->
     @if (pestanaActiva === 'ventas') {
       <div class="tab-content animated-fade">
         <section class="stats-grid">
@@ -177,13 +175,10 @@
       </div>
     }
 
-    <!-- =========================================================
-         PESTAÑA 2: PRODUCTOS E INVENTARIO
-    ========================================================= -->
+    <!-- PESTAÑA 2: PRODUCTOS E INVENTARIO -->
     @if (pestanaActiva === 'inventario') {
       <div class="tab-content animated-fade">
         
-        <!-- ESTADO DEL INVENTARIO -->
         <section class="panel mb-6">
           <div class="panel-header">
             <div>
@@ -217,7 +212,6 @@
           </div>
         </section>
 
-        <!-- VENTAS POR CATEGORÍA -->
         <section class="panel category-panel mb-6">
           <div class="panel-header">
             <div>
@@ -250,7 +244,6 @@
           </div>
         </section>
 
-        <!-- PRODUCTOS MÁS VENDIDOS -->
         <section class="panel products-panel">
           <div class="panel-header">
             <div>
@@ -301,14 +294,11 @@
       </div>
     }
 
-    <!-- =========================================================
-         PESTAÑA 3: MEDIOS DE PAGO Y CANALES
-    ========================================================= -->
+    <!-- PESTAÑA 3: MEDIOS DE PAGO Y CANALES -->
     @if (pestanaActiva === 'canales') {
       <div class="tab-content animated-fade">
         <section class="summary-grid">
           
-          <!-- MEDIOS DE PAGO -->
           <article class="panel">
             <div class="panel-header">
               <div>
@@ -342,7 +332,6 @@
             </div>
           </article>
 
-          <!-- CANALES DE VENTA -->
           <article class="panel">
             <div class="panel-header">
               <div>
@@ -380,9 +369,7 @@
       </div>
     }
 
-    <!-- =========================================================
-         PESTAÑA 4: CLIENTES Y CUENTAS
-    ========================================================= -->
+    <!-- PESTAÑA 4: CLIENTES Y CUENTAS -->
     @if (pestanaActiva === 'clientes') {
       <div class="tab-content animated-fade">
         <section class="summary-grid">
