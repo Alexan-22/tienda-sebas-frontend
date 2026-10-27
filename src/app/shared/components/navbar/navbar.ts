@@ -2,6 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CarritoService } from '../../../core/services/carrito';
 import { AuthService } from '../../../core/services/auth';
+import { TiendaService } from '../../../core/services/tienda.service'; // 1. IMPORTAR SERVICIO
 
 @Component({
   selector: 'app-navbar',
@@ -17,9 +18,9 @@ export class Navbar {
   constructor(
     public carritoService: CarritoService,
     public authService: AuthService,
+    public tiendaService: TiendaService, // 2. INYECTAR COMO PUBLIC
     private router: Router
   ) {}
-
   // ==========================================
   // BÚSQUEDA DE PRODUCTOS
   // ==========================================
