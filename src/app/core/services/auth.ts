@@ -55,7 +55,7 @@ export class AuthService {
       this.guardarSesion(response.token);
     })
   );
-}
+  }
 
   // ==========================================
   // GUARDAR SESIÓN
