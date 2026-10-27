@@ -17,6 +17,8 @@ import { ProductoService } from '../../../core/services/producto';
 import { ProductoTallaService } from '../../../core/services/producto-talla';
 import { UsuarioService } from '../../../core/services/usuario';
 
+export type PestanaReporte = 'ventas' | 'inventario' | 'canales' | 'clientes';
+
 interface ProductoVendido {
   idProducto: number;
   nombre: string;
@@ -55,9 +57,10 @@ interface CanalReporte {
   styleUrl: './reportes.css'
 })
 export class Reportes implements OnInit {
-  // =========================================================
+  // PESTAÑA ACTIVA
+  pestanaActiva: PestanaReporte = 'ventas';
+
   // DATOS PRINCIPALES
-  // =========================================================
   ventas: Venta[] = [];
   ventasFiltradas: Venta[] = [];
   productos: Producto[] = [];
@@ -65,21 +68,15 @@ export class Reportes implements OnInit {
   detalles: DetalleVenta[] = [];
   inventario: ProductoTalla[] = [];
 
-  // =========================================================
   // FILTROS
-  // =========================================================
   periodo = 'TODO';
   canal = 'TODOS';
 
-  // =========================================================
   // ESTADO
-  // =========================================================
   cargando = true;
   error = '';
 
-  // =========================================================
   // RESULTADOS
-  // =========================================================
   productosVendidos: ProductoVendido[] = [];
   mediosPago: MedioPagoReporte[] = [];
   categorias: CategoriaReporte[] = [];
@@ -92,16 +89,10 @@ export class Reportes implements OnInit {
     private usuarioService: UsuarioService
   ) {}
 
-  // =========================================================
-  // INICIO
-  // =========================================================
   ngOnInit(): void {
     this.cargarReportes();
   }
 
-  // =========================================================
-  // CARGA PRINCIPAL
-  // =========================================================
   cargarReportes(): void {
     this.cargando = true;
     this.error = '';
@@ -125,9 +116,6 @@ export class Reportes implements OnInit {
     });
   }
 
-  // =========================================================
-  // DETALLES + INVENTARIO
-  // =========================================================
   private cargarInformacionSecundaria(): void {
     const detalles$ = this.ventaService.listarDetallesParaReportes().pipe(
       catchError(error => (console.error('Error cargando detalles para reportes:', error), of([] as DetalleVenta[])))
@@ -156,9 +144,6 @@ export class Reportes implements OnInit {
     });
   }
 
-  // =========================================================
-  // FILTROS
-  // =========================================================
   aplicarPeriodo(): void { this.aplicarFiltros(); }
   aplicarCanal(): void { this.aplicarFiltros(); }
 
@@ -253,9 +238,6 @@ export class Reportes implements OnInit {
     return venta.idClientePresencial ? 'PRESENCIAL' : 'ONLINE';
   }
 
-  // =========================================================
-  // DETALLES DEL FILTRO
-  // =========================================================
   private idsVentasFiltradas(): Set<number> {
     return new Set(this.ventasFiltradas.map(venta => venta.idVenta));
   }
@@ -273,9 +255,6 @@ export class Reportes implements OnInit {
     return detalle.idVenta ?? null;
   }
 
-  // =========================================================
-  // PRODUCTOS MÁS VENDIDOS
-  // =========================================================
   private generarProductosVendidos(): void {
     const mapa = new Map<number, ProductoVendido>();
 
@@ -311,9 +290,6 @@ export class Reportes implements OnInit {
     this.productosVendidos = resultado;
   }
 
-  // =========================================================
-  // MEDIOS DE PAGO
-  // =========================================================
   private generarMediosPago(): void {
     const mapa = new Map<string, MedioPagoReporte>();
 
@@ -335,9 +311,6 @@ export class Reportes implements OnInit {
       .sort((a, b) => b.cantidad - a.cantidad);
   }
 
-  // =========================================================
-  // VENTAS POR CANAL
-  // =========================================================
   private generarCanales(): void {
     const mapa = new Map<'ONLINE' | 'PRESENCIAL', CanalReporte>();
 
@@ -359,9 +332,6 @@ export class Reportes implements OnInit {
       .sort((a, b) => b.cantidad - a.cantidad);
   }
 
-  // =========================================================
-  // VENTAS POR CATEGORÍA
-  // =========================================================
   private generarCategorias(): void {
     const mapa = new Map<string, CategoriaReporte>();
 
@@ -392,9 +362,6 @@ export class Reportes implements OnInit {
     this.categorias = resultado;
   }
 
-  // =========================================================
-  // INDICADORES DE VENTAS
-  // =========================================================
   get totalVentas(): number { return this.ventasFiltradas.length; }
   get ingresosTotales(): number { return this.ventasFiltradas.reduce((total, venta) => total + Number(venta.total ?? 0), 0); }
   get ventaPromedio(): number { return this.totalVentas > 0 ? this.ingresosTotales / this.totalVentas : 0; }
@@ -402,29 +369,17 @@ export class Reportes implements OnInit {
   get ventasOnline(): number { return this.ventasFiltradas.filter(venta => this.obtenerTipoVenta(venta) === 'ONLINE').length; }
   get ventasPresenciales(): number { return this.ventasFiltradas.filter(venta => this.obtenerTipoVenta(venta) === 'PRESENCIAL').length; }
 
-  // =========================================================
-  // INDICADORES DE USUARIOS
-  // =========================================================
   get totalUsuarios(): number { return this.usuarios.length; }
   get usuariosActivos(): number { return this.usuarios.filter(usuario => usuario.estado).length; }
   get totalClientes(): number { return this.usuarios.filter(usuario => usuario.rol?.toUpperCase() === 'CLIENTE').length; }
 
-  // =========================================================
-  // INDICADORES DE INVENTARIO
-  // =========================================================
   get stockTotal(): number { return this.inventario.reduce((total, item) => total + Number(item.stock ?? 0), 0); }
   get stockBajo(): number { return this.inventario.filter(item => item.stock > 0 && item.stock <= 5).length; }
   get sinStock(): number { return this.inventario.filter(item => item.stock <= 0).length; }
   get productosActivos(): number { return this.productos.filter(producto => producto.estado).length; }
 
-  // =========================================================
-  // PRODUCTO LÍDER
-  // =========================================================
   get productoMasVendido(): ProductoVendido | null { return this.productosVendidos.length > 0 ? this.productosVendidos[0] : null; }
 
-  // =========================================================
-  // EXPORTAR PDF
-  // =========================================================
   exportarPDF(): void {
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const anchoPagina = pdf.internal.pageSize.getWidth();
@@ -432,8 +387,7 @@ export class Reportes implements OnInit {
     const periodo = this.obtenerNombrePeriodo();
     const canal = this.obtenerNombreCanal();
 
-    // ENCABEZADO
-    pdf.setFillColor(0, 0, 0);
+    pdf.setFillColor(124, 58, 237);
     pdf.rect(0, 0, anchoPagina, 34, 'F');
     pdf.setTextColor(255, 255, 255);
     pdf.setFont('helvetica', 'bold');
@@ -441,7 +395,7 @@ export class Reportes implements OnInit {
     pdf.text('TIENDA SEBAS', 14, 15);
     pdf.setFont('helvetica', 'normal');
     pdf.setFontSize(9);
-    pdf.text('REPORTE DE VENTAS', 14, 23);
+    pdf.text('REPORTE DE VENTAS E INDICADORES', 14, 23);
 
     pdf.setTextColor(0, 0, 0);
     pdf.setFontSize(8);
@@ -449,10 +403,9 @@ export class Reportes implements OnInit {
     pdf.text(`Canal: ${canal}`, 14, 48);
     pdf.text(`Generado: ${fechaGeneracion}`, 14, 53);
 
-    // RESUMEN
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(12);
-    pdf.text('RESUMEN', 14, 66);
+    pdf.text('RESUMEN GENERAL', 14, 66);
 
     autoTable(pdf, {
       startY: 71,
@@ -467,12 +420,11 @@ export class Reportes implements OnInit {
         this.ventasPresenciales.toString()
       ]],
       styles: { font: 'helvetica', fontSize: 8, cellPadding: 3, halign: 'center' },
-      headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255], fontStyle: 'bold' }
+      headStyles: { fillColor: [124, 58, 237], textColor: [255, 255, 255], fontStyle: 'bold' }
     });
 
     let posicionY = this.obtenerUltimaPosicionPDF(pdf) + 12;
 
-    // MEDIOS DE PAGO
     this.verificarEspacioPDF(pdf, posicionY, 35);
     if (posicionY > 245) { pdf.addPage(); posicionY = 20; }
 
@@ -488,14 +440,13 @@ export class Reportes implements OnInit {
         ? this.mediosPago.map(medio => [medio.nombre, medio.cantidad.toString(), this.formatearMonedaPDF(medio.total), `${medio.porcentaje.toFixed(0)}%`])
         : [['Sin datos', '0', 'S/ 0.00', '0%']],
       styles: { font: 'helvetica', fontSize: 8, cellPadding: 3 },
-      headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255], fontStyle: 'bold' },
+      headStyles: { fillColor: [124, 58, 237], textColor: [255, 255, 255], fontStyle: 'bold' },
       columnStyles: { 1: { halign: 'center' }, 2: { halign: 'right' }, 3: { halign: 'center' } },
       margin: { left: 14, right: 14, bottom: 20 }
     });
 
     posicionY = this.obtenerUltimaPosicionPDF(pdf) + 12;
 
-    // VENTAS POR CANAL
     if (posicionY > 245) { pdf.addPage(); posicionY = 20; }
 
     pdf.setFont('helvetica', 'bold');
@@ -510,14 +461,13 @@ export class Reportes implements OnInit {
         ? this.canales.map(item => [item.nombre, item.cantidad.toString(), this.formatearMonedaPDF(item.total), `${item.porcentaje.toFixed(0)}%`])
         : [['Sin datos', '0', 'S/ 0.00', '0%']],
       styles: { font: 'helvetica', fontSize: 8, cellPadding: 3 },
-      headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255], fontStyle: 'bold' },
+      headStyles: { fillColor: [124, 58, 237], textColor: [255, 255, 255], fontStyle: 'bold' },
       columnStyles: { 1: { halign: 'center' }, 2: { halign: 'right' }, 3: { halign: 'center' } },
       margin: { left: 14, right: 14, bottom: 20 }
     });
 
     posicionY = this.obtenerUltimaPosicionPDF(pdf) + 12;
 
-    // VENTAS POR CATEGORÍA
     if (posicionY > 240) { pdf.addPage(); posicionY = 20; }
 
     pdf.setFont('helvetica', 'bold');
@@ -532,14 +482,13 @@ export class Reportes implements OnInit {
         ? this.categorias.map(categoria => [categoria.nombre, categoria.cantidad.toString(), this.formatearMonedaPDF(categoria.ingresos)])
         : [['Sin datos', '0', 'S/ 0.00']],
       styles: { font: 'helvetica', fontSize: 8, cellPadding: 3 },
-      headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255], fontStyle: 'bold' },
+      headStyles: { fillColor: [124, 58, 237], textColor: [255, 255, 255], fontStyle: 'bold' },
       columnStyles: { 1: { halign: 'center' }, 2: { halign: 'right' } },
       margin: { left: 14, right: 14, bottom: 20 }
     });
 
     posicionY = this.obtenerUltimaPosicionPDF(pdf) + 12;
 
-    // PRODUCTOS VENDIDOS
     if (posicionY > 235) { pdf.addPage(); posicionY = 20; }
 
     pdf.setFont('helvetica', 'bold');
@@ -554,7 +503,7 @@ export class Reportes implements OnInit {
         ? this.productosVendidos.map((producto, index) => [(index + 1).toString(), producto.nombre, producto.categoria, producto.cantidad.toString(), this.formatearMonedaPDF(producto.ingresos)])
         : [['-', 'Sin datos', '-', '0', 'S/ 0.00']],
       styles: { font: 'helvetica', fontSize: 8, cellPadding: 3, overflow: 'linebreak' },
-      headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255], fontStyle: 'bold' },
+      headStyles: { fillColor: [124, 58, 237], textColor: [255, 255, 255], fontStyle: 'bold' },
       columnStyles: {
         0: { cellWidth: 12, halign: 'center' },
         1: { cellWidth: 60 },
@@ -565,7 +514,6 @@ export class Reportes implements OnInit {
       margin: { left: 14, right: 14, bottom: 20 }
     });
 
-    // ESTADO DEL INVENTARIO
     posicionY = this.obtenerUltimaPosicionPDF(pdf) + 12;
     if (posicionY > 235) { pdf.addPage(); posicionY = 20; }
 
@@ -579,11 +527,10 @@ export class Reportes implements OnInit {
       head: [['Stock total', 'Stock bajo', 'Sin stock', 'Productos activos']],
       body: [[this.stockTotal.toString(), this.stockBajo.toString(), this.sinStock.toString(), this.productosActivos.toString()]],
       styles: { font: 'helvetica', fontSize: 8, cellPadding: 3, halign: 'center' },
-      headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255], fontStyle: 'bold' },
+      headStyles: { fillColor: [124, 58, 237], textColor: [255, 255, 255], fontStyle: 'bold' },
       margin: { left: 14, right: 14, bottom: 20 }
     });
 
-    // USUARIOS
     posicionY = this.obtenerUltimaPosicionPDF(pdf) + 12;
     if (posicionY > 235) { pdf.addPage(); posicionY = 20; }
 
@@ -597,25 +544,23 @@ export class Reportes implements OnInit {
       head: [['Clientes online', 'Usuarios totales', 'Cuentas activas']],
       body: [[this.totalClientes.toString(), this.totalUsuarios.toString(), this.usuariosActivos.toString()]],
       styles: { font: 'helvetica', fontSize: 8, cellPadding: 3, halign: 'center' },
-      headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255], fontStyle: 'bold' },
+      headStyles: { fillColor: [124, 58, 237], textColor: [255, 255, 255], fontStyle: 'bold' },
       margin: { left: 14, right: 14, bottom: 20 }
     });
 
-    // PRODUCTO LÍDER
     if (this.productoMasVendido) {
       posicionY = this.obtenerUltimaPosicionPDF(pdf) + 12;
       if (posicionY > 250) { pdf.addPage(); posicionY = 20; }
 
       pdf.setFont('helvetica', 'bold');
       pdf.setFontSize(11);
-      pdf.text('PRODUCTO LIDER DEL FILTRO', 14, posicionY);
+      pdf.text('PRODUCTO LÍDER DEL FILTRO', 14, posicionY);
 
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(9);
       pdf.text(`${this.productoMasVendido.nombre} - ${this.productoMasVendido.cantidad} unidades vendidas`, 14, posicionY + 7);
     }
 
-    // PIE DE PÁGINA
     const totalPaginas = pdf.getNumberOfPages();
 
     for (let pagina = 1; pagina <= totalPaginas; pagina++) {
@@ -630,10 +575,9 @@ export class Reportes implements OnInit {
       pdf.setTextColor(130, 130, 130);
 
       pdf.text('Tienda Sebas - Reporte administrativo', 14, altoPagina - 8);
-      pdf.text(`Pagina ${pagina} de ${totalPaginas}`, anchoPagina - 14, altoPagina - 8, { align: 'right' });
+      pdf.text(`Página ${pagina} de ${totalPaginas}`, anchoPagina - 14, altoPagina - 8, { align: 'right' });
     }
 
-    // DESCARGA
     const fechaArchivo = this.obtenerFechaArchivo();
     const periodoArchivo = this.periodo.toLowerCase().replace(/_/g, '-');
     const canalArchivo = this.canal.toLowerCase();
@@ -645,15 +589,15 @@ export class Reportes implements OnInit {
     const periodos: Record<string, string> = {
       HOY: 'Hoy',
       AYER: 'Ayer',
-      '7': 'Ultimos 7 dias',
-      '15': 'Ultimos 15 dias',
-      '30': 'Ultimos 30 dias',
+      '7': 'Últimos 7 días',
+      '15': 'Últimos 15 días',
+      '30': 'Últimos 30 días',
       MES: 'Este mes',
-      ANIO: 'Este ano',
-      ULTIMO_ANIO: 'Ultimo ano',
-      TODO: 'Todo el periodo'
+      ANIO: 'Este año',
+      ULTIMO_ANIO: 'Último año',
+      TODO: 'Todo el período'
     };
-    return periodos[this.periodo] ?? 'Todo el periodo';
+    return periodos[this.periodo] ?? 'Todo el período';
   }
 
   private obtenerNombreCanal(): string {
@@ -689,9 +633,6 @@ export class Reportes implements OnInit {
     return `${anio}-${mes}-${dia}`;
   }
 
-  // =========================================================
-  // EXPORTAR EXCEL
-  // =========================================================
   exportarExcel(): void {
     const libro = XLSX.utils.book_new();
     const periodo = this.obtenerNombrePeriodo();
@@ -900,32 +841,32 @@ export class Reportes implements OnInit {
     });
   }
 
-private aplicarFormatoMonedaExcel(hoja: XLSX.WorkSheet, celdas: string[]): void {
-  celdas.forEach(referencia => {
-    const celda = hoja[referencia];
-    if (celda && typeof celda.v === 'number') {
-      celda.t = 'n';
-      celda.z = '"S/ "#,##0.00';
-    }
-  });
-}
+  private aplicarFormatoMonedaExcel(hoja: XLSX.WorkSheet, celdas: string[]): void {
+    celdas.forEach(referencia => {
+      const celda = hoja[referencia];
+      if (celda && typeof celda.v === 'number') {
+        celda.t = 'n';
+        celda.z = '"S/ "#,##0.00';
+      }
+    });
+  }
 
-private aplicarFormatoColumnaMonedaExcel(hoja: XLSX.WorkSheet, columna: number, filaFinal: number): void {
-  for (let fila = 2; fila <= filaFinal; fila++) {
-    const referencia = XLSX.utils.encode_cell({ r: fila - 1, c: columna });
-    const celda = hoja[referencia];
-    if (celda && typeof celda.v === 'number') {
-      celda.t = 'n';
-      celda.z = '"S/ "#,##0.00';
+  private aplicarFormatoColumnaMonedaExcel(hoja: XLSX.WorkSheet, columna: number, filaFinal: number): void {
+    for (let fila = 2; fila <= filaFinal; fila++) {
+      const referencia = XLSX.utils.encode_cell({ r: fila - 1, c: columna });
+      const celda = hoja[referencia];
+      if (celda && typeof celda.v === 'number') {
+        celda.t = 'n';
+        celda.z = '"S/ "#,##0.00';
+      }
+    }
+  }
+
+  private aplicarFormatoColumnaPorcentajeExcel(hoja: XLSX.WorkSheet, columna: number, filaFinal: number): void {
+    for (let fila = 2; fila <= filaFinal; fila++) {
+      const referencia = XLSX.utils.encode_cell({ r: fila - 1, c: columna });
+      const celda = hoja[referencia];
+      if (celda && typeof celda.v === 'number') celda.z = '0.00"%"';
     }
   }
 }
-
-private aplicarFormatoColumnaPorcentajeExcel(hoja: XLSX.WorkSheet, columna: number, filaFinal: number): void {
-  for (let fila = 2; fila <= filaFinal; fila++) {
-    const referencia = XLSX.utils.encode_cell({ r: fila - 1, c: columna });
-    const celda = hoja[referencia];
-    if (celda && typeof celda.v === 'number') celda.z = '0.00"%"';
-  }
-}
-}  
