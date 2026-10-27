@@ -14,25 +14,20 @@ html {
 .hero-carousel {
   position: relative;
   width: 100%;
-  background: #000;
+  background: #0a0a0a;
   overflow: hidden;
 }
 
 .hero-slide {
   position: relative;
   width: 100%;
-  /* Mantiene la proporción adaptable según el tamaño de pantalla */
   aspect-ratio: 16 / 7;
-  min-height: 480px;
-  max-height: 720px;
+  min-height: 520px;
+  max-height: 750px;
   overflow: hidden;
-  background: #000;
+  background: #0a0a0a;
   isolation: isolate;
 }
-
-/* =========================================================
-   IMAGEN DEL BANNER
-   ========================================================= */
 
 .hero-image {
   position: absolute;
@@ -42,17 +37,12 @@ html {
   object-fit: cover;
   object-position: center;
   z-index: 1;
-  animation: heroImageEnter 0.8s ease both;
+  animation: heroImageEnter 1s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.hero-gradient {
-  z-index: 2;
-  background: transparent;
-}
-
-/* Ocultar el texto sobrepuesto "TIENDA SEBAS / FASHION STORE" */
 .hero-content {
-  display: none !important;
+  display: block !important;
+  z-index: 10;
 }
 
 /* =========================================================
@@ -63,47 +53,46 @@ html {
   position: absolute;
   top: 50%;
   z-index: 30;
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   transform: translateY(-50%);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.4);
   color: #fff;
   font-family: Arial, sans-serif;
   font-size: 28px;
   font-weight: 300;
   line-height: 1;
   cursor: pointer;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .carousel-arrow:hover {
-  background: #fff;
-  color: #000;
-  border-color: #fff;
-}
-
-.carousel-arrow:active {
-  transform: translateY(-50%) scale(0.94);
+  background: #6366f1;
+  color: #fff;
+  border-color: #6366f1;
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
 }
 
 .carousel-arrow-left {
-  left: 20px;
+  left: 24px;
 }
 
 .carousel-arrow-right {
-  right: 20px;
+  right: 24px;
 }
 
 .carousel-dots {
   position: absolute;
   left: 50%;
-  bottom: 20px;
+  bottom: 24px;
   z-index: 30;
   display: flex;
   align-items: center;
@@ -113,93 +102,80 @@ html {
 }
 
 .carousel-dot {
-  width: 24px;
-  height: 3px;
+  width: 28px;
+  height: 4px;
   padding: 0;
   border: 0;
-  background: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.35);
   cursor: pointer;
-  transition: width 0.25s ease, background 0.25s ease, opacity 0.25s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .carousel-dot:hover {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .carousel-dot.active {
-  width: 40px;
-  background: #fff;
+  width: 45px;
+  background: #6366f1;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
 }
 
 .carousel-counter {
   position: absolute;
-  right: 24px;
-  bottom: 18px;
+  right: 28px;
+  bottom: 22px;
   z-index: 30;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   color: rgba(255, 255, 255, 0.7);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 900;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.15em;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
 }
 
 .carousel-counter strong {
   color: #fff;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 /* =========================================================
-   GRID DINÁMICO DE COLECCIONES
+   GRID DE COLECCIONES
    ========================================================= */
 
 .collections-public-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 24px;
 }
 
 .collection-public-card {
   position: relative;
-  min-height: 500px;
+  min-height: 480px;
   overflow: hidden;
-  background: #000;
+  background: #0f172a;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.collection-public-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.08);
 }
 
 .collection-public-card img {
-  transition: transform 0.7s cubic-bezier(0.2, 0.75, 0.25, 1);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .collection-public-card:hover img {
-  transform: scale(1.05);
-}
-
-.collection-public-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0);
-  transition: border-color 0.3s ease;
-}
-
-.collection-public-card:hover::after {
-  border-color: rgba(255, 255, 255, 0.22);
-}
-
-.collection-public-card > div:last-child {
-  z-index: 10;
-}
-
-.collection-public-card h3 {
-  word-break: break-word;
-}
-
-.hero-carousel a,
-.collection-public-card a {
-  text-decoration: none;
+  transform: scale(1.08);
 }
 
 /* =========================================================
@@ -209,159 +185,11 @@ html {
 @keyframes heroImageEnter {
   from {
     opacity: 0;
-    transform: scale(1.035);
+    transform: scale(1.04);
   }
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-/* =========================================================
-   ADAPTACIÓN PARA PANTALLAS GRANDES (min-width: 1500px)
-   ========================================================= */
-
-@media (min-width: 1500px) {
-  .hero-slide {
-    max-height: 800px;
-  }
-
-  .collection-public-card {
-    min-height: 540px;
-  }
-}
-
-/* =========================================================
-   ADAPTACIÓN PARA TABLETAS GRANDES (max-width: 1100px)
-   ========================================================= */
-
-@media (max-width: 1100px) {
-  .hero-slide {
-    aspect-ratio: 16 / 8;
-    min-height: 380px;
-  }
-
-  .collections-public-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .carousel-arrow {
-    width: 44px;
-    height: 44px;
-    font-size: 26px;
-  }
-
-  .carousel-arrow-left { left: 14px; }
-  .carousel-arrow-right { right: 14px; }
-}
-
-/* =========================================================
-   ADAPTACIÓN PARA TABLETAS / MÓVILES (max-width: 768px)
-   ========================================================= */
-
-@media (max-width: 768px) {
-  .hero-slide {
-    aspect-ratio: 16 / 9;
-    min-height: 280px;
-  }
-
-  .collections-public-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .collection-public-card {
-    min-height: 450px;
-  }
-
-  .carousel-arrow {
-    width: 38px;
-    height: 38px;
-    font-size: 22px;
-  }
-
-  .carousel-arrow-left { left: 10px; }
-  .carousel-arrow-right { right: 10px; }
-
-  .carousel-dots {
-    bottom: 14px;
-    gap: 6px;
-  }
-
-  .carousel-dot {
-    width: 18px;
-  }
-
-  .carousel-dot.active {
-    width: 32px;
-  }
-
-  .carousel-counter {
-    display: none;
-  }
-}
-
-/* =========================================================
-   ADAPTACIÓN EXCLUSIVA PARA MÓVILES (max-width: 520px)
-   ========================================================= */
-
-@media (max-width: 520px) {
-  .hero-slide {
-    aspect-ratio: 16 / 10;
-    min-height: 220px;
-  }
-
-  .collection-public-card {
-    min-height: 380px;
-  }
-
-  .collection-public-card > div:last-child {
-    padding: 20px;
-  }
-
-  .collection-public-card h3 {
-    font-size: 28px;
-  }
-
-  .carousel-arrow {
-    width: 32px;
-    height: 32px;
-    font-size: 18px;
-  }
-
-  .carousel-arrow-left { left: 8px; }
-  .carousel-arrow-right { right: 8px; }
-
-  .carousel-dots {
-    bottom: 10px;
-  }
-
-  .carousel-dot {
-    width: 14px;
-    height: 2px;
-  }
-
-  .carousel-dot.active {
-    width: 24px;
-  }
-}
-
-/* =========================================================
-   ACCESIBILIDAD
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  .hero-image {
-    animation: none;
-  }
-
-  .collection-public-card img,
-  .carousel-arrow,
-  .carousel-dot {
-    transition: none;
   }
 }
 
@@ -379,33 +207,75 @@ html {
   color: #ffffff;
   border-radius: 50px;
   text-align: center;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.35);
+  box-shadow: 0px 6px 20px rgba(37, 211, 102, 0.4);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
 }
 
 .whatsapp-float:hover {
   background-color: #20ba5a;
-  transform: scale(1.1);
-  box-shadow: 0px 6px 20px rgba(37, 211, 102, 0.5);
+  transform: scale(1.12);
+  box-shadow: 0px 8px 25px rgba(37, 211, 102, 0.6);
   color: #ffffff;
 }
 
-/* Ajuste para pantallas móviles */
-@media (max-width: 640px) {
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .hero-slide {
+    aspect-ratio: 16 / 8;
+    min-height: 420px;
+  }
+
+  .collections-public-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-slide {
+    aspect-ratio: 16 / 9;
+    min-height: 340px;
+  }
+
+  .collections-public-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .collection-public-card {
+    min-height: 400px;
+  }
+
+  .carousel-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .carousel-arrow-left { left: 12px; }
+  .carousel-arrow-right { right: 12px; }
+
+  .carousel-counter {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero-slide {
+    aspect-ratio: 16 / 10;
+    min-height: 280px;
+  }
+
   .whatsapp-float {
     width: 52px;
     height: 52px;
     bottom: 20px;
     right: 20px;
-  }
-
-  .whatsapp-float svg {
-    width: 28px;
-    height: 28px;
   }
 }
