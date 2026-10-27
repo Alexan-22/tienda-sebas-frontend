@@ -1,784 +1,189 @@
 <app-promo-bar></app-promo-bar>
-
 <app-navbar></app-navbar>
-
 
 <main class="tienda-page">
 
+  <!-- CABECERA -->
+  <section class="tienda-header relative overflow-hidden bg-slate-950 text-white py-16 px-5 lg:px-10">
+    <div class="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-indigo-600/30 blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-20 -bottom-20 h-80 w-80 rounded-full bg-violet-600/20 blur-3xl pointer-events-none"></div>
 
-  <!-- =====================================================
-       CABECERA
-       ===================================================== -->
-
-  <section class="tienda-header">
-
-    <div class="tienda-container">
-
-      <p class="eyebrow">
-        Tienda Sebas
-      </p>
-
-      <h1 class="tienda-title">
-
-        @if (soloNuevos) {
-          Novedades
-        } @else if (soloOfertas) {
-          Ofertas
-        } @else {
-          Tienda
-        }
-
+    <div class="tienda-container relative z-10 max-w-[1500px] mx-auto">
+      <span class="inline-block px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-[10px] font-black uppercase tracking-[0.25em] text-indigo-300 mb-4">
+        Catálogo Oficial
+      </span>
+      <h1 class="tienda-title text-4xl sm:text-6xl font-black uppercase tracking-tight text-white">
+        @if (soloNuevos) { Novedades Exclusivas }
+        @else if (soloOfertas) { Ofertas Especiales }
+        @else { Nuestra Tienda }
       </h1>
-
-
-      <p class="tienda-description">
-
-        @if (soloNuevos) {
-
-          Descubre los últimos productos
-          de nuestra colección.
-
-        } @else if (soloOfertas) {
-
-          Encuentra productos seleccionados
-          con precios especiales.
-
-        } @else {
-
-          Descubre nuestra colección para hombres,
-          mujeres, niños y niñas.
-
-        }
-
+      <p class="tienda-description mt-3 text-sm text-slate-300 max-w-xl leading-relaxed">
+        @if (soloNuevos) { Explora los últimos lanzamientos y tendencias recién llegadas a nuestra colección. }
+        @else if (soloOfertas) { Aprovecha descuentos únicos en prendas seleccionadas por tiempo limitado. }
+        @else { Descubre prendas de alta calidad diseñadas para destacar en cualquier ocasión. }
       </p>
-
     </div>
-
   </section>
 
-
-  <!-- =====================================================
-       NAVEGACIÓN POR GÉNERO
-       ===================================================== -->
-
-  <section class="gender-navigation">
-
-    <div
-      class="tienda-container
-             gender-navigation-inner"
-    >
-
-      <button
-        type="button"
-        (click)="seleccionarGenero(0)"
-        [class.active]="generoSeleccionado === 0"
-      >
-        Todos
-      </button>
-
-
-      <button
-        type="button"
-        (click)="seleccionarGenero(1)"
-        [class.active]="generoSeleccionado === 1"
-      >
-        Hombres
-      </button>
-
-
-      <button
-        type="button"
-        (click)="seleccionarGenero(2)"
-        [class.active]="generoSeleccionado === 2"
-      >
-        Mujeres
-      </button>
-
-
-      <button
-        type="button"
-        (click)="seleccionarGenero(3)"
-        [class.active]="generoSeleccionado === 3"
-      >
-        Niños
-      </button>
-
-
-      <button
-        type="button"
-        (click)="seleccionarGenero(4)"
-        [class.active]="generoSeleccionado === 4"
-      >
-        Niñas
-      </button>
-
+  <!-- NAVEGACIÓN POR GÉNERO -->
+  <section class="gender-navigation bg-white border-b border-slate-200 sticky top-0 z-30 backdrop-blur-md bg-white/90">
+    <div class="tienda-container max-w-[1500px] mx-auto px-5 lg:px-10 gender-navigation-inner flex gap-6 overflow-x-auto scrollbar-none py-4">
+      <button type="button" (click)="seleccionarGenero(0)" [class.active]="generoSeleccionado === 0" class="text-xs font-black uppercase tracking-wider text-slate-500 hover:text-indigo-600 transition pb-1 whitespace-nowrap">Todos</button>
+      <button type="button" (click)="seleccionarGenero(1)" [class.active]="generoSeleccionado === 1" class="text-xs font-black uppercase tracking-wider text-slate-500 hover:text-indigo-600 transition pb-1 whitespace-nowrap">Hombres</button>
+      <button type="button" (click)="seleccionarGenero(2)" [class.active]="generoSeleccionado === 2" class="text-xs font-black uppercase tracking-wider text-slate-500 hover:text-indigo-600 transition pb-1 whitespace-nowrap">Mujeres</button>
+      <button type="button" (click)="seleccionarGenero(3)" [class.active]="generoSeleccionado === 3" class="text-xs font-black uppercase tracking-wider text-slate-500 hover:text-indigo-600 transition pb-1 whitespace-nowrap">Niños</button>
+      <button type="button" (click)="seleccionarGenero(4)" [class.active]="generoSeleccionado === 4" class="text-xs font-black uppercase tracking-wider text-slate-500 hover:text-indigo-600 transition pb-1 whitespace-nowrap">Niñas</button>
     </div>
-
   </section>
 
+  <!-- CONTENIDO PRINCIPAL -->
+  <section class="tienda-content bg-slate-50 py-12">
+    <div class="tienda-container max-w-[1500px] mx-auto px-5 lg:px-10">
 
-  <!-- =====================================================
-       CONTENIDO
-       ===================================================== -->
-
-  <section class="tienda-content">
-
-    <div class="tienda-container">
-
-
-      <!-- =================================================
-           BUSCADOR / CONTADOR / ORDEN
-           ================================================= -->
-
-      <div class="catalog-toolbar">
-
-
-        <!-- BUSCADOR -->
-
-        <div class="search-section">
-
-          <label for="buscarProducto">
-            Buscar productos
-          </label>
-
-
-          <div class="search-box">
-
-            <input
-              id="buscarProducto"
-              type="search"
-              [(ngModel)]="busqueda"
-              (ngModelChange)="aplicarFiltros()"
-              placeholder="¿Qué estás buscando?"
-            >
-
-
-            <span class="search-icon">
-              ⌕
-            </span>
-
+      <!-- TOOLBAR: BUSCADOR Y ORDEN -->
+      <div class="catalog-toolbar flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-4 pb-8 border-b border-slate-200">
+        <div class="search-section w-full sm:max-w-md">
+          <label for="buscarProducto" class="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-2">Buscador</label>
+          <div class="search-box relative flex items-center">
+            <input id="buscarProducto" type="search" [(ngModel)]="busqueda" (ngModelChange)="aplicarFiltros()" placeholder="Buscar por nombre, categoría..." class="w-full h-12 pl-4 pr-12 rounded-xl border border-slate-200 bg-white text-xs font-medium text-slate-900 outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition">
+            <span class="search-icon absolute right-4 text-slate-400 font-black">⌕</span>
           </div>
-
         </div>
 
-
-        <!-- DERECHA -->
-
-        <div class="toolbar-right">
-
-
-          <!-- CONTADOR -->
-
+        <div class="toolbar-right flex items-center justify-between sm:justify-end gap-6">
           <div class="product-counter">
-
-            <span>
-              Productos
-            </span>
-
-            <strong>
-              {{ productosFiltrados.length }}
-            </strong>
-
+            <span class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Resultados</span>
+            <strong class="text-sm font-black text-slate-900">{{ productosFiltrados.length }}</strong>
           </div>
-
-
-          <!-- ORDEN -->
 
           <div class="sort-section">
-
-            <label for="orden">
-              Ordenar por
-            </label>
-
-
-            <select
-              id="orden"
-              [(ngModel)]="ordenSeleccionado"
-              (change)="aplicarFiltros()"
-            >
-
-              <option value="relevancia">
-                Relevancia
-              </option>
-
-              <option value="precio-asc">
-                Precio: menor a mayor
-              </option>
-
-              <option value="precio-desc">
-                Precio: mayor a menor
-              </option>
-
-              <option value="nombre">
-                Nombre
-              </option>
-
+            <label for="orden" class="block text-[10px] font-black uppercase tracking-wider text-slate-700 mb-2">Ordenar por</label>
+            <select id="orden" [(ngModel)]="ordenSeleccionado" (change)="aplicarFiltros()" class="h-12 px-4 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-900 outline-none focus:border-indigo-600 cursor-pointer">
+              <option value="relevancia">Relevancia</option>
+              <option value="precio-asc">Precio: Menor a Mayor</option>
+              <option value="precio-desc">Precio: Mayor a Menor</option>
+              <option value="nombre">Nombre (A-Z)</option>
             </select>
-
           </div>
-
         </div>
-
       </div>
 
+      <!-- LAYOUT DE FILTROS Y PRODUCTOS -->
+      <div class="catalog-layout grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-8 pt-8">
 
-      <!-- =================================================
-           CATÁLOGO
-           ================================================= -->
-
-      <div class="catalog-layout">
-
-
-        <!-- =================================================
-             FILTROS
-             ================================================= -->
-
-        <aside class="filters">
-
-
-          <!-- CABECERA -->
-
-          <div class="filters-heading">
-
-            <h2>
-              Filtros
-            </h2>
-
-
-            <button
-              type="button"
-              (click)="limpiarFiltros()"
-            >
-              Limpiar
-            </button>
-
+        <!-- PANEL DE FILTROS -->
+        <aside class="filters bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
+          <div class="filters-heading flex items-center justify-between pb-4 border-b border-slate-100">
+            <h2 class="text-xs font-black uppercase tracking-wider text-slate-900">Filtros Activos</h2>
+            <button type="button" (click)="limpiarFiltros()" class="text-[10px] font-black uppercase tracking-wider text-indigo-600 hover:underline">Limpiar</button>
           </div>
 
-
-          <!-- =================================================
-               COLECCIÓN
-               ================================================= -->
-
-          <div class="filter-group">
-
-            <h3>
-              Colección
-            </h3>
-
-
-            <div class="filter-options">
-
-              <button
-                type="button"
-                [class.active]="soloNuevos"
-                (click)="
-                  soloNuevos = !soloNuevos;
-                  aplicarFiltros()
-                "
-              >
-                Novedades
-              </button>
-
-
-              <button
-                type="button"
-                [class.active]="soloOfertas"
-                (click)="
-                  soloOfertas = !soloOfertas;
-                  aplicarFiltros()
-                "
-              >
-                Ofertas
-              </button>
-
+          <!-- Colección -->
+          <div class="filter-group py-5 border-b border-slate-100">
+            <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-3">Colección</h3>
+            <div class="filter-options flex flex-col gap-2">
+              <button type="button" [class.active]="soloNuevos" (click)="soloNuevos = !soloNuevos; aplicarFiltros()" class="text-left text-xs font-medium text-slate-600 hover:text-indigo-600 transition">✦ Novedades</button>
+              <button type="button" [class.active]="soloOfertas" (click)="soloOfertas = !soloOfertas; aplicarFiltros()" class="text-left text-xs font-medium text-slate-600 hover:text-indigo-600 transition">🔥 Ofertas Especiales</button>
             </div>
-
           </div>
 
-
-          <!-- =================================================
-               GÉNERO
-               ================================================= -->
-
-          <div class="filter-group">
-
-            <h3>
-              Género
-            </h3>
-
-
-            <div class="filter-options">
-
-              <button
-                type="button"
-                (click)="seleccionarGenero(0)"
-                [class.active]="generoSeleccionado === 0"
-              >
-                Todos
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarGenero(1)"
-                [class.active]="generoSeleccionado === 1"
-              >
-                Hombres
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarGenero(2)"
-                [class.active]="generoSeleccionado === 2"
-              >
-                Mujeres
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarGenero(3)"
-                [class.active]="generoSeleccionado === 3"
-              >
-                Niños
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarGenero(4)"
-                [class.active]="generoSeleccionado === 4"
-              >
-                Niñas
-              </button>
-
+          <!-- Género -->
+          <div class="filter-group py-5 border-b border-slate-100">
+            <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-3">Género</h3>
+            <div class="filter-options flex flex-col gap-2">
+              <button type="button" (click)="seleccionarGenero(0)" [class.active]="generoSeleccionado === 0" class="text-left text-xs font-medium text-slate-600 hover:text-indigo-600">Todos</button>
+              <button type="button" (click)="seleccionarGenero(1)" [class.active]="generoSeleccionado === 1" class="text-left text-xs font-medium text-slate-600 hover:text-indigo-600">Hombres</button>
+              <button type="button" (click)="seleccionarGenero(2)" [class.active]="generoSeleccionado === 2" class="text-left text-xs font-medium text-slate-600 hover:text-indigo-600">Mujeres</button>
+              <button type="button" (click)="seleccionarGenero(3)" [class.active]="generoSeleccionado === 3" class="text-left text-xs font-medium text-slate-600 hover:text-indigo-600">Niños</button>
+              <button type="button" (click)="seleccionarGenero(4)" [class.active]="generoSeleccionado === 4" class="text-left text-xs font-medium text-slate-600 hover:text-indigo-600">Niñas</button>
             </div>
-
           </div>
 
-
-          <!-- =================================================
-               CATEGORÍA
-               ================================================= -->
-
-          <div class="filter-group">
-
-            <h3>
-              Categoría
-            </h3>
-
-
-            <div class="filter-options">
-
-              <button
-                type="button"
-                (click)="seleccionarCategoria(0)"
-                [class.active]="categoriaSeleccionada === 0"
-              >
-                Todas
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarCategoria(1)"
-                [class.active]="categoriaSeleccionada === 1"
-              >
-                Polos
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarCategoria(2)"
-                [class.active]="categoriaSeleccionada === 2"
-              >
-                Camisas
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarCategoria(3)"
-                [class.active]="categoriaSeleccionada === 3"
-              >
-                Pantalones
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarCategoria(4)"
-                [class.active]="categoriaSeleccionada === 4"
-              >
-                Casacas
-              </button>
-
+          <!-- Categoría -->
+          <div class="filter-group py-5 border-b border-slate-100">
+            <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-3">Categoría</h3>
+            <div class="filter-options flex flex-col gap-2">
+              <button type="button" (click)="seleccionarCategoria(0)" [class.active]="categoriaSeleccionada === 0" class="text-left text-xs font-medium text-slate-600">Todas</button>
+              <button type="button" (click)="seleccionarCategoria(1)" [class.active]="categoriaSeleccionada === 1" class="text-left text-xs font-medium text-slate-600">Polos</button>
+              <button type="button" (click)="seleccionarCategoria(2)" [class.active]="categoriaSeleccionada === 2" class="text-left text-xs font-medium text-slate-600">Camisas</button>
+              <button type="button" (click)="seleccionarCategoria(3)" [class.active]="categoriaSeleccionada === 3" class="text-left text-xs font-medium text-slate-600">Pantalones</button>
+              <button type="button" (click)="seleccionarCategoria(4)" [class.active]="categoriaSeleccionada === 4" class="text-left text-xs font-medium text-slate-600">Casacas</button>
             </div>
-
           </div>
 
-
-          <!-- =================================================
-               TALLA
-               ================================================= -->
-
-          <div class="filter-group">
-
-            <h3>
-              Talla
-            </h3>
-
-
-            <div class="size-filter">
-
-              <button
-                type="button"
-                (click)="seleccionarTalla(1)"
-                [class.active]="tallaSeleccionada === 1"
-              >
-                XS
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarTalla(2)"
-                [class.active]="tallaSeleccionada === 2"
-              >
-                S
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarTalla(3)"
-                [class.active]="tallaSeleccionada === 3"
-              >
-                M
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarTalla(4)"
-                [class.active]="tallaSeleccionada === 4"
-              >
-                L
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarTalla(5)"
-                [class.active]="tallaSeleccionada === 5"
-              >
-                XL
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarTalla(6)"
-                [class.active]="tallaSeleccionada === 6"
-              >
-                XXL
-              </button>
-
-
-              <button
-                type="button"
-                (click)="seleccionarTalla(7)"
-                [class.active]="tallaSeleccionada === 7"
-              >
-                XXXL
-              </button>
-
+          <!-- Talla -->
+          <div class="filter-group py-5 border-b border-slate-100">
+            <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-3">Talla</h3>
+            <div class="size-filter grid grid-cols-3 gap-2">
+              @for (t of [ {id:1, name:'XS'}, {id:2, name:'S'}, {id:3, name:'M'}, {id:4, name:'L'}, {id:5, name:'XL'}, {id:6, name:'XXL'}, {id:7, name:'XXXL'} ]; track t.id) {
+                <button type="button" (click)="seleccionarTalla(t.id)" [class.active]="tallaSeleccionada === t.id" class="h-9 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 hover:border-indigo-600 transition">{{ t.name }}</button>
+              }
             </div>
-
           </div>
 
-
-          <!-- =================================================
-               DISPONIBILIDAD
-               ================================================= -->
-
-          <div class="filter-group">
-
-            <h3>
-              Disponibilidad
-            </h3>
-
-
-            <label class="availability-filter">
-
-              <input
-                type="checkbox"
-                [(ngModel)]="soloDisponibles"
-                (ngModelChange)="aplicarFiltros()"
-              >
-
-              <span class="availability-box">
-              </span>
-
-              <span class="availability-text">
-                Solo productos con stock
-              </span>
-
+          <!-- Disponibilidad -->
+          <div class="filter-group py-5 border-b border-slate-100">
+            <label class="availability-filter flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" [(ngModel)]="soloDisponibles" (ngModelChange)="aplicarFiltros()" class="rounded border-slate-300 text-indigo-600 h-4 w-4">
+              <span class="availability-text text-xs font-bold text-slate-700">Solo con stock disponible</span>
             </label>
-
           </div>
 
-
-          <!-- =================================================
-               PRECIO
-               ================================================= -->
-
-          <div class="filter-group">
-
-            <h3>
-              Precio
-            </h3>
-
-
-            <div class="price-filter">
-
-              <label>
-
-                <span>
-                  Desde
-                </span>
-
-                <div class="price-input">
-
-                  <span>
-                    S/
-                  </span>
-
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
-                    [(ngModel)]="precioMinimo"
-                    (ngModelChange)="aplicarFiltros()"
-                    placeholder="0"
-                  >
-
-                </div>
-
-              </label>
-
-
-              <label>
-
-                <span>
-                  Hasta
-                </span>
-
-                <div class="price-input">
-
-                  <span>
-                    S/
-                  </span>
-
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
-                    [(ngModel)]="precioMaximo"
-                    (ngModelChange)="aplicarFiltros()"
-                    placeholder="500"
-                  >
-
-                </div>
-
-              </label>
-
+          <!-- Precio -->
+          <div class="filter-group pt-5">
+            <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-3">Rango de Precio (S/)</h3>
+            <div class="price-filter grid grid-cols-2 gap-2">
+              <div class="price-input flex items-center border border-slate-200 rounded-xl px-3 bg-slate-50 h-10">
+                <span class="text-xs text-slate-400 mr-1">S/</span>
+                <input type="number" [(ngModel)]="precioMinimo" (ngModelChange)="aplicarFiltros()" placeholder="Mín" class="w-full bg-transparent text-xs outline-none">
+              </div>
+              <div class="price-input flex items-center border border-slate-200 rounded-xl px-3 bg-slate-50 h-10">
+                <span class="text-xs text-slate-400 mr-1">S/</span>
+                <input type="number" [(ngModel)]="precioMaximo" (ngModelChange)="aplicarFiltros()" placeholder="Máx" class="w-full bg-transparent text-xs outline-none">
+              </div>
             </div>
-
           </div>
-
         </aside>
 
-
-        <!-- =================================================
-             PRODUCTOS
-             ================================================= -->
-
+        <!-- ÁREA DE PRODUCTOS -->
         <div class="products-area">
-
-
-          <!-- CARGANDO -->
-
           @if (cargando) {
-
-            <div class="products-grid">
-
-              @for (
-                item of [1,2,3,4,5,6,7,8];
-                track item
-              ) {
-
-                <div class="product-skeleton">
-
-                  <div class="skeleton-image">
-                  </div>
-
-                  <div
-                    class="skeleton-line
-                           skeleton-small">
-                  </div>
-
-                  <div
-                    class="skeleton-line
-                           skeleton-medium">
-                  </div>
-
-                  <div
-                    class="skeleton-line
-                           skeleton-price">
-                  </div>
-
+            <div class="products-grid grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6">
+              @for (item of [1,2,3,4,5,6,7,8]; track item) {
+                <div class="product-skeleton bg-white p-4 rounded-2xl border border-slate-200 animate-pulse">
+                  <div class="skeleton-image aspect-[3/4] bg-slate-200 rounded-xl mb-4"></div>
+                  <div class="skeleton-line h-3 bg-slate-200 rounded w-1/2 mb-2"></div>
+                  <div class="skeleton-line h-4 bg-slate-200 rounded w-3/4 mb-4"></div>
+                  <div class="skeleton-line h-4 bg-slate-200 rounded w-1/3"></div>
                 </div>
-
               }
-
             </div>
-
-          }
-
-
-          <!-- ERROR -->
-
-          @else if (errorCarga) {
-
-            <div class="catalog-message">
-
-              <span class="message-code">
-                Error
-              </span>
-
-
-              <h2>
-                No pudimos cargar los productos
-              </h2>
-
-
-              <p>
-                Comprueba que el servidor de la tienda
-                esté funcionando e inténtalo nuevamente.
-              </p>
-
-
-              <button
-                type="button"
-                (click)="cargarProductos()"
-              >
-                Intentar nuevamente
-              </button>
-
+          } @else if (errorCarga) {
+            <div class="catalog-message bg-white p-12 rounded-2xl border border-red-200 text-center">
+              <h2 class="text-lg font-black uppercase text-red-600">Error cargando catálogo</h2>
+              <p class="text-xs text-slate-500 mt-2">Comprueba tu conexión e intenta nuevamente.</p>
+              <button type="button" (click)="cargarProductos()" class="mt-6 h-11 px-6 rounded-xl bg-slate-900 text-white text-xs font-bold uppercase">Reintentar</button>
             </div>
-
-          }
-
-
-          <!-- SIN RESULTADOS -->
-
-          @else if (
-            productosFiltrados.length === 0
-          ) {
-
-            <div class="catalog-message">
-
-              <span class="message-code">
-                0 productos
-              </span>
-
-
-              <h2>
-
-                @if (soloNuevos) {
-
-                  No hay novedades disponibles
-
-                } @else if (soloOfertas) {
-
-                  No hay ofertas disponibles
-
-                } @else {
-
-                  No encontramos productos
-
-                }
-
-              </h2>
-
-
-              <p>
-
-                @if (soloNuevos) {
-
-                  Próximamente agregaremos nuevos
-                  productos a esta colección.
-
-                } @else if (soloOfertas) {
-
-                  Actualmente no encontramos productos
-                  en oferta con estos filtros.
-
-                } @else {
-
-                  Prueba con otra búsqueda o cambia
-                  los filtros seleccionados.
-
-                }
-
-              </p>
-
-
-              <button
-                type="button"
-                (click)="limpiarFiltros()"
-              >
-                Ver todos los productos
-              </button>
-
+          } @else if (productosFiltrados.length === 0) {
+            <div class="catalog-message bg-white p-12 rounded-2xl border border-slate-200 text-center shadow-sm">
+              <h2 class="text-xl font-black uppercase text-slate-900">No encontramos productos</h2>
+              <p class="text-xs text-slate-500 mt-2 max-w-sm mx-auto">Prueba con otra búsqueda o restablece los filtros aplicados.</p>
+              <button type="button" (click)="limpiarFiltros()" class="mt-6 h-11 px-6 rounded-xl bg-indigo-600 text-white text-xs font-bold uppercase tracking-wider">Ver todos los productos</button>
             </div>
-
-          }
-
-
-          <!-- PRODUCTOS -->
-
-          @else {
-
-            <div class="products-grid">
-
-              @for (
-                producto of productosFiltrados;
-                track producto.idProducto
-              ) {
-
-                <app-product-card
-                  [producto]="producto">
-                </app-product-card>
-
+          } @else {
+            <div class="products-grid grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6">
+              @for (producto of productosFiltrados; track producto.idProducto) {
+                <app-product-card [producto]="producto"></app-product-card>
               }
-
             </div>
-
           }
-
         </div>
 
       </div>
 
     </div>
-
   </section>
 
 </main>
-
 
 <app-footer></app-footer>

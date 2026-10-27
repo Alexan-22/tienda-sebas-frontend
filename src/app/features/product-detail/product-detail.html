@@ -1,703 +1,225 @@
 <app-promo-bar></app-promo-bar>
-
 <app-navbar></app-navbar>
-
 
 <main class="product-page">
 
   @if (cargando) {
-
     <section class="detail-container loading-layout">
-
-      <div class="image-skeleton"></div>
-
-      <div class="info-skeleton">
-        <div class="skeleton-line skeleton-title"></div>
-        <div class="skeleton-line skeleton-price"></div>
-        <div class="skeleton-line skeleton-text"></div>
-        <div class="skeleton-line skeleton-text"></div>
+      <div class="image-skeleton rounded-2xl"></div>
+      <div class="info-skeleton space-y-4">
+        <div class="skeleton-line skeleton-title rounded-xl"></div>
+        <div class="skeleton-line skeleton-price rounded-xl"></div>
+        <div class="skeleton-line skeleton-text rounded-lg"></div>
+        <div class="skeleton-line skeleton-text rounded-lg"></div>
       </div>
-
     </section>
-
-  } @else if (
-    errorCarga ||
-    !producto
-  ) {
-
+  } @else if (errorCarga || !producto) {
     <section class="product-error">
-
-      <span>
-        Producto no disponible
-      </span>
-
-      <h1>
-        No encontramos este producto
-      </h1>
-
-      <p>
-        El producto que buscas no está disponible
-        o pudo haber sido retirado de la tienda.
-      </p>
-
-      <a routerLink="/tienda">
-        Volver a la tienda
-      </a>
-
+      <span class="text-indigo-600 font-black uppercase tracking-widest text-[10px]">Producto no disponible</span>
+      <h1 class="text-3xl sm:text-5xl font-black uppercase text-slate-900 mt-2">No encontramos este producto</h1>
+      <p class="text-slate-600 text-sm mt-3">El artículo que buscas no está disponible o fue retirado de la tienda.</p>
+      <a routerLink="/tienda" class="mt-6 inline-flex h-12 items-center rounded-xl bg-slate-900 px-7 text-xs font-bold uppercase text-white shadow">Volver a la tienda</a>
     </section>
-
   } @else {
 
-    <!-- ==========================================
-         BREADCRUMB
-         ========================================== -->
-
-    <div class="detail-container breadcrumb">
-
-      <a routerLink="/tienda">
-        Tienda
-      </a>
-
+    <!-- BREADCRUMB -->
+    <div class="detail-container breadcrumb py-6">
+      <a routerLink="/tienda">Tienda</a>
       <span>/</span>
-
-      <a
-        routerLink="/tienda"
-        [queryParams]="{
-          genero: producto.genero.idGenero
-        }"
-      >
-        {{ producto.genero.nombreGenero }}
-      </a>
-
+      <a routerLink="/tienda" [queryParams]="{ genero: producto.genero.idGenero }">{{ producto.genero.nombreGenero }}</a>
       <span>/</span>
-
-      <a
-        routerLink="/tienda"
-        [queryParams]="{
-          categoria: producto.categoria.idCategoria
-        }"
-      >
-        {{ producto.categoria.nombreCategoria }}
-      </a>
-
+      <a routerLink="/tienda" [queryParams]="{ categoria: producto.categoria.idCategoria }">{{ producto.categoria.nombreCategoria }}</a>
       <span>/</span>
-
-      <strong>
-        {{ producto.nombre }}
-      </strong>
-
+      <strong class="text-indigo-600">{{ producto.nombre }}</strong>
     </div>
 
+    <!-- LAYOUT PRINCIPAL -->
+    <section class="detail-container product-layout pb-20">
 
-    <!-- ==========================================
-         DETALLE
-         ========================================== -->
-
-    <section class="detail-container product-layout">
-
-
-      <!-- ========================================
-           GALERÍA
-           ======================================== -->
-
-      <div class="gallery-section">
-
-
+      <!-- GALERÍA -->
+      <div class="gallery-section flex flex-col-reverse lg:flex-row gap-4 items-start">
+        
         <!-- MINIATURAS -->
-
-        <div class="gallery-thumbnails">
-
-
-          <!-- IMAGEN PRINCIPAL -->
-
+        <div class="gallery-thumbnails flex lg:flex-col gap-3 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0">
           @if (producto.imagen) {
-
-            <button
-              type="button"
-              class="thumbnail"
-              [class.active]="
-                esImagenSeleccionada(
-                  producto.imagen
-                )
-              "
-              (click)="
-                seleccionarImagen(
-                  producto.imagen
-                )
-              "
-            >
-
-              <img
-                [src]="
-                  obtenerImagenUrl(
-                    producto.imagen
-                  )
-                "
-                [alt]="producto.nombre"
-              >
-
+            <button type="button" class="thumbnail rounded-xl overflow-hidden border-2 transition" [class.border-indigo-600]="esImagenSeleccionada(producto.imagen)" [class.border-transparent]="!esImagenSeleccionada(producto.imagen)" (click)="seleccionarImagen(producto.imagen)">
+              <img [src]="obtenerImagenUrl(producto.imagen)" [alt]="producto.nombre" class="w-20 h-24 object-cover">
             </button>
-
           }
 
-
-          <!-- IMÁGENES ADICIONALES -->
-
-          @for (
-            productoImagen of imagenes;
-            track productoImagen.idProductoImagen
-          ) {
-
-            <button
-              type="button"
-              class="thumbnail"
-              [class.active]="
-                esImagenSeleccionada(
-                  productoImagen.imagen
-                )
-              "
-              (click)="
-                seleccionarImagen(
-                  productoImagen.imagen
-                )
-              "
-            >
-
-              <img
-                [src]="
-                  obtenerImagenUrl(
-                    productoImagen.imagen
-                  )
-                "
-                [alt]="producto.nombre"
-              >
-
+          @for (prodImg of imagenes; track prodImg.idProductoImagen) {
+            <button type="button" class="thumbnail rounded-xl overflow-hidden border-2 transition" [class.border-indigo-600]="esImagenSeleccionada(prodImg.imagen)" [class.border-transparent]="!esImagenSeleccionada(prodImg.imagen)" (click)="seleccionarImagen(prodImg.imagen)">
+              <img [src]="obtenerImagenUrl(prodImg.imagen)" [alt]="producto.nombre" class="w-20 h-24 object-cover">
             </button>
-
           }
-
-
-          @if (cargandoImagenes) {
-
-            <div class="thumbnail-loading">
-            </div>
-
-          }
-
         </div>
 
-
         <!-- IMAGEN GRANDE -->
-
-        <div class="main-image">
-
-
-          <!-- ETIQUETAS -->
-
-          <div class="product-badges">
-
+        <div class="main-image relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 shadow-sm border border-slate-200">
+          <div class="product-badges absolute top-4 left-4 z-10 flex gap-2">
             @if (producto.nuevo) {
-
-              <span class="badge-new">
-                Nuevo
-              </span>
-
+              <span class="badge-new bg-slate-900 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">Nuevo</span>
             }
-
-
             @if (tieneOferta) {
-
-              <span class="badge-offer">
-                -{{ porcentajeDescuento }}%
-              </span>
-
+              <span class="badge-offer bg-rose-600 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">-{{ porcentajeDescuento }}%</span>
             }
-
           </div>
 
-
           @if (imagenUrl) {
-
-            <img
-              [src]="imagenUrl"
-              [alt]="producto.nombre"
-            >
-
+            <img [src]="imagenUrl" [alt]="producto.nombre" class="w-full h-full object-cover">
           } @else {
-
-            <div class="no-image">
-
-              <strong>
-                TS
-              </strong>
-
-              <span>
-                Sin imagen
-              </span>
-
+            <div class="no-image flex flex-col items-center justify-center h-full text-slate-300">
+              <span class="text-6xl font-black">TS</span>
+              <span class="text-xs font-bold uppercase mt-2">Sin imagen</span>
             </div>
-
           }
-
         </div>
 
       </div>
 
-
-      <!-- ========================================
-           INFORMACIÓN
-           ======================================== -->
-
+      <!-- INFORMACIÓN -->
       <div class="product-info">
+        <span class="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-600 block">
+          {{ producto.categoria.nombreCategoria }} · {{ producto.genero.nombreGenero }}
+        </span>
 
-
-        <p class="product-category">
-          {{ producto.categoria.nombreCategoria }}
-          ·
-          {{ producto.genero.nombreGenero }}
-        </p>
-
-
-        <h1>
+        <h1 class="mt-2 text-3xl sm:text-5xl font-black uppercase tracking-tight text-slate-900">
           {{ producto.nombre }}
         </h1>
 
-
         <!-- PRECIO -->
-
-        <div class="price-section">
-
+        <div class="price-section flex items-baseline gap-4 mt-6">
           @if (tieneOferta) {
-
-            <span class="current-price">
-              S/
-              {{
-                precioActual
-                  | number:'1.2-2'
-              }}
-            </span>
-
-            <span class="old-price">
-              S/
-              {{
-                producto.precio
-                  | number:'1.2-2'
-              }}
-            </span>
-
-            <span class="discount-label">
-              Ahorras
-              {{ porcentajeDescuento }}%
-            </span>
-
+            <span class="current-price text-3xl font-black text-indigo-600">S/ {{ precioActual | number:'1.2-2' }}</span>
+            <span class="old-price text-base text-slate-400 line-through">S/ {{ producto.precio | number:'1.2-2' }}</span>
+            <span class="discount-label bg-emerald-100 text-emerald-800 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase">Ahorras {{ porcentajeDescuento }}%</span>
           } @else {
-
-            <span class="current-price">
-              S/
-              {{
-                producto.precio
-                  | number:'1.2-2'
-              }}
-            </span>
-
+            <span class="current-price text-3xl font-black text-slate-900">S/ {{ producto.precio | number:'1.2-2' }}</span>
           }
-
         </div>
 
-
-        <!-- STOCK GENERAL -->
-
+        <!-- STOCK -->
         @if (cargandoTallas) {
-
-          <p class="stock-status neutral">
-            Comprobando disponibilidad...
-          </p>
-
+          <p class="stock-status text-xs font-bold text-slate-400 mt-3">Comprobando disponibilidad...</p>
         } @else if (hayStock) {
-
-          <p class="stock-status available">
-            ● Disponible
-            ·
-            {{ stockTotal }}
-            unidades en stock
+          <p class="stock-status text-xs font-bold text-emerald-600 mt-3 flex items-center gap-1.5">
+            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span> Disponible · {{ stockTotal }} unidades en stock
           </p>
-
         } @else {
-
-          <p class="stock-status unavailable">
-            ● Producto agotado
+          <p class="stock-status text-xs font-bold text-rose-600 mt-3 flex items-center gap-1.5">
+            <span class="h-2 w-2 rounded-full bg-rose-500"></span> Producto agotado
           </p>
-
         }
 
-
-        <!-- DESCRIPCIÓN -->
-
-        <p class="product-description">
+        <p class="product-description mt-6 text-sm leading-relaxed text-slate-600">
           {{ producto.descripcion }}
         </p>
 
-
-        <!-- ======================================
-             TALLAS
-             ====================================== -->
-
-        <div class="product-option">
-
-          <div class="option-heading">
-
-            <div>
-
-              <span class="option-number">
-                01
-              </span>
-
-              <strong>
-                Selecciona tu talla
-              </strong>
-
+        <!-- TALLAS -->
+        <div class="product-option mt-8 pt-6 border-t border-slate-200">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-indigo-600">01</span>
+              <strong class="text-xs font-black uppercase text-slate-900 tracking-wider">Selecciona tu talla</strong>
             </div>
-
-
             @if (tallaSeleccionada) {
-
-              <span class="selected-stock">
-                {{ tallaSeleccionada.stock }}
-                disponibles
-              </span>
-
+              <span class="text-xs font-bold text-slate-500">{{ tallaSeleccionada.stock }} disponibles</span>
             }
-
           </div>
-
 
           @if (cargandoTallas) {
-
-            <p class="option-message">
-              Cargando tallas...
-            </p>
-
-          } @else if (
-            tallas.length === 0
-          ) {
-
-            <p class="option-message error">
-              Este producto no tiene tallas
-              configuradas.
-            </p>
-
+            <p class="text-xs text-slate-400 mt-3">Cargando tallas...</p>
+          } @else if (tallas.length === 0) {
+            <p class="text-xs text-rose-600 mt-3 font-semibold">Este producto no tiene tallas configuradas.</p>
           } @else {
-
-            <div class="size-options">
-
-              @for (
-                productoTalla of tallas;
-                track productoTalla.idProductoTalla
-              ) {
-
+            <div class="flex flex-wrap gap-2.5 mt-4">
+              @for (pt of tallas; track pt.idProductoTalla) {
                 <button
                   type="button"
-                  class="size-button"
-
-                  [disabled]="
-                    productoTalla.stock <= 0
-                  "
-
-                  [class.active]="
-                    tallaSeleccionada
-                      ?.idProductoTalla ===
-                    productoTalla
-                      .idProductoTalla
-                  "
-
-                  [class.out-of-stock]="
-                    productoTalla.stock <= 0
-                  "
-
-                  (click)="
-                    seleccionarTalla(
-                      productoTalla
-                    )
-                  "
-                >
-
-                  <span>
-                    {{
-                      productoTalla
-                        .talla
-                        .nombreTalla
-                    }}
-                  </span>
-
-                  @if (
-                    productoTalla.stock <= 0
-                  ) {
-
-                    <small>
-                      Agotado
-                    </small>
-
-                  }
-
+                  class="size-button h-12 min-w-[56px] px-4 rounded-xl border font-black text-xs uppercase transition flex flex-col items-center justify-center"
+                  [disabled]="pt.stock <= 0"
+                  [class.border-indigo-600]="tallaSeleccionada?.idProductoTalla === pt.idProductoTalla"
+                  [class.bg-indigo-600]="tallaSeleccionada?.idProductoTalla === pt.idProductoTalla"
+                  [class.text-white]="tallaSeleccionada?.idProductoTalla === pt.idProductoTalla"
+                  [class.border-slate-200]="tallaSeleccionada?.idProductoTalla !== pt.idProductoTalla && pt.stock > 0"
+                  [class.bg-slate-50]="pt.stock <= 0"
+                  [class.text-slate-300]="pt.stock <= 0"
+                  [class.cursor-not-allowed]="pt.stock <= 0"
+                  (click)="seleccionarTalla(pt)">
+                  <span>{{ pt.talla.nombreTalla }}</span>
                 </button>
-
               }
-
             </div>
-
           }
-
         </div>
 
-
-        <!-- ======================================
-             CANTIDAD
-             ====================================== -->
-
-        <div class="product-option quantity-option">
-
-          <div class="option-heading">
-
-            <div>
-
-              <span class="option-number">
-                02
-              </span>
-
-              <strong>
-                Cantidad
-              </strong>
-
-            </div>
-
+        <!-- CANTIDAD -->
+        <div class="product-option mt-8 pt-6 border-t border-slate-200">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-xs font-black text-indigo-600">02</span>
+            <strong class="text-xs font-black uppercase text-slate-900 tracking-wider">Cantidad</strong>
           </div>
 
-
-          <div class="quantity-row">
-
-            <div class="quantity-selector">
-
-              <button
-                type="button"
-                (click)="disminuirCantidad()"
-                [disabled]="cantidad <= 1"
-                aria-label="Disminuir cantidad"
-              >
-                −
-              </button>
-
-
-              <span>
-                {{ cantidad }}
-              </span>
-
-
-              <button
-                type="button"
-                (click)="aumentarCantidad()"
-                [disabled]="
-                  !tallaSeleccionada ||
-                  cantidad >= tallaSeleccionada.stock
-                "
-                aria-label="Aumentar cantidad"
-              >
-                +
-              </button>
-
+          <div class="flex items-center gap-4">
+            <div class="flex h-12 w-36 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+              <button type="button" class="w-12 font-black text-base hover:bg-slate-200 transition" (click)="disminuirCantidad()" [disabled]="cantidad <= 1">−</button>
+              <div class="flex-1 flex items-center justify-center font-black text-sm">{{ cantidad }}</div>
+              <button type="button" class="w-12 font-black text-base hover:bg-slate-200 transition" (click)="aumentarCantidad()" [disabled]="!tallaSeleccionada || cantidad >= tallaSeleccionada.stock">+</button>
             </div>
-
-
             @if (tallaSeleccionada) {
-
-              <p class="quantity-help">
-
-                Máximo:
-                {{ tallaSeleccionada.stock }}
-
-              </p>
-
+              <span class="text-xs text-slate-500 font-medium">Máximo: {{ tallaSeleccionada.stock }} unidades</span>
             } @else {
-
-              <p class="quantity-help">
-                Selecciona primero una talla
-              </p>
-
+              <span class="text-xs text-slate-400 italic">Selecciona una talla primero</span>
             }
-
           </div>
-
         </div>
 
-
-        <!-- ======================================
-             RESUMEN
-             ====================================== -->
-
-        <div class="purchase-summary">
-
-          <div>
-
-            <span>
-              Precio unitario
-            </span>
-
-            <strong>
-              S/
-              {{
-                precioActual
-                  | number:'1.2-2'
-              }}
-            </strong>
-
+        <!-- RESUMEN -->
+        <div class="mt-8 p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 text-xs">
+          <div class="flex justify-between text-slate-600"><span>Precio unitario</span><strong>S/ {{ precioActual | number:'1.2-2' }}</strong></div>
+          <div class="flex justify-between text-slate-600"><span>Cantidad seleccionada</span><strong>{{ cantidad }}</strong></div>
+          <div class="flex justify-between pt-3 border-t border-slate-200 text-sm font-black text-slate-900">
+            <span class="uppercase">Subtotal</span>
+            <strong class="text-indigo-600 text-lg">S/ {{ subtotal | number:'1.2-2' }}</strong>
           </div>
-
-
-          <div>
-
-            <span>
-              Cantidad
-            </span>
-
-            <strong>
-              {{ cantidad }}
-            </strong>
-
-          </div>
-
-
-          <div class="summary-total">
-
-            <span>
-              Subtotal
-            </span>
-
-            <strong>
-              S/
-              {{
-                subtotal
-                  | number:'1.2-2'
-              }}
-            </strong>
-
-          </div>
-
         </div>
 
-
-        <!-- ======================================
-             BOTONES
-             ====================================== -->
-
-        <div class="purchase-actions">
-
+        <!-- ACCIONES -->
+        <div class="mt-8 grid gap-3 sm:grid-cols-2">
           <button
             type="button"
-            class="add-cart-button"
+            class="h-14 rounded-xl border-2 border-slate-900 bg-white px-6 text-xs font-black uppercase tracking-widest text-slate-900 shadow-sm transition hover:bg-slate-50 disabled:border-slate-200 disabled:text-slate-300 disabled:bg-slate-50"
             (click)="agregarAlCarrito()"
-            [disabled]="
-              !tallaSeleccionada ||
-              !hayStock
-            "
-          >
-
-            @if (!hayStock) {
-
-              Producto agotado
-
-            } @else if (!tallaSeleccionada) {
-
-              Selecciona una talla
-
-            } @else if (productoAgregado) {
-
-              ✓ Agregado al carrito
-
-            } @else {
-
-              Agregar al carrito
-
-            }
-
+            [disabled]="!tallaSeleccionada || !hayStock">
+            @if (!hayStock) { Agotado }
+            @else if (!tallaSeleccionada) { Elige Talla }
+            @else if (productoAgregado) { ✓ Agregado }
+            @else { Agregar al Carrito }
           </button>
-
 
           <button
             type="button"
-            class="buy-button"
+            class="h-14 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-indigo-500/25 transition hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             (click)="comprarAhora()"
-            [disabled]="
-              !tallaSeleccionada ||
-              !hayStock
-            "
-          >
-            Comprar ahora
+            [disabled]="!tallaSeleccionada || !hayStock">
+            Comprar Ahora
           </button>
-
         </div>
 
-
-        <!-- ======================================
-             BENEFICIOS
-             ====================================== -->
-
-        <div class="product-benefits">
-
-          <div>
-
-            <span class="benefit-icon">
-              01
-            </span>
-
-            <p>
-              <strong>
-                Envíos a todo el Perú
-              </strong>
-
-              <span>
-                Recibe tu pedido de forma segura.
-              </span>
-            </p>
-
+        <!-- BENEFICIOS -->
+        <div class="mt-10 grid gap-4 sm:grid-cols-3 pt-8 border-t border-slate-200 text-xs">
+          <div class="flex items-start gap-3">
+            <div class="p-2 rounded-lg bg-indigo-50 text-indigo-600 font-black">🚚</div>
+            <div><strong class="block text-slate-900 uppercase">Envíos a todo el Perú</strong><span class="text-slate-500 text-[10px]">Seguros y rápidos.</span></div>
           </div>
-
-
-          <div>
-
-            <span class="benefit-icon">
-              02
-            </span>
-
-            <p>
-              <strong>
-                Yape o tarjeta
-              </strong>
-
-              <span>
-                Elige tu medio de pago al comprar.
-              </span>
-            </p>
-
+          <div class="flex items-start gap-3">
+            <div class="p-2 rounded-lg bg-indigo-50 text-indigo-600 font-black">💳</div>
+            <div><strong class="block text-slate-900 uppercase">Yape o Tarjeta</strong><span class="text-slate-500 text-[10px]">Métodos confiables.</span></div>
           </div>
-
-
-          <div>
-
-            <span class="benefit-icon">
-              03
-            </span>
-
-            <p>
-              <strong>
-                Compra protegida
-              </strong>
-
-              <span>
-                Stock validado antes de procesar tu pedido.
-              </span>
-            </p>
-
+          <div class="flex items-start gap-3">
+            <div class="p-2 rounded-lg bg-indigo-50 text-indigo-600 font-black">🔒</div>
+            <div><strong class="block text-slate-900 uppercase">Compra Protegida</strong><span class="text-slate-500 text-[10px]">Stock garantizado.</span></div>
           </div>
-
         </div>
 
       </div>
@@ -707,6 +229,5 @@
   }
 
 </main>
-
 
 <app-footer></app-footer>
