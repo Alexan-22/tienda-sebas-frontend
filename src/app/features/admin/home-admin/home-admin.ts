@@ -1,4 +1,4 @@
-import { environment } from '../../../../environments/environment';
+﻿import { environment } from '../../../../environments/environment';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HomeBanner, HomeColeccion } from '../../../core/models/home-contenido';
@@ -29,9 +29,6 @@ export class HomeAdmin implements OnInit, OnDestroy {
   eliminandoBanner: number | null = null;
   creandoBanner = false;
 
-  // =========================================================
-  // IMÁGENES BANNERS
-  // =========================================================
   archivosBanners = new Map<number, File>();
   previewsBanners = new Map<number, string>();
   erroresBanners = new Map<number, string>();
@@ -44,43 +41,26 @@ export class HomeAdmin implements OnInit, OnDestroy {
   eliminandoColeccion: number | null = null;
   creandoColeccion = false;
 
-  // =========================================================
-  // IMÁGENES COLECCIONES
-  // =========================================================
   archivosColecciones = new Map<number, File>();
   previewsColecciones = new Map<number, string>();
   erroresColecciones = new Map<number, string>();
 
-  // =========================================================
-  // CONSTRUCTOR
-  // =========================================================
   constructor(
     private homeService: HomeContenidoService,
     private cdr: ChangeDetectorRef
   ) {}
 
-  // =========================================================
-  // INIT
-  // =========================================================
   ngOnInit(): void {
     this.cargar();
   }
 
-  // =========================================================
-  // DESTROY
-  // =========================================================
   ngOnDestroy(): void {
-    this.previewsBanners.forEach(preview => {
-      this.liberarPreview(preview);
-    });
-
-    this.previewsColecciones.forEach(preview => {
-      this.liberarPreview(preview);
-    });
+    this.previewsBanners.forEach(preview => this.liberarPreview(preview));
+    this.previewsColecciones.forEach(preview => this.liberarPreview(preview));
   }
 
   // =========================================================
-  // CARGAR TODO
+  // CARGAR DATOS
   // =========================================================
   cargar(): void {
     this.cargando = true;
@@ -96,9 +76,6 @@ export class HomeAdmin implements OnInit, OnDestroy {
       }
     };
 
-    // =======================================================
-    // BANNERS
-    // =======================================================
     this.homeService.listarBannersAdmin().subscribe({
       next: banners => {
         this.banners = [...banners].sort((a, b) => a.orden - b.orden);
@@ -113,9 +90,6 @@ export class HomeAdmin implements OnInit, OnDestroy {
       }
     });
 
-    // =======================================================
-    // COLECCIONES
-    // =======================================================
     this.homeService.listarColeccionesAdmin().subscribe({
       next: colecciones => {
         this.colecciones = [...colecciones].sort((a, b) => a.orden - b.orden);
@@ -132,12 +106,10 @@ export class HomeAdmin implements OnInit, OnDestroy {
   }
 
   // =========================================================
-  // CREAR BANNER
+  // BANNERS (MÉTODOS)
   // =========================================================
   nuevoBanner(): void {
-    if (this.creandoBanner) {
-      return;
-    }
+    if (this.creandoBanner) return;
 
     this.error = '';
     this.mensaje = '';
@@ -145,10 +117,10 @@ export class HomeAdmin implements OnInit, OnDestroy {
 
     const nuevo: HomeBanner = {
       idBanner: 0,
-      etiqueta: 'Nueva colección',
-      titulo: 'Nuevo banner',
+      etiqueta: '',
+      titulo: '',
       descripcion: '',
-      textoBoton: 'Comprar ahora',
+      textoBoton: '',
       enlaceBoton: '/tienda',
       imagen: null,
       orden: this.siguienteOrdenBanner(),
@@ -160,7 +132,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
         this.banners = [...this.banners, creado];
         this.ordenarBanners();
         this.creandoBanner = false;
-        this.mensaje = 'Nuevo banner creado correctamente. Ahora puedes editarlo y cargar su imagen.';
+        this.mensaje = 'Nuevo banner creado correctamente.';
         this.actualizarVista();
       },
       error: error => {
@@ -172,14 +144,9 @@ export class HomeAdmin implements OnInit, OnDestroy {
     });
   }
 
-  // =========================================================
-  // GUARDAR BANNER
-  // =========================================================
   guardarBanner(banner: HomeBanner): void {
     this.error = '';
     this.mensaje = '';
-
-    banner.titulo = banner.titulo?.trim() ?? '';
 
     if (banner.orden == null || banner.orden < 1) {
       this.error = 'El orden del banner debe ser mayor a 0.';
@@ -202,7 +169,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
 
         this.guardandoBanner = null;
         this.ordenarBanners();
-        this.mensaje = `Banner "${actualizado.titulo}" actualizado correctamente.`;
+        this.mensaje = `Banner guardado correctamente.`;
         this.actualizarVista();
       },
       error: error => {
@@ -214,17 +181,13 @@ export class HomeAdmin implements OnInit, OnDestroy {
     });
   }
 
-  // =========================================================
-  // ELIMINAR BANNER
-  // =========================================================
+  // MÉTODO ELIMINAR BANNER MANTENIDO
   eliminarBanner(banner: HomeBanner): void {
     const confirmado = window.confirm(
-      `¿Eliminar el banner "${banner.titulo}"?\n\nEsta acción también eliminará su imagen y no se puede deshacer.`
+      `¿Eliminar el banner con ID ${banner.idBanner}?\n\nEsta acción también eliminará su imagen y no se puede deshacer.`
     );
 
-    if (!confirmado) {
-      return;
-    }
+    if (!confirmado) return;
 
     this.error = '';
     this.mensaje = '';
@@ -236,7 +199,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
         this.cancelarImagenBanner(banner.idBanner);
         this.banners = this.banners.filter(item => item.idBanner !== banner.idBanner);
         this.eliminandoBanner = null;
-        this.mensaje = `Banner "${banner.titulo}" eliminado correctamente.`;
+        this.mensaje = 'Banner eliminado correctamente.';
         this.actualizarVista();
       },
       error: error => {
@@ -248,16 +211,11 @@ export class HomeAdmin implements OnInit, OnDestroy {
     });
   }
 
-  // =========================================================
-  // SELECCIONAR IMAGEN BANNER
-  // =========================================================
   seleccionarImagenBanner(event: Event, idBanner: number): void {
     this.erroresBanners.delete(idBanner);
     const input = event.target as HTMLInputElement;
 
-    if (!input.files || input.files.length === 0) {
-      return;
-    }
+    if (!input.files || input.files.length === 0) return;
 
     const archivo = input.files[0];
     const error = this.validarImagen(archivo);
@@ -276,9 +234,6 @@ export class HomeAdmin implements OnInit, OnDestroy {
     this.actualizarVista();
   }
 
-  // =========================================================
-  // CANCELAR IMAGEN BANNER
-  // =========================================================
   cancelarImagenBanner(idBanner: number): void {
     const preview = this.previewsBanners.get(idBanner);
     this.liberarPreview(preview);
@@ -287,40 +242,21 @@ export class HomeAdmin implements OnInit, OnDestroy {
     this.erroresBanners.delete(idBanner);
   }
 
-  // =========================================================
-  // URL IMAGEN BANNER
-  // =========================================================
   imagenBannerUrl(banner: HomeBanner): string | null {
     const preview = this.previewsBanners.get(banner.idBanner);
-
-    if (preview) {
-      return preview;
-    }
-
-    if (banner.imagen) {
-      return this.uploadsUrl + banner.imagen;
-    }
-
+    if (preview) return preview;
+    if (banner.imagen) return this.uploadsUrl + banner.imagen;
     return null;
   }
 
-  // =========================================================
-  // ARCHIVO BANNER
-  // =========================================================
   archivoBanner(idBanner: number): File | null {
     return this.archivosBanners.get(idBanner) ?? null;
   }
 
-  // =========================================================
-  // ERROR BANNER
-  // =========================================================
   errorBanner(idBanner: number): string {
     return this.erroresBanners.get(idBanner) ?? '';
   }
 
-  // =========================================================
-  // SUBIR IMAGEN BANNER
-  // =========================================================
   private subirImagenBanner(banner: HomeBanner, archivo: File): void {
     this.homeService.subirImagenBanner(banner.idBanner, archivo).subscribe({
       next: actualizado => {
@@ -328,54 +264,37 @@ export class HomeAdmin implements OnInit, OnDestroy {
         this.cancelarImagenBanner(actualizado.idBanner);
         this.guardandoBanner = null;
         this.ordenarBanners();
-        this.mensaje = `Banner "${actualizado.titulo}" e imagen actualizados correctamente.`;
+        this.mensaje = 'Imagen de banner actualizada correctamente.';
         this.actualizarVista();
       },
       error: error => {
         console.error('ERROR SUBIENDO IMAGEN BANNER:', error);
-        this.error = 'Los datos del banner se guardaron, pero no se pudo subir la imagen.';
+        this.error = 'No se pudo subir la imagen del banner.';
         this.guardandoBanner = null;
         this.actualizarVista();
       }
     });
   }
 
-  // =========================================================
-  // REEMPLAZAR BANNER
-  // =========================================================
   private reemplazarBanner(actualizado: HomeBanner): void {
     const indice = this.banners.findIndex(item => item.idBanner === actualizado.idBanner);
-
-    if (indice >= 0) {
-      this.banners[indice] = actualizado;
-    }
+    if (indice >= 0) this.banners[indice] = actualizado;
   }
 
-  // =========================================================
-  // ORDENAR BANNERS
-  // =========================================================
   private ordenarBanners(): void {
     this.banners = [...this.banners].sort((a, b) => a.orden - b.orden);
   }
 
-  // =========================================================
-  // SIGUIENTE ORDEN BANNER
-  // =========================================================
   private siguienteOrdenBanner(): number {
-    if (this.banners.length === 0) {
-      return 1;
-    }
-
+    if (this.banners.length === 0) return 1;
     return Math.max(...this.banners.map(banner => banner.orden || 0)) + 1;
   }
 
   // =========================================================
-  // CREAR COLECCIÓN
+  // COLECCIONES (MÉTODOS)
   // =========================================================
   nuevaColeccion(): void {
-    if (this.creandoColeccion) {
-      return;
-    }
+    if (this.creandoColeccion) return;
 
     this.error = '';
     this.mensaje = '';
@@ -383,9 +302,9 @@ export class HomeAdmin implements OnInit, OnDestroy {
 
     const nueva: HomeColeccion = {
       idColeccion: 0,
-      titulo: 'Nueva colección',
-      etiqueta: 'Colección',
-      textoBoton: 'Ver productos',
+      titulo: '',
+      etiqueta: '',
+      textoBoton: '',
       enlace: '/tienda',
       imagen: null,
       orden: this.siguienteOrdenColeccion(),
@@ -397,7 +316,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
         this.colecciones = [...this.colecciones, creada];
         this.ordenarColecciones();
         this.creandoColeccion = false;
-        this.mensaje = 'Nueva colección creada correctamente. Ahora puedes editarla y cargar su imagen.';
+        this.mensaje = 'Nueva colección creada correctamente.';
         this.actualizarVista();
       },
       error: error => {
@@ -409,18 +328,11 @@ export class HomeAdmin implements OnInit, OnDestroy {
     });
   }
 
-  // =========================================================
-  // GUARDAR COLECCIÓN
-  // =========================================================
   guardarColeccion(coleccion: HomeColeccion): void {
     this.error = '';
     this.mensaje = '';
 
-    if (!coleccion.titulo || !coleccion.titulo.trim()) {
-      this.error = 'El título de la colección es obligatorio.';
-      this.actualizarVista();
-      return;
-    }
+    coleccion.titulo = coleccion.titulo ? coleccion.titulo.trim() : '';
 
     if (coleccion.orden == null || coleccion.orden < 1) {
       this.error = 'El orden debe ser mayor a 0.';
@@ -443,7 +355,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
 
         this.guardandoColeccion = null;
         this.ordenarColecciones();
-        this.mensaje = `Colección "${actualizada.titulo}" actualizada correctamente.`;
+        this.mensaje = 'Colección actualizada correctamente.';
         this.actualizarVista();
       },
       error: error => {
@@ -455,17 +367,14 @@ export class HomeAdmin implements OnInit, OnDestroy {
     });
   }
 
-  // =========================================================
-  // ELIMINAR COLECCIÓN
-  // =========================================================
+  // MÉTODO ELIMINAR COLECCIÓN MANTENIDO
   eliminarColeccion(coleccion: HomeColeccion): void {
+    const verTitulo = coleccion.titulo ? `"${coleccion.titulo}"` : `ID ${coleccion.idColeccion}`;
     const confirmado = window.confirm(
-      `¿Eliminar la colección "${coleccion.titulo}"?\n\nEsta acción también eliminará su imagen y no se puede deshacer.`
+      `¿Eliminar la colección ${verTitulo}?\n\nEsta acción también eliminará su imagen y no se puede deshacer.`
     );
 
-    if (!confirmado) {
-      return;
-    }
+    if (!confirmado) return;
 
     this.error = '';
     this.mensaje = '';
@@ -477,7 +386,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
         this.cancelarImagenColeccion(coleccion.idColeccion);
         this.colecciones = this.colecciones.filter(item => item.idColeccion !== coleccion.idColeccion);
         this.eliminandoColeccion = null;
-        this.mensaje = `Colección "${coleccion.titulo}" eliminada correctamente.`;
+        this.mensaje = 'Colección eliminada correctamente.';
         this.actualizarVista();
       },
       error: error => {
@@ -489,16 +398,11 @@ export class HomeAdmin implements OnInit, OnDestroy {
     });
   }
 
-  // =========================================================
-  // SELECCIONAR IMAGEN COLECCIÓN
-  // =========================================================
   seleccionarImagenColeccion(event: Event, idColeccion: number): void {
     this.erroresColecciones.delete(idColeccion);
     const input = event.target as HTMLInputElement;
 
-    if (!input.files || input.files.length === 0) {
-      return;
-    }
+    if (!input.files || input.files.length === 0) return;
 
     const archivo = input.files[0];
     const error = this.validarImagen(archivo);
@@ -517,9 +421,6 @@ export class HomeAdmin implements OnInit, OnDestroy {
     this.actualizarVista();
   }
 
-  // =========================================================
-  // CANCELAR IMAGEN COLECCIÓN
-  // =========================================================
   cancelarImagenColeccion(idColeccion: number): void {
     const preview = this.previewsColecciones.get(idColeccion);
     this.liberarPreview(preview);
@@ -528,40 +429,21 @@ export class HomeAdmin implements OnInit, OnDestroy {
     this.erroresColecciones.delete(idColeccion);
   }
 
-  // =========================================================
-  // URL IMAGEN COLECCIÓN
-  // =========================================================
   imagenColeccionUrl(coleccion: HomeColeccion): string | null {
     const preview = this.previewsColecciones.get(coleccion.idColeccion);
-
-    if (preview) {
-      return preview;
-    }
-
-    if (coleccion.imagen) {
-      return this.uploadsUrl + coleccion.imagen;
-    }
-
+    if (preview) return preview;
+    if (coleccion.imagen) return this.uploadsUrl + coleccion.imagen;
     return null;
   }
 
-  // =========================================================
-  // ARCHIVO COLECCIÓN
-  // =========================================================
   archivoColeccion(idColeccion: number): File | null {
     return this.archivosColecciones.get(idColeccion) ?? null;
   }
 
-  // =========================================================
-  // ERROR COLECCIÓN
-  // =========================================================
   errorColeccion(idColeccion: number): string {
     return this.erroresColecciones.get(idColeccion) ?? '';
   }
 
-  // =========================================================
-  // SUBIR IMAGEN COLECCIÓN
-  // =========================================================
   private subirImagenColeccion(coleccion: HomeColeccion, archivo: File): void {
     this.homeService.subirImagenColeccion(coleccion.idColeccion, archivo).subscribe({
       next: actualizada => {
@@ -569,51 +451,32 @@ export class HomeAdmin implements OnInit, OnDestroy {
         this.cancelarImagenColeccion(actualizada.idColeccion);
         this.guardandoColeccion = null;
         this.ordenarColecciones();
-        this.mensaje = `Colección "${actualizada.titulo}" e imagen actualizadas correctamente.`;
+        this.mensaje = 'Colección e imagen actualizadas correctamente.';
         this.actualizarVista();
       },
       error: error => {
         console.error('ERROR SUBIENDO IMAGEN COLECCIÓN:', error);
-        this.error = 'Los datos de la colección se guardaron, pero no se pudo subir la imagen.';
+        this.error = 'No se pudo subir la imagen de la colección.';
         this.guardandoColeccion = null;
         this.actualizarVista();
       }
     });
   }
 
-  // =========================================================
-  // REEMPLAZAR COLECCIÓN
-  // =========================================================
   private reemplazarColeccion(actualizada: HomeColeccion): void {
     const indice = this.colecciones.findIndex(item => item.idColeccion === actualizada.idColeccion);
-
-    if (indice >= 0) {
-      this.colecciones[indice] = actualizada;
-    }
+    if (indice >= 0) this.colecciones[indice] = actualizada;
   }
 
-  // =========================================================
-  // ORDENAR COLECCIONES
-  // =========================================================
   private ordenarColecciones(): void {
     this.colecciones = [...this.colecciones].sort((a, b) => a.orden - b.orden);
   }
 
-  // =========================================================
-  // SIGUIENTE ORDEN COLECCIÓN
-  // =========================================================
   private siguienteOrdenColeccion(): number {
-    if (this.colecciones.length === 0) {
-      return 1;
-    }
-
+    if (this.colecciones.length === 0) return 1;
     return Math.max(...this.colecciones.map(coleccion => coleccion.orden || 0)) + 1;
   }
 
-  // =========================================================
-  // VALIDAR IMAGEN
-  // JPG / JPEG / JFIF / PNG / WEBP
-  // =========================================================
   private validarImagen(archivo: File): string {
     const nombre = archivo.name.toLowerCase();
     const extensionValida = /\.(jpg|jpeg|jfif|png|webp)$/.test(nombre);
@@ -626,48 +489,28 @@ export class HomeAdmin implements OnInit, OnDestroy {
       'image/webp'
     ];
 
-    /*
-     * Algunos navegadores reportan los archivos
-     * JFIF como image/jpeg.
-     *
-     * Otros pueden entregar type vacío.
-     * Por eso validamos MIME + extensión.
-     */
     const tipoValido = !archivo.type || tiposPermitidos.includes(archivo.type.toLowerCase());
 
     if (!extensionValida || !tipoValido) {
       return 'Solo se permiten imágenes JPG, JPEG, JFIF, PNG o WEBP.';
     }
 
-    const maximo = 5 * 1024 * 1024;
-
-    if (archivo.size > maximo) {
+    if (archivo.size > 5 * 1024 * 1024) {
       return 'La imagen no puede superar los 5 MB.';
     }
 
     return '';
   }
 
-  // =========================================================
-  // LIBERAR PREVIEW
-  // =========================================================
   private liberarPreview(preview: string | null | undefined): void {
     if (preview && preview.startsWith('blob:')) {
       URL.revokeObjectURL(preview);
     }
   }
 
-  // =========================================================
-  // ACTUALIZAR VISTA
-  // =========================================================
   private actualizarVista(): void {
     try {
       this.cdr.detectChanges();
-    } catch {
-      /*
-       * El componente puede haber sido destruido
-       * mientras finalizaba una petición HTTP.
-       */
-    }
+    } catch {}
   }
 }
