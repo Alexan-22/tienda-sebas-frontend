@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -9,16 +10,23 @@ import { VentaService } from '../../../core/services/venta';
 import { UsuarioService } from '../../../core/services/usuario';
 import { TiendaService } from '../../../core/services/tienda.service';
 
+export type PeriodoFiltro = 'Semana' | 'Mes' | 'Trimestre';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, DecimalPipe],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
+  // Filtro de período de tiempo activo
+  periodoActivo: PeriodoFiltro = 'Semana';
+
+  // Métricas dinámicas
   totalProductos: number | null = null;
-  totalVentas: number | null = null;
+  totalVentasConteo: number | null = null;
+  montoTotalVentas: number = 12850.00;
   totalClientes: number | null = null;
   totalStock: number | null = null;
 
@@ -27,19 +35,50 @@ export class Dashboard implements OnInit {
     private productoTallaService: ProductoTallaService,
     private ventaService: VentaService,
     private usuarioService: UsuarioService,
-    public tiendaService: TiendaService, // INYECTADO COMO PUBLIC
+    public tiendaService: TiendaService,
+    private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.cargarDatos();
+  }
+
+  // ==========================================
+  // CAMBIAR PERÍODO DE TIEMPO (Semana / Mes / Trimestre)
+  // ==========================================
+  cambiarPeriodo(periodo: PeriodoFiltro): void {
+    this.periodoActivo = periodo;
+    
+    // Recalcula el monto visual según el período seleccionado
+    if (periodo === 'Semana') {
+      this.montoTotalVentas = 12850.00;
+    } else if (periodo === 'Mes') {
+      this.montoTotalVentas = 48500.00;
+    } else if (periodo === 'Trimestre') {
+      this.montoTotalVentas = 135200.00;
+    }
+
+    this.actualizarVista();
+  }
+
+  // ==========================================
+  // ACCIÓN DEL BOTÓN: + NUEVA VENTA
+  // ==========================================
+  irANuevaVenta(): void {
+    // Redirige al Punto de Venta / Registro de venta presencial
+    this.router.navigate(['/admin/vender']);
+  }
+
+  // ==========================================
+  // CARGA DE DATOS DESDE SERVICIOS
+  // ==========================================
+  private cargarDatos(): void {
     this.cargarProductos();
     this.cargarVentas();
     this.cargarUsuarios();
   }
 
-  // ==========================================
-  // PRODUCTOS Y STOCK
-  // ==========================================
   private cargarProductos(): void {
     this.productoService.listar().subscribe({
       next: productos => {
@@ -86,26 +125,20 @@ export class Dashboard implements OnInit {
     });
   }
 
-  // ==========================================
-  // VENTAS
-  // ==========================================
   private cargarVentas(): void {
     this.ventaService.listarTodas().subscribe({
       next: ventas => {
-        this.totalVentas = ventas.length;
+        this.totalVentasConteo = ventas.length;
         this.actualizarVista();
       },
       error: error => {
         console.error('Error cargando ventas:', error);
-        this.totalVentas = 0;
+        this.totalVentasConteo = 0;
         this.actualizarVista();
       }
     });
   }
 
-  // ==========================================
-  // USUARIOS / CLIENTES
-  // ==========================================
   private cargarUsuarios(): void {
     this.usuarioService.listarTodos().subscribe({
       next: usuarios => {
@@ -123,9 +156,6 @@ export class Dashboard implements OnInit {
     });
   }
 
-  // ==========================================
-  // ACTUALIZAR VISTA
-  // ==========================================
   private actualizarVista(): void {
     this.cdr.detectChanges();
   }

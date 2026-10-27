@@ -16,9 +16,11 @@
       </p>
     </div>
 
+    <!-- BOTÓN INTERACTIVO + NUEVA VENTA (CON Clic para ir a /admin/vender) -->
     <button 
       type="button" 
-      class="inline-flex items-center justify-center gap-2 rounded-xl bg-purple-600 px-5 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-purple-700 active:scale-95">
+      (click)="irANuevaVenta()"
+      class="inline-flex items-center justify-center gap-2 rounded-xl bg-purple-600 px-5 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-purple-700 active:scale-95 cursor-pointer">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M12 5v14M5 12h14"/>
       </svg>
@@ -31,11 +33,30 @@
     💡 Vista de demostración: los indicadores muestran datos sincronizados en tiempo real con Supabase.
   </div>
 
-  <!-- FILTRO DE TIEMPO -->
+  <!-- ==========================================
+       FILTRO DE TIEMPO INTERACTIVO (Semana / Mes / Trimestre)
+  =========================================== -->
   <div class="mt-6 flex items-center gap-2">
-    <button type="button" class="rounded-lg bg-purple-600 px-4 py-2 text-xs font-bold text-white">Semana</button>
-    <button type="button" class="rounded-lg bg-white px-4 py-2 text-xs font-bold text-neutral-600 border border-neutral-200 hover:bg-neutral-50">Mes</button>
-    <button type="button" class="rounded-lg bg-white px-4 py-2 text-xs font-bold text-neutral-600 border border-neutral-200 hover:bg-neutral-50">Trimestre</button>
+    <button 
+      type="button" 
+      (click)="cambiarPeriodo('Semana')"
+      [class]="periodoActivo === 'Semana' ? 'rounded-lg bg-purple-600 px-4 py-2 text-xs font-bold text-white shadow-sm cursor-pointer' : 'rounded-lg bg-white px-4 py-2 text-xs font-bold text-neutral-600 border border-neutral-200 hover:bg-neutral-50 cursor-pointer'">
+      Semana
+    </button>
+
+    <button 
+      type="button" 
+      (click)="cambiarPeriodo('Mes')"
+      [class]="periodoActivo === 'Mes' ? 'rounded-lg bg-purple-600 px-4 py-2 text-xs font-bold text-white shadow-sm cursor-pointer' : 'rounded-lg bg-white px-4 py-2 text-xs font-bold text-neutral-600 border border-neutral-200 hover:bg-neutral-50 cursor-pointer'">
+      Mes
+    </button>
+
+    <button 
+      type="button" 
+      (click)="cambiarPeriodo('Trimestre')"
+      [class]="periodoActivo === 'Trimestre' ? 'rounded-lg bg-purple-600 px-4 py-2 text-xs font-bold text-white shadow-sm cursor-pointer' : 'rounded-lg bg-white px-4 py-2 text-xs font-bold text-neutral-600 border border-neutral-200 hover:bg-neutral-50 cursor-pointer'">
+      Trimestre
+    </button>
   </div>
 
   <!-- ==========================================
@@ -43,14 +64,14 @@
   =========================================== -->
   <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
     
-    <!-- TARJETA 1: VENTAS EN MONEDA -->
+    <!-- TARJETA 1: VENTAS EN MONEDA (Dinámico según período) -->
     <div class="rounded-2xl border border-neutral-100 bg-white p-6 shadow-sm">
       <div class="flex items-center justify-between">
         <span class="text-xs font-bold uppercase tracking-wider text-neutral-400">Ventas</span>
         <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 text-xs font-black text-purple-700">S/</span>
       </div>
-      <p class="mt-4 text-2xl font-black text-neutral-900">S/ 12,850.00</p>
-      <p class="mt-1 text-[11px] text-neutral-400">Ingresos del período seleccionado</p>
+      <p class="mt-4 text-2xl font-black text-neutral-900">S/ {{ montoTotalVentas | number:'1.2-2' }}</p>
+      <p class="mt-1 text-[11px] text-neutral-400">Ingresos del período: {{ periodoActivo }}</p>
     </div>
 
     <!-- TARJETA 2: PEDIDOS -->
@@ -61,7 +82,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12l2 5H4l2-5Z"/><path d="M4 7v15h16V7"/></svg>
         </span>
       </div>
-      <p class="mt-4 text-2xl font-black text-neutral-900">128</p>
+      <p class="mt-4 text-2xl font-black text-neutral-900">{{ totalVentasConteo ?? 128 }}</p>
       <p class="mt-1 text-[11px] text-neutral-400">Pedidos registrados</p>
     </div>
 
@@ -73,7 +94,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         </span>
       </div>
-      <p class="mt-4 text-2xl font-black text-neutral-900">64</p>
+      <p class="mt-4 text-2xl font-black text-neutral-900">{{ totalProductos ?? 64 }}</p>
       <p class="mt-1 text-[11px] text-neutral-400">Productos en el catálogo</p>
     </div>
 
@@ -97,7 +118,7 @@
     <!-- RENDIMIENTO DE VENTAS (GRÁFICO SIMULADO EN CSS/BARS) -->
     <div class="rounded-2xl border border-neutral-100 bg-white p-6 shadow-sm lg:col-span-2">
       <h3 class="text-base font-bold text-neutral-900">Rendimiento de ventas</h3>
-      <p class="text-xs text-neutral-400">Actividad del período seleccionado</p>
+      <p class="text-xs text-neutral-400">Actividad del período: {{ periodoActivo }}</p>
 
       <!-- BAR CHART CSS -->
       <div class="mt-8 flex h-48 items-end justify-between gap-2 border-b border-neutral-100 pb-2 px-4">
