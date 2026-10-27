@@ -7,6 +7,7 @@ import { ProductoService } from '../../../core/services/producto';
 import { ProductoTallaService } from '../../../core/services/producto-talla';
 import { VentaService } from '../../../core/services/venta';
 import { UsuarioService } from '../../../core/services/usuario';
+import { TiendaService } from '../../../core/services/tienda.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,6 +27,7 @@ export class Dashboard implements OnInit {
     private productoTallaService: ProductoTallaService,
     private ventaService: VentaService,
     private usuarioService: UsuarioService,
+    public tiendaService: TiendaService, // INYECTADO COMO PUBLIC
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -36,15 +38,13 @@ export class Dashboard implements OnInit {
   }
 
   // ==========================================
-  // PRODUCTOS
+  // PRODUCTOS Y STOCK
   // ==========================================
   private cargarProductos(): void {
     this.productoService.listar().subscribe({
       next: productos => {
         this.totalProductos = productos.length;
 
-        // Una vez tenemos los productos,
-        // calculamos el stock.
         if (productos.length === 0) {
           this.totalStock = 0;
           this.actualizarVista();
@@ -104,7 +104,7 @@ export class Dashboard implements OnInit {
   }
 
   // ==========================================
-  // USUARIOS
+  // USUARIOS / CLIENTES
   // ==========================================
   private cargarUsuarios(): void {
     this.usuarioService.listarTodos().subscribe({
