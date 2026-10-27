@@ -1,260 +1,248 @@
-<section class="page">
+<section class="producto-form-page">
 
-  <a routerLink="/admin/productos" class="back">← VOLVER A PRODUCTOS</a>
+  <!-- BOTÓN DE RETORNO -->
+  <a routerLink="/admin/productos" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    <span>Volver al Catálogo</span>
+  </a>
 
-  <header>
-    <p>CATÁLOGO</p>
-    <h1>{{ editando ? 'Editar producto' : 'Nuevo producto' }}</h1>
+  <!-- ENCABEZADO -->
+  <header class="page-header">
+    <div class="page-title">
+      <span class="eyebrow">ADMINISTRACIÓN DE CATÁLOGO</span>
+      <h1>{{ editando ? 'Editar Producto' : 'Nuevo Producto' }}</h1>
+      <p>{{ editando ? 'Actualiza los datos y la imagen del artículo seleccionado.' : 'Registra un nuevo artículo en el inventario de la tienda.' }}</p>
+    </div>
   </header>
 
-  <!-- ===================================================== -->
   <!-- ERROR GENERAL -->
-  <!-- ===================================================== -->
-
   @if (error) {
-    <div class="error">{{ error }}</div>
+    <div class="alert-box error">
+      <strong>ERROR DE VALIDACIÓN</strong>
+      <p>{{ error }}</p>
+    </div>
   }
 
-  <!-- ===================================================== -->
-  <!-- CARGANDO -->
-  <!-- ===================================================== -->
-
+  <!-- ESTADO DE CARGA -->
   @if (cargando) {
-    <div class="loading">Cargando producto...</div>
+    <div class="state-container">
+      <div class="spinner"></div>
+      <p>Cargando información del producto...</p>
+    </div>
   } @else {
 
-    <!-- =================================================== -->
-    <!-- FORMULARIO -->
-    <!-- =================================================== -->
+    <!-- FORMULARIO PRINCIPAL -->
+    <form (ngSubmit)="guardar()" class="form-grid">
 
-    <form (ngSubmit)="guardar()">
+      <!-- COLUMNA IZQUIERDA: INFORMACIÓN, PRECIO Y CLASIFICACIÓN -->
+      <div class="main-column">
 
-      <!-- ================================================= -->
-      <!-- COLUMNA PRINCIPAL -->
-      <!-- ================================================= -->
+        <!-- INFORMACIÓN GENERAL -->
+        <section class="panel-card">
+          <div class="panel-header">
+            <h3>Información General</h3>
+            <span class="panel-step">01</span>
+          </div>
 
-      <div class="main">
-
-        <!-- INFORMACIÓN -->
-
-        <section class="card">
-          <h2>Información</h2>
-
-          <label>
-            NOMBRE
+          <div class="field-group">
+            <label>NOMBRE DEL PRODUCTO</label>
             <input
               type="text"
               name="nombre"
               [(ngModel)]="nombre"
+              placeholder="Ej. Polo Oversize Premium"
               required
               [disabled]="guardando">
-          </label>
+          </div>
 
-          <label>
-            DESCRIPCIÓN
+          <div class="field-group">
+            <label>DESCRIPCIÓN</label>
             <textarea
               name="descripcion"
               [(ngModel)]="descripcion"
-              rows="6"
+              rows="5"
+              placeholder="Detalles de materiales, diseño o características..."
               [disabled]="guardando"></textarea>
-          </label>
+          </div>
         </section>
 
-        <!-- ================================================= -->
-        <!-- PRECIO -->
-        <!-- ================================================= -->
+        <!-- PRECIOS -->
+        <section class="panel-card">
+          <div class="panel-header">
+            <h3>Precios y Ofertas</h3>
+            <span class="panel-step">02</span>
+          </div>
 
-        <section class="card">
-          <h2>Precio</h2>
-
-          <div class="columns">
-            <label>
-              PRECIO NORMAL
+          <div class="columns-2">
+            <div class="field-group">
+              <label>PRECIO NORMAL (S/)</label>
               <input
                 type="number"
                 name="precio"
                 [(ngModel)]="precio"
                 step="0.01"
                 min="0"
+                placeholder="0.00"
                 [disabled]="guardando">
-            </label>
+            </div>
 
-            <label>
-              PRECIO OFERTA
+            <div class="field-group">
+              <label>PRECIO DE OFERTA (S/)</label>
               <input
                 type="number"
                 name="precioOferta"
                 [(ngModel)]="precioOferta"
                 step="0.01"
                 min="0"
+                placeholder="Opcional"
                 [disabled]="guardando">
-            </label>
+            </div>
           </div>
         </section>
 
-        <!-- ================================================= -->
         <!-- CLASIFICACIÓN -->
-        <!-- ================================================= -->
+        <section class="panel-card">
+          <div class="panel-header">
+            <h3>Clasificación Comercial</h3>
+            <span class="panel-step">03</span>
+          </div>
 
-        <section class="card">
-          <h2>Clasificación</h2>
-
-          <div class="columns">
-
-            <!-- GÉNERO -->
-
-            <label>
-              GÉNERO
-
+          <div class="columns-2">
+            <div class="field-group">
+              <label>GÉNERO</label>
               <select name="genero" [(ngModel)]="idGenero" [disabled]="guardando">
-                <option [ngValue]="null">Seleccionar</option>
-
+                <option [ngValue]="null">Seleccionar género...</option>
                 @for (genero of generos; track genero.idGenero) {
                   <option [ngValue]="genero.idGenero">{{ genero.nombreGenero }}</option>
                 }
               </select>
-            </label>
+            </div>
 
-            <!-- CATEGORÍA -->
-
-            <label>
-              CATEGORÍA
-
+            <div class="field-group">
+              <label>CATEGORÍA</label>
               <select name="categoria" [(ngModel)]="idCategoria" [disabled]="guardando">
-                <option [ngValue]="null">Seleccionar</option>
-
+                <option [ngValue]="null">Seleccionar categoría...</option>
                 @for (categoria of categorias; track categoria.idCategoria) {
                   <option [ngValue]="categoria.idCategoria">{{ categoria.nombreCategoria }}</option>
                 }
               </select>
-            </label>
-
+            </div>
           </div>
         </section>
 
       </div>
 
-      <!-- ================================================= -->
-      <!-- COLUMNA DERECHA -->
-      <!-- ================================================= -->
+      <!-- COLUMNA DERECHA: IMAGEN Y VISIBILIDAD -->
+      <aside class="side-column">
 
-      <aside>
-
-        <!-- ================================================= -->
         <!-- IMAGEN -->
-        <!-- ================================================= -->
+        <section class="panel-card image-card-section">
+          <div class="panel-header">
+            <h3>Fotografía</h3>
+            <span class="panel-step">04</span>
+          </div>
 
-        <section class="card image-card">
-          <h2>Imagen</h2>
-
-          <!-- PREVISUALIZACIÓN -->
-
-          <div class="image-preview">
+          <div class="image-preview-box">
             @if (imagenActualUrl()) {
-              <img [src]="imagenActualUrl()" [alt]="nombre || 'Imagen del producto'">
+              <img [src]="imagenActualUrl()" [alt]="nombre || 'Previsualización'">
             } @else {
-              <div class="image-empty">
+              <div class="image-placeholder">
                 <strong>TS</strong>
                 <span>SIN IMAGEN</span>
               </div>
             }
           </div>
 
-          <!-- SELECCIONAR ARCHIVO -->
-
-          <label class="file-label">
-            IMAGEN DEL PRODUCTO
-
-            <input
-              type="file"
-              accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-              (change)="seleccionarImagen($event)"
-              [disabled]="guardando">
-          </label>
-
-          <!-- ARCHIVO SELECCIONADO -->
+          <div class="field-group">
+            <label class="file-upload-btn">
+              <span>Examinar Archivo...</span>
+              <input
+                type="file"
+                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                (change)="seleccionarImagen($event)"
+                [disabled]="guardando">
+            </label>
+          </div>
 
           @if (archivoImagen) {
-            <div class="selected-file">
+            <div class="selected-file-banner">
               <div>
-                <strong>IMAGEN SELECCIONADA</strong>
+                <strong>Nuevo archivo seleccionado:</strong>
                 <span>{{ archivoImagen.name }}</span>
               </div>
-
-              <button type="button" (click)="cancelarImagen()" [disabled]="guardando">
-                QUITAR
-              </button>
+              <button type="button" class="btn-remove-img" (click)="cancelarImagen()" [disabled]="guardando">Quitar</button>
             </div>
           }
 
-          <!-- ERROR IMAGEN -->
-
           @if (errorImagen) {
-            <div class="image-error">{{ errorImagen }}</div>
+            <div class="inline-error">{{ errorImagen }}</div>
           }
 
-          <small>
-            Formatos permitidos: JPG, PNG o WEBP. Máximo 5 MB.
-          </small>
-
-          <!-- IMAGEN ACTUAL -->
+          <small class="help-text">Formatos permitidos: JPG, PNG, WEBP. Máximo 5 MB.</small>
 
           @if (imagen && !archivoImagen) {
-            <div class="current-image-info">
-              <span>IMAGEN ACTUAL</span>
+            <div class="current-img-info">
+              <span>Imagen actual en servidor:</span>
               <strong>{{ imagen }}</strong>
             </div>
           }
         </section>
 
-        <!-- ================================================= -->
-        <!-- VISIBILIDAD -->
-        <!-- ================================================= -->
+        <!-- VISIBILIDAD Y ETIQUETAS -->
+        <section class="panel-card">
+          <div class="panel-header">
+            <h3>Visibilidad</h3>
+          </div>
 
-        <section class="card">
-          <h2>Visibilidad</h2>
+          <div class="checks-list">
+            <label class="check-item">
+              <div>
+                <strong>Producto Activo</strong>
+                <span>Visible en la tienda web</span>
+              </div>
+              <input
+                type="checkbox"
+                name="estado"
+                [(ngModel)]="estado"
+                [disabled]="guardando">
+            </label>
 
-          <label class="check">
-            <span>Producto activo</span>
-            <input
-              type="checkbox"
-              name="estado"
-              [(ngModel)]="estado"
-              [disabled]="guardando">
-          </label>
+            <label class="check-item">
+              <div>
+                <strong>Nuevo Lanzamiento</strong>
+                <span>Muestra etiqueta "Nuevo"</span>
+              </div>
+              <input
+                type="checkbox"
+                name="nuevo"
+                [(ngModel)]="nuevo"
+                [disabled]="guardando">
+            </label>
 
-          <label class="check">
-            <span>Nuevo</span>
-            <input
-              type="checkbox"
-              name="nuevo"
-              [(ngModel)]="nuevo"
-              [disabled]="guardando">
-          </label>
-
-          <label class="check">
-            <span>Destacado</span>
-            <input
-              type="checkbox"
-              name="destacado"
-              [(ngModel)]="destacado"
-              [disabled]="guardando">
-          </label>
+            <label class="check-item">
+              <div>
+                <strong>Producto Destacado</strong>
+                <span>Aparece en secciones principales</span>
+              </div>
+              <input
+                type="checkbox"
+                name="destacado"
+                [(ngModel)]="destacado"
+                [disabled]="guardando">
+            </label>
+          </div>
         </section>
 
-        <!-- ================================================= -->
-        <!-- GUARDAR -->
-        <!-- ================================================= -->
-
-        <button class="save" type="submit" [disabled]="guardando">
+        <!-- BOTÓN DE GUARDAR -->
+        <button type="submit" class="btn-save-main" [disabled]="guardando">
           @if (subiendoImagen) {
-            SUBIENDO IMAGEN...
+            <span>Subiendo imagen al servidor...</span>
           } @else if (guardando) {
-            GUARDANDO...
+            <span>Guardando información...</span>
           } @else if (editando) {
-            GUARDAR CAMBIOS
+            <span>Guardar Cambios</span>
           } @else {
-            CREAR PRODUCTO
+            <span>Crear Producto</span>
           }
         </button>
 
