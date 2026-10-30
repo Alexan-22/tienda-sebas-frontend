@@ -1,33 +1,56 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Observable, tap, catchError, of } from 'rxjs';
 
-export interface ConfiguracionTienda {
+export interface TiendaConfig {
   id: number;
-  nombre: string;
-  logoUrl: string;
-  colorPrimario: string;
+  nombre: String;
+  subdominio: String;
+  colorPrimario: String;
+  logoUrl: String;
+  ruc?: String;
+  telefonoSoporte?: String;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class TiendaService {
-  tiendaActual = signal<ConfiguracionTienda | null>(null);
+  private http = inject(HttpClient);
+  private apiUrl = `${environment.apiUrl}/v1/tiendas`;
 
-  constructor(private http: HttpClient) {}
+  // Signal para almacenar el estado dinámico de la tienda activa
+  public tiendaActual = signal<TiendaConfig | null>(null);
 
-  cargarConfiguracion(): Observable<ConfiguracionTienda> {
+  cargarConfiguracion(): Observable<TiendaConfig> {
     const domain = window.location.hostname;
-    return this.http.get<ConfiguracionTienda>(`${environment.apiUrl}/api/v1/tiendas/config?domain=${domain}`).pipe(
-      tap(config => {
+    
+    return this.http.get<TiendaConfig>(`${this.apiUrl}/config?domain=${domain}`).pipe(
+      tap((config) => {
         this.tiendaActual.set(config);
-        // Actualizar el título de la pestaña del navegador
-        document.title = config.nombre;
-        // Aplicar el color primario como variable CSS
-        document.documentElement.style.setProperty('--color-primario', config.colorPrimario);
+        this.aplicarTema(config.colorPrimario);
+      }),
+      catchError((err) => {
+        console.error('Error cargando configuración de la tienda:', err);
+        // Fallback predeterminado a Sebas Collection (1)
+        const defaultConfig: TiendaConfig = {
+          id: 1,
+          nombre: 'Sebas Collection',
+          subdominio: 'sebascollection',
+          colorPrimario: '#000000',
+          logoUrl: '/images/home/publiclogo-tienda.jpg.jpg'
+        };
+        this.tiendaActual.set(defaultConfig);
+        this.aplicarTema(defaultConfig.colorPrimario);
+        return of(defaultConfig);
       })
     );
+  }
+
+  private aplicarTema(colorHex: String): void {
+    if (colorHex) {
+      document.documentElement.style.setProperty('--color-primario', `${colorHex}`);
+    }
   }
 }
