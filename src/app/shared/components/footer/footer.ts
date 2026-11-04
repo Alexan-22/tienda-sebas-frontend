@@ -1,13 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TiendaService } from '../../../core/services/tienda.service';
 
-@Component({
-  selector: 'app-footer',
-  standalone: true,
-  imports: [RouterLink],
-  templateUrl: './footer.html',
-  styleUrl: './footer.css'
-})
+@Component({selector:'app-footer',standalone:true,imports:[RouterLink],templateUrl:'./footer.html',styleUrl:'./footer.css'})
 export class Footer {
-  anio = new Date().getFullYear();
+  readonly anio = new Date().getFullYear();
+  constructor(public readonly tiendaService: TiendaService) {}
 }

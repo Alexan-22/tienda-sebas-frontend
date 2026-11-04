@@ -41,15 +41,9 @@
         
         <!-- MINIATURAS -->
         <div class="gallery-thumbnails flex lg:flex-col gap-3 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0">
-          @if (producto.imagen) {
-            <button type="button" class="thumbnail rounded-xl overflow-hidden border-2 transition" [class.border-indigo-600]="esImagenSeleccionada(producto.imagen)" [class.border-transparent]="!esImagenSeleccionada(producto.imagen)" (click)="seleccionarImagen(producto.imagen)">
-              <img [src]="obtenerImagenUrl(producto.imagen)" [alt]="producto.nombre" class="w-20 h-24 object-cover">
-            </button>
-          }
-
-          @for (prodImg of imagenes; track prodImg.idProductoImagen) {
-            <button type="button" class="thumbnail rounded-xl overflow-hidden border-2 transition" [class.border-indigo-600]="esImagenSeleccionada(prodImg.imagen)" [class.border-transparent]="!esImagenSeleccionada(prodImg.imagen)" (click)="seleccionarImagen(prodImg.imagen)">
-              <img [src]="obtenerImagenUrl(prodImg.imagen)" [alt]="producto.nombre" class="w-20 h-24 object-cover">
+          @for (ruta of galeriaUnificada; track ruta; let i = $index) {
+            <button type="button" class="thumbnail rounded-xl overflow-hidden border-2 transition" [class.border-indigo-600]="esImagenSeleccionada(ruta)" [class.border-transparent]="!esImagenSeleccionada(ruta)" (click)="seleccionarImagen(ruta)" [attr.aria-label]="'Ver fotografía ' + (i + 1)">
+              <img [src]="obtenerImagenUrl(ruta)" [alt]="producto.nombre + ' - foto ' + (i + 1)" class="w-20 h-24 object-cover" loading="lazy">
             </button>
           }
         </div>
@@ -65,8 +59,15 @@
             }
           </div>
 
+          @if (galeriaUnificada.length > 1) {
+            <button type="button" class="gallery-prev" (click)="moverImagen(-1)" aria-label="Fotografía anterior">‹</button>
+            <button type="button" class="gallery-next" (click)="moverImagen(1)" aria-label="Fotografía siguiente">›</button>
+            <span class="gallery-count">{{ indiceImagenActual + 1 }} / {{ galeriaUnificada.length }}</span>
+          }
           @if (imagenUrl) {
-            <img [src]="imagenUrl" [alt]="producto.nombre" class="w-full h-full object-cover">
+            <button type="button" class="gallery-zoom" (click)="ampliarImagen()" aria-label="Ampliar fotografía">
+              <img [src]="imagenUrl" [alt]="producto.nombre" class="w-full h-full object-cover">
+            </button>
           } @else {
             <div class="no-image flex flex-col items-center justify-center h-full text-slate-300">
               <span class="text-6xl font-black">TS</span>
@@ -230,4 +231,17 @@
 
 </main>
 
+@if (imagenAmpliada && imagenUrl) {
+  <div class="gallery-lightbox" role="presentation" (click)="cerrarAmpliacion()">
+    <div class="gallery-lightbox-inner" role="dialog" aria-modal="true" aria-label="Fotografía ampliada" (click)="$event.stopPropagation()">
+      <button type="button" class="gallery-lightbox-close" (click)="cerrarAmpliacion()" aria-label="Cerrar">×</button>
+      <img [src]="imagenUrl" [alt]="producto?.nombre || 'Fotografía de producto'">
+      <div class="gallery-lightbox-actions">
+        <button type="button" (click)="moverImagen(-1)" aria-label="Anterior">‹</button>
+        <span>{{ indiceImagenActual + 1 }} / {{ galeriaUnificada.length }}</span>
+        <button type="button" (click)="moverImagen(1)" aria-label="Siguiente">›</button>
+      </div>
+    </div>
+  </div>
+}
 <app-footer></app-footer>

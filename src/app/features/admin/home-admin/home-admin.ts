@@ -1,4 +1,4 @@
-﻿import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HomeBanner, HomeColeccion } from '../../../core/models/home-contenido';
@@ -111,6 +111,14 @@ export class HomeAdmin implements OnInit, OnDestroy {
   nuevoBanner(): void {
     if (this.creandoBanner) return;
 
+    const titulo = window.prompt('Título del nuevo banner (obligatorio):', 'Nueva colección');
+    if (titulo === null) return;
+    if (!titulo.trim()) {
+      this.error = 'Ingresa un título para crear el banner.';
+      this.actualizarVista();
+      return;
+    }
+
     this.error = '';
     this.mensaje = '';
     this.creandoBanner = true;
@@ -118,7 +126,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
     const nuevo: HomeBanner = {
       idBanner: 0,
       etiqueta: '',
-      titulo: '',
+      titulo: titulo.trim(),
       descripcion: '',
       textoBoton: '',
       enlaceBoton: '/tienda',
@@ -137,7 +145,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
       },
       error: error => {
         console.error('ERROR CREANDO BANNER:', error);
-        this.error = 'No se pudo crear el nuevo banner.';
+        this.error = 'No se pudo crear el banner: ' + (typeof error?.error === 'string' ? error.error.slice(0, 240) : (error?.error?.detail ?? error?.error?.message ?? `HTTP ${error.status || 'desconocido'}`));
         this.creandoBanner = false;
         this.actualizarVista();
       }
@@ -147,6 +155,13 @@ export class HomeAdmin implements OnInit, OnDestroy {
   guardarBanner(banner: HomeBanner): void {
     this.error = '';
     this.mensaje = '';
+
+    banner.titulo = (banner.titulo ?? '').trim();
+    if (!banner.titulo) {
+      this.error = 'El título del banner es obligatorio.';
+      this.actualizarVista();
+      return;
+    }
 
     if (banner.orden == null || banner.orden < 1) {
       this.error = 'El orden del banner debe ser mayor a 0.';
@@ -269,7 +284,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
       },
       error: error => {
         console.error('ERROR SUBIENDO IMAGEN BANNER:', error);
-        this.error = 'No se pudo subir la imagen del banner.';
+        this.error = 'No se pudo subir la imagen del banner: ' + (typeof error?.error === 'string' ? error.error.slice(0, 240) : (error?.error?.detail ?? error?.error?.message ?? `HTTP ${error.status || 'desconocido'}`));
         this.guardandoBanner = null;
         this.actualizarVista();
       }
@@ -296,13 +311,21 @@ export class HomeAdmin implements OnInit, OnDestroy {
   nuevaColeccion(): void {
     if (this.creandoColeccion) return;
 
+    const titulo = window.prompt('Título de la nueva colección (obligatorio):', 'Moda Mujer');
+    if (titulo === null) return;
+    if (!titulo.trim()) {
+      this.error = 'Ingresa un título para crear la colección.';
+      this.actualizarVista();
+      return;
+    }
+
     this.error = '';
     this.mensaje = '';
     this.creandoColeccion = true;
 
     const nueva: HomeColeccion = {
       idColeccion: 0,
-      titulo: '',
+      titulo: titulo.trim(),
       etiqueta: '',
       textoBoton: '',
       enlace: '/tienda',
@@ -321,7 +344,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
       },
       error: error => {
         console.error('ERROR CREANDO COLECCIÓN:', error);
-        this.error = 'No se pudo crear la nueva colección.';
+        this.error = 'No se pudo crear la colección: ' + (typeof error?.error === 'string' ? error.error.slice(0, 240) : (error?.error?.detail ?? error?.error?.message ?? `HTTP ${error.status || 'desconocido'}`));
         this.creandoColeccion = false;
         this.actualizarVista();
       }
@@ -333,6 +356,11 @@ export class HomeAdmin implements OnInit, OnDestroy {
     this.mensaje = '';
 
     coleccion.titulo = coleccion.titulo ? coleccion.titulo.trim() : '';
+    if (!coleccion.titulo) {
+      this.error = 'El título de la colección es obligatorio.';
+      this.actualizarVista();
+      return;
+    }
 
     if (coleccion.orden == null || coleccion.orden < 1) {
       this.error = 'El orden debe ser mayor a 0.';
@@ -456,7 +484,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
       },
       error: error => {
         console.error('ERROR SUBIENDO IMAGEN COLECCIÓN:', error);
-        this.error = 'No se pudo subir la imagen de la colección.';
+        this.error = 'No se pudo subir la imagen de la colección: ' + (typeof error?.error === 'string' ? error.error.slice(0, 240) : (error?.error?.detail ?? error?.error?.message ?? `HTTP ${error.status || 'desconocido'}`));
         this.guardandoColeccion = null;
         this.actualizarVista();
       }

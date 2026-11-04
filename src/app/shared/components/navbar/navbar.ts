@@ -2,7 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CarritoService } from '../../../core/services/carrito';
 import { AuthService } from '../../../core/services/auth';
-import { TiendaService } from '../../../core/services/tienda.service'; // 1. IMPORTAR SERVICIO
+import { TiendaService } from '../../../core/services/tienda.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,130 +14,38 @@ import { TiendaService } from '../../../core/services/tienda.service'; // 1. IMP
 export class Navbar {
   menuAbierto = false;
   cuentaAbierta = false;
-
   constructor(
-    public carritoService: CarritoService,
-    public authService: AuthService,
-    public tiendaService: TiendaService, // 2. INYECTAR COMO PUBLIC
-    private router: Router
+    public readonly carritoService: CarritoService,
+    public readonly authService: AuthService,
+    public readonly tiendaService: TiendaService,
+    private readonly router: Router
   ) {}
-  // ==========================================
-  // BÚSQUEDA DE PRODUCTOS
-  // ==========================================
-  ejecutarBusqueda(termino: string): void {
-    const query = termino.trim();
-    if (query.length > 0) {
-      this.cerrarMenu();
-      this.router.navigate(['/tienda'], { queryParams: { q: query } });
-    }
-  }
 
-  // ==========================================
-  // MENÚ MÓVIL
-  // ==========================================
-  toggleMenu(): void {
-    this.menuAbierto = !this.menuAbierto;
-    this.cuentaAbierta = false;
-  }
-
-  cerrarMenu(): void {
+  ejecutarBusqueda(texto: string): void {
+    const q = texto.trim();
+    if (!q) return;
     this.menuAbierto = false;
+    void this.router.navigate(['/tienda'], { queryParams: { q } });
   }
-
-  // ==========================================
-  // MENÚ DE CUENTA
-  // ==========================================
+  toggleMenu(): void { this.menuAbierto = !this.menuAbierto; this.cuentaAbierta = false; }
+  cerrarMenu(): void { this.menuAbierto = false; }
   toggleCuenta(event: MouseEvent): void {
     event.stopPropagation();
-
-    if (!this.authService.autenticado()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
+    if (!this.authService.autenticado()) { void this.router.navigate(['/login']); return; }
     this.cuentaAbierta = !this.cuentaAbierta;
-    this.menuAbierto = false;
   }
-
-  cerrarCuenta(): void {
-    this.cuentaAbierta = false;
-  }
-
-  @HostListener('document:click')
-  cerrarCuentaAlHacerClickFuera(): void {
-    this.cuentaAbierta = false;
-  }
-
-  // ==========================================
-  // DATOS DEL USUARIO
-  // ==========================================
-  get correoUsuario(): string {
-    return this.authService.obtenerCorreo() ?? 'Mi cuenta';
-  }
-
-  get inicialUsuario(): string {
-    const correo = this.authService.obtenerCorreo();
-
-    if (!correo) {
-      return 'U';
-    }
-
-    return correo.charAt(0).toUpperCase();
-  }
-
-  get rolUsuario(): string {
-    const rol = this.authService.obtenerRol();
-
-    if (!rol) {
-      return 'CLIENTE';
-    }
-
-    return rol.toUpperCase();
-  }
-
-  get esAdmin(): boolean {
-    return this.rolUsuario === 'ADMIN';
-  }
-
-  // ==========================================
-  // NAVEGACIÓN DE CUENTA
-  // ==========================================
+  cerrarCuenta(): void { this.cuentaAbierta = false; }
+  @HostListener('document:click') cerrarCuentaFuera(): void { this.cuentaAbierta = false; }
+  get correoUsuario(): string { return this.authService.obtenerCorreo() ?? 'Mi cuenta'; }
+  get inicialUsuario(): string { return this.correoUsuario.charAt(0).toUpperCase(); }
+  get esAdmin(): boolean { return this.authService.obtenerRol()?.toUpperCase() === 'ADMIN'; }
   irACuenta(): void {
-    this.cerrarMenu();
-    this.cerrarCuenta();
-
-    if (!this.authService.autenticado()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    if (this.esAdmin) {
-      this.router.navigate(['/admin/dashboard']);
-      return;
-    }
-
-    this.router.navigate(['/mis-compras']);
+    this.cerrarMenu(); this.cerrarCuenta();
+    void this.router.navigate([!this.authService.autenticado() ? '/login' : this.esAdmin ? '/admin/dashboard' : '/mis-compras']);
   }
-
-  irAMisCompras(): void {
-    this.cerrarCuenta();
-    this.cerrarMenu();
-    this.router.navigate(['/mis-compras']);
-  }
-
-  irAAdmin(): void {
-    this.cerrarCuenta();
-    this.cerrarMenu();
-    this.router.navigate(['/admin/dashboard']);
-  }
-
-  // ==========================================
-  // CERRAR SESIÓN
-  // ==========================================
+  irAMisCompras(): void { this.cerrarCuenta(); this.cerrarMenu(); void this.router.navigate(['/mis-compras']); }
+  irAAdmin(): void { this.cerrarCuenta(); this.cerrarMenu(); void this.router.navigate(['/admin/dashboard']); }
   cerrarSesion(): void {
-    this.authService.logout();
-    this.cerrarCuenta();
-    this.cerrarMenu();
-    this.router.navigate(['/']);
+    this.authService.logout(); this.cerrarMenu(); this.cerrarCuenta(); void this.router.navigate(['/']);
   }
 }

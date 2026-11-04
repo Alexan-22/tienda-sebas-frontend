@@ -5,6 +5,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Categoria, Genero, Producto } from '../../../core/models/producto';
 import { ProductoService } from '../../../core/services/producto';
 import { ImagenService } from '../../../core/services/imagen';
+import { ProductoImagenService } from '../../../core/services/producto-imagen';
+import { ProductoImagen } from '../../../core/models/producto-imagen';
+import { finalize, from, concatMap, toArray } from 'rxjs';
 
 @Component({
   selector: 'app-producto-form',
@@ -14,6 +17,14 @@ import { ImagenService } from '../../../core/services/imagen';
   styleUrl: './producto-form.css'
 })
 export class ProductoForm implements OnInit {
+  readonly maximoFotos = 12;
+  galeria: ProductoImagen[] = [];
+  archivosGaleria: File[] = [];
+  cargandoGaleria = false;
+  subiendoGaleria = false;
+  errorGaleria = '';
+  mensajeGaleria = '';
+  eliminandoFoto: number | null = null;
   idProducto: number | null = null;
   editando = false;
   cargando = false;
@@ -54,7 +65,8 @@ export class ProductoForm implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private productoService: ProductoService,
-    private imagenService: ImagenService
+    private imagenService: ImagenService,
+    private productoImagenService: ProductoImagenService
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +76,99 @@ export class ProductoForm implements OnInit {
       this.idProducto = id;
       this.editando = true;
       this.cargarProducto(id);
+      this.cargarGaleria(id);
     }
+  }
+
+  get cuposDisponibles(): number {
+    return Math.max(0, this.maximoFotos - (this.imagen ? 1 : 0) - this.galeria.length - this.archivosGaleria.length);
+  }
+
+  cargarGaleria(id: number): void {
+    this.cargandoGaleria = true;
+    this.errorGaleria = '';
+    this.productoImagenService.listarAdmin(id).subscribe({
+      next: fotos => {
+        this.galeria = [...(fotos ?? [])].sort((a, b) => a.orden - b.orden);
+        this.cargandoGaleria = false;
+      },
+      error: e => {
+        console.error('Galería administrativa:', e);
+        this.errorGaleria = 'No se pudo consultar la galería.';
+        this.cargandoGaleria = false;
+      }
+    });
+  }
+
+  seleccionarGaleria(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.errorGaleria = '';
+    this.mensajeGaleria = '';
+    const nuevos = Array.from(input.files ?? []);
+    input.value = '';
+    if (nuevos.length > this.cuposDisponibles) {
+      this.errorGaleria = `Solo puedes agregar ${this.cuposDisponibles} fotografía(s) más.`;
+      return;
+    }
+    for (const archivo of nuevos) {
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(archivo.type)) {
+        this.errorGaleria = 'Solo JPG, PNG y WEBP.';
+        return;
+      }
+      if (archivo.size === 0 || archivo.size > 5 * 1024 * 1024) {
+        this.errorGaleria = 'Cada imagen debe pesar entre 1 byte y 5 MB.';
+        return;
+      }
+    }
+    this.archivosGaleria = [...this.archivosGaleria, ...nuevos];
+  }
+
+  quitarPendiente(indice: number): void {
+    this.archivosGaleria = this.archivosGaleria.filter((_, i) => i !== indice);
+  }
+
+  subirGaleria(): void {
+    if (!this.idProducto || this.subiendoGaleria || !this.archivosGaleria.length) return;
+    const archivos = [...this.archivosGaleria];
+    const id = this.idProducto;
+    this.subiendoGaleria = true;
+    this.errorGaleria = '';
+    this.mensajeGaleria = '';
+    // Cargas secuenciales: cada archivo conserva su posición.
+    from(archivos).pipe(
+      concatMap((archivo, indice) => this.productoImagenService.subir(id, archivo, this.galeria.length + indice + 1)),
+      toArray(),
+      finalize(() => { this.subiendoGaleria = false; this.cargarGaleria(id); })
+    ).subscribe({
+      next: () => { this.archivosGaleria = []; this.mensajeGaleria = 'Fotografías guardadas correctamente.'; },
+      error: e => {
+        console.error(e);
+        this.errorGaleria = 'La carga se interrumpió. Algunas fotografías podrían haberse guardado. Verifica la galería antes de reintentar.';
+        this.archivosGaleria = [];
+      }
+    });
+  }
+
+  eliminarFoto(foto: ProductoImagen): void {
+    if (!this.idProducto || this.eliminandoFoto !== null || !window.confirm('¿Eliminar esta fotografía de la galería?')) return;
+    this.eliminandoFoto = foto.idProductoImagen;
+    this.errorGaleria = '';
+    this.productoImagenService.eliminar(foto.idProductoImagen).subscribe({
+      next: () => {
+        this.eliminandoFoto = null;
+        this.cargarGaleria(this.idProducto!);
+      },
+      error: e => {
+        console.error(e);
+        this.eliminandoFoto = null;
+        this.errorGaleria = 'No se pudo eliminar la fotografía.';
+      }
+    });
+  }
+
+  fotoUrl(ruta: string): string {
+    if (/^https?:\/\//i.test(ruta)) return ruta;
+    return this.uploadsUrl + ruta.replace(/^\/?uploads\//, '').replace(/^\/+/, '');
   }
 
   // =========================================================
@@ -275,7 +379,7 @@ export class ProductoForm implements OnInit {
       this.idGenero,
       this.idCategoria
     ).subscribe({
-      next: () => this.router.navigate(['/admin/productos']),
+      next: creado => this.router.navigate(['/admin/productos', creado.idProducto, 'editar']),
       error: error => {
         console.error(error);
         this.error = this.obtenerMensajeError(error, 'No se pudo crear el producto.');

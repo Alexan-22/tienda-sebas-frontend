@@ -1,116 +1,19 @@
-<footer class="site-footer">
-  <div class="footer-container">
-
-    <!-- GRID PRINCIPAL DE CONTENIDO -->
-    <div class="footer-grid">
-
-      <!-- COLUMNA 1: LOGO E INFORMACIÓN DE MARCA -->
-      <div class="footer-brand-col">
-        <a routerLink="/" class="footer-brand-link group">
-          <div class="brand-badge">
-            TS
-          </div>
-          <span class="brand-title">
-            Tienda Sebas
-          </span>
-        </a>
-
-        <p class="brand-desc">
-          Moda urbana, contemporánea y exclusiva para toda la familia. Envíos garantizados y seguros a todo el Perú.
-        </p>
-
-        <!-- REDES SOCIALES (BOTONES COLORIDOS) -->
-        <div class="social-section">
-          <p class="footer-subtitle">Síguenos en Redes</p>
-          <div class="social-buttons">
-            
-            <!-- INSTAGRAM -->
-            <button type="button" class="social-btn instagram-btn" aria-label="Instagram (Pronto)">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-              </svg>
-              <span>Instagram</span>
-            </button>
-
-            <!-- FACEBOOK -->
-            <button type="button" class="social-btn facebook-btn" aria-label="Facebook (Pronto)">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-              </svg>
-              <span>Facebook</span>
-            </button>
-
-            <!-- TIKTOK -->
-            <button type="button" class="social-btn tiktok-btn" aria-label="TikTok (Pronto)">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
-              </svg>
-              <span>TikTok</span>
-            </button>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- COLUMNA 2: NAVEGACIÓN DE TIENDA -->
-      <div class="footer-links-col">
-        <p class="footer-subtitle">Catálogo</p>
-        <div class="footer-links-list">
-          <a routerLink="/tienda" [queryParams]="{ nuevo: true }" class="footer-link">✦ Novedades</a>
-          <a routerLink="/tienda" [queryParams]="{ genero: 1 }" class="footer-link">Hombres</a>
-          <a routerLink="/tienda" [queryParams]="{ genero: 2 }" class="footer-link">Mujeres</a>
-          <a routerLink="/tienda" [queryParams]="{ genero: 3 }" class="footer-link">Niños</a>
-          <a routerLink="/tienda" [queryParams]="{ genero: 4 }" class="footer-link">Niñas</a>
-        </div>
-      </div>
-
-      <!-- COLUMNA 3: MI CUENTA -->
-      <div class="footer-links-col">
-        <p class="footer-subtitle">Mi Cuenta</p>
-        <div class="footer-links-list">
-          <a routerLink="/login" class="footer-link">Iniciar Sesión</a>
-          <a routerLink="/registro" class="footer-link">Crear Cuenta</a>
-          <a routerLink="/mis-compras" class="footer-link">Mis Compras</a>
-        </div>
-      </div>
-
-      <!-- COLUMNA 4: SERVICIO Y AYUDA -->
-      <div class="footer-links-col">
-        <p class="footer-subtitle">Ayuda y Soporte</p>
-        <div class="footer-links-list">
-          <a routerLink="/tienda" class="footer-link">Envíos a todo el Perú</a>
-          <a routerLink="/tienda" class="footer-link">Cambios y Devoluciones</a>
-          <a routerLink="/tienda" class="footer-link">Términos y Condiciones</a>
-          <a routerLink="/tienda" class="footer-link">Política de Privacidad</a>
-        </div>
-      </div>
-
-      <!-- COLUMNA 5: MEDIOS DE PAGO -->
-      <div class="footer-pay-col">
-        <p class="footer-subtitle">Medios de Pago</p>
-        <p class="pay-desc">Transacciones 100% seguras y confiables con tus métodos favoritos.</p>
-
-        <div class="pay-badges-grid">
-          <span class="pay-badge yape-badge">Yape</span>
-          <span class="pay-badge plin-badge">Plin</span>
-          <span class="pay-badge visa-badge">Visa</span>
-          <span class="pay-badge mc-badge">Mastercard</span>
-        </div>
-      </div>
-
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-intro">
+      <h2>{{ tiendaService.tiendaActual()?.nombre }}</h2>
+      <p>Descubre prendas para expresar tu estilo, todos los días.</p>
     </div>
-
-    <!-- SEPARADOR Y COPYRIGHT -->
-    <div class="footer-bottom">
-      <p class="copyright-text">
-        © {{ anio }} Tienda Sebas. Todos los derechos reservados.
-      </p>
-      <p class="location-text">
-        Hecho con estilo para el Perú 🇵🇪
-      </p>
+    <div><h3>Explora</h3><a routerLink="/tienda" [queryParams]="{ generoNombre: 'Mujer' }">Mujer</a><a routerLink="/tienda" [queryParams]="{ generoNombre: 'Hombre' }">Hombre</a><a routerLink="/tienda" [queryParams]="{ nuevo: true }">Novedades</a><a routerLink="/tienda" [queryParams]="{ ofertas: true }">Ofertas</a></div>
+    <div><h3>Mi cuenta</h3><a routerLink="/login">Iniciar sesión</a><a routerLink="/registro">Registrarme</a><a routerLink="/mis-compras">Mis pedidos</a></div>
+    <div><h3>Contacto</h3>
+      @if (tiendaService.telefonoWhatsApp(); as numero) {
+        <a [href]="'https://wa.me/' + numero" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a>
+      } @else { <p>Información de contacto próximamente.</p> }
     </div>
-
   </div>
+  <div class="footer-bottom"><span>© {{ anio }} {{ tiendaService.tiendaActual()?.nombre }}. Todos los derechos reservados.</span><span>Moda y estilo en Perú</span></div>
 </footer>
+
+
+========================================

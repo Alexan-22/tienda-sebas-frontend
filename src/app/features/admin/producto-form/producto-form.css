@@ -435,3 +435,16 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+/* Galería V2 */
+.galeria-admin-panel { margin-top: 24px; }
+.galeria-admin-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;margin:16px 0; }
+.galeria-admin-item { border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#f8fafc; }
+.galeria-admin-item img {width:100%;aspect-ratio:3/4;object-fit:cover;}
+.galeria-admin-item button {width:100%;border:0;background:#fee2e2;color:#991b1b;padding:10px;font-size:12px;font-weight:700;}
+.galeria-pick {margin-top:14px;}
+.galeria-pendientes {display:grid;gap:8px;margin:16px 0;}
+.galeria-pendientes>div {display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px;background:#f8fafc;}
+.galeria-pendientes span {overflow-wrap:anywhere;font-size:12px;}
+.galeria-pendientes button {border:1px solid #cbd5e1;border-radius:5px;padding:5px 9px;background:#fff;}
+.galeria-ok {color:#166534;background:#dcfce7;padding:10px;border-radius:6px;}

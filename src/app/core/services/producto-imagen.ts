@@ -23,6 +23,10 @@ export class ProductoImagenService {
     );
   }
 
+  listarAdmin(idProducto: number): Observable<ProductoImagen[]> {
+    return this.http.get<ProductoImagen[]>(`${this.apiUrl}/admin/producto/${idProducto}`);
+  }
+
   // ==========================================
   // SUBIR IMAGEN
   // ==========================================

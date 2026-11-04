@@ -1,320 +1,113 @@
 <app-promo-bar></app-promo-bar>
 <app-navbar></app-navbar>
-
-<main class="home-main-wrapper">
-
-  <!-- ===================================================== -->
-  <!-- HERO / CARRUSEL DINÁMICO -->
-  <!-- ===================================================== -->
-  <section class="hero-carousel relative overflow-hidden bg-neutral-950 text-white">
-
+<main>
+  <section class="hero" aria-label="Colecciones destacadas">
     @if (cargandoBanners) {
-      <div class="mx-auto flex min-h-[620px] max-w-[1500px] items-center justify-center px-5 lg:px-10">
-        <div class="text-center">
-          <div class="mx-auto h-12 w-12 animate-spin rounded-full border-3 border-neutral-800 border-t-indigo-500"></div>
-          <p class="mt-5 text-[10px] font-black uppercase tracking-[0.25em] text-neutral-400">
-            Cargando experiencia...
-          </p>
-        </div>
-      </div>
-    }
-
-    @else if (obtenerBannerActual(); as banner) {
-      <div class="hero-slide relative min-h-[620px]">
-
-        @if (imagenBannerUrl(banner)) {
-          <img
-            [src]="imagenBannerUrl(banner)"
-            [alt]="banner.titulo"
-            class="hero-image absolute inset-0 h-full w-full object-cover"
-          />
+      <div class="hero-empty"><p>Cargando novedades...</p></div>
+    } @else if (obtenerBannerActual(); as banner) {
+      <div class="hero-slide">
+        @if (imagenBannerUrl(banner); as src) {
+          <img class="hero-image" [src]="src" [alt]="banner.titulo || 'Moda'" fetchpriority="high" />
         }
-
-        <!-- CAPAS DE COLOR Y GRADIENTES MODERNOS -->
-        <div class="absolute inset-0 bg-gradient-to-r from-neutral-950/80 via-neutral-950/40 to-transparent"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-neutral-950/90 via-transparent to-neutral-950/30"></div>
-
-        <div class="relative z-10 mx-auto grid min-h-[620px] max-w-[1500px] items-center px-5 py-20 lg:grid-cols-2 lg:px-10">
-          <div class="hero-content max-w-[750px]">
-
-            @if (banner.etiqueta) {
-              <span class="inline-block px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-[10px] font-black uppercase tracking-[0.25em] text-indigo-300 mb-4">
-                {{ banner.etiqueta }}
-              </span>
-            }
-
-            <h1 class="text-4xl font-black uppercase leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl text-white drop-shadow-md">
-              {{ banner.titulo }}
-            </h1>
-
-            @if (banner.descripcion) {
-              <p class="mt-5 max-w-lg text-sm sm:text-base leading-relaxed text-neutral-300">
-                {{ banner.descripcion }}
-              </p>
-            }
-
-            <div class="mt-8 flex flex-wrap gap-4">
-              @if (banner.textoBoton) {
-                <a
-                  [href]="enlaceBanner(banner)"
-                  class="inline-flex h-14 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-8 text-xs font-black uppercase tracking-[0.15em] text-white shadow-lg shadow-indigo-500/25 transition hover:scale-105 active:scale-95">
-                  {{ banner.textoBoton }}
-                </a>
-              }
-
-              <a
-                href="#categorias"
-                class="inline-flex h-14 items-center justify-center rounded-xl border border-white/30 bg-white/10 px-8 text-xs font-black uppercase tracking-[0.15em] text-white backdrop-blur-md transition hover:bg-white hover:text-neutral-950">
-                Explorar Estilos
-              </a>
-            </div>
-
-          </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          @if (banner.etiqueta) { <span class="eyebrow">{{ banner.etiqueta }}</span> }
+          <h1>{{ banner.titulo }}</h1>
+          @if (banner.descripcion) { <p>{{ banner.descripcion }}</p> }
+          <a class="hero-button" [href]="enlaceBanner(banner)">{{ banner.textoBoton || 'Explorar colección' }}</a>
         </div>
-
         @if (banners.length > 1) {
-          <button
-            type="button"
-            class="carousel-arrow carousel-arrow-left"
-            aria-label="Banner anterior"
-            (click)="bannerAnterior()">
-            ‹
-          </button>
-
-          <button
-            type="button"
-            class="carousel-arrow carousel-arrow-right"
-            aria-label="Siguiente banner"
-            (click)="siguienteBanner()">
-            ›
-          </button>
-        }
-
-        @if (banners.length > 1) {
-          <div class="carousel-dots" aria-label="Seleccionar banner">
-            @for (item of banners; track item.idBanner; let indice = $index) {
-              <button
-                type="button"
-                class="carousel-dot"
-                [class.active]="indice === bannerActual"
-                [attr.aria-label]="'Ir al banner ' + (indice + 1)"
-                (click)="irABanner(indice)">
-              </button>
+          <button class="arrow prev" type="button" aria-label="Banner anterior" (click)="bannerAnterior()">‹</button>
+          <button class="arrow next" type="button" aria-label="Siguiente banner" (click)="siguienteBanner()">›</button>
+          <div class="dots">
+            @for (item of banners; track item.idBanner; let i = $index) {
+              <button type="button" [class.selected]="i === bannerActual" [attr.aria-label]="'Ir al banner ' + (i + 1)" (click)="irABanner(i)"></button>
             }
           </div>
         }
-
-        @if (banners.length > 1) {
-          <div class="carousel-counter">
-            <strong>{{ (bannerActual + 1).toString().padStart(2, '0') }}</strong>
-            <span>/</span>
-            <span>{{ banners.length.toString().padStart(2, '0') }}</span>
-          </div>
-        }
-
-      </div>
-    }
-
-    @else {
-      <div class="mx-auto grid min-h-[580px] max-w-[1500px] items-center px-5 py-20 lg:grid-cols-2 lg:px-10">
-        <div class="max-w-[750px]">
-          <span class="inline-block px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-[10px] font-black uppercase tracking-[0.25em] text-indigo-300 mb-4">
-            Nueva Colección
-          </span>
-          <h1 class="text-5xl font-black uppercase leading-[1.05] tracking-tight sm:text-7xl text-white">
-            Viste tu propio estilo.
-          </h1>
-          <p class="mt-6 max-w-md text-sm leading-relaxed text-neutral-400">
-            Descubre nuestra selección exclusiva de prendas diseñadas para destacar en cualquier ocasión.
-          </p>
-          <a
-            href="#productos"
-            class="mt-8 inline-flex h-14 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-8 text-xs font-black uppercase tracking-[0.15em] text-white shadow-lg shadow-indigo-500/25 transition hover:scale-105">
-            Ver Productos
-          </a>
-        </div>
-      </div>
-    }
-
-  </section>
-
-  <!-- ===================================================== -->
-  <!-- COLECCIONES DINÁMICAS -->
-  <!-- ===================================================== -->
-  <section id="categorias" class="mx-auto max-w-[1500px] px-5 py-20 lg:px-10 lg:py-28">
-
-    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-      <div>
-        <span class="text-[10px] font-black uppercase tracking-[0.25em] text-indigo-600">Tendencias</span>
-        <h2 class="mt-2 text-3xl font-black uppercase tracking-tight text-neutral-900 sm:text-5xl">
-          Compra por Estilo
-        </h2>
-      </div>
-
-      @if (!cargandoColecciones && colecciones.length > 0) {
-        <span class="rounded-full bg-indigo-50 px-4 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-indigo-700">
-          {{ colecciones.length }} {{ colecciones.length === 1 ? 'Colección activa' : 'Colecciones activas' }}
-        </span>
-      }
-    </div>
-
-    @if (cargandoColecciones) {
-      <div class="mt-12 grid gap-6 md:grid-cols-3">
-        @for (item of [1, 2, 3]; track item) {
-          <div class="min-h-[420px] animate-pulse rounded-2xl bg-neutral-200"></div>
-        }
-      </div>
-    } @else if (errorColecciones) {
-      <div class="mt-12 rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-        <p class="text-sm text-red-700 font-bold">No pudimos cargar las colecciones en este momento.</p>
-      </div>
-    } @else if (colecciones.length === 0) {
-      <div class="mt-12 rounded-2xl bg-neutral-50 border border-neutral-200 p-12 text-center">
-        <p class="font-bold text-neutral-600">No hay colecciones publicadas.</p>
       </div>
     } @else {
-      <div class="collections-public-grid mt-12">
+      <div class="hero-empty"><div class="hero-content">
+        <span class="eyebrow">Nueva temporada</span>
+        <h1>Tu estilo, tu esencia.</h1>
+        <p>Descubre prendas para mujer y hombre que acompañan cada momento.</p>
+        <a class="hero-button" routerLink="/tienda">Explorar tienda</a>
+      </div></div>
+    }
+  </section>
+
+  <section class="department-section section-wrap" aria-label="Explorar moda">
+    <div class="section-heading centered">
+      <span class="eyebrow dark">Encuentra tu estilo</span>
+      <h2>Moda para cada ocasión</h2>
+      <p>Dos universos, una misma esencia.</p>
+    </div>
+    <div class="department-grid">
+      <a class="department-tile mujer" routerLink="/tienda" [queryParams]="{ generoNombre: 'Mujer' }">
+        @if (coleccionMujer; as coleccion) {
+          @if (imagenColeccionUrl(coleccion); as src) { <img class="department-image" [src]="src" alt="Colección Mujer" loading="lazy" /> }
+        }
+        <div class="department-shade"></div>
+        <div class="department-copy"><span>Estilo y elegancia</span><h3>MUJER</h3><strong>Descubrir prendas <span aria-hidden="true">→</span></strong></div>
+      </a>
+      <a class="department-tile hombre" routerLink="/tienda" [queryParams]="{ generoNombre: 'Hombre' }">
+        @if (coleccionHombre; as coleccion) {
+          @if (imagenColeccionUrl(coleccion); as src) { <img class="department-image" [src]="src" alt="Colección Hombre" loading="lazy" /> }
+        }
+        <div class="department-shade"></div>
+        <div class="department-copy"><span>Esenciales modernos</span><h3>HOMBRE</h3><strong>Explorar colección <span aria-hidden="true">→</span></strong></div>
+      </a>
+    </div>
+  </section>
+
+  @if (!cargandoColecciones && colecciones.length > 0) {
+    <section class="section-wrap collection-section">
+      <div class="section-heading centered">
+        <span class="eyebrow dark">Seleccionados para ti</span>
+        <h2>Colecciones destacadas</h2>
+      </div>
+      <div class="collection-grid" [class.collection-grid-two]="colecciones.length === 2" [class.collection-grid-one]="colecciones.length === 1">
         @for (coleccion of colecciones; track coleccion.idColeccion) {
-          <article class="collection-public-card group relative min-h-[460px] overflow-hidden rounded-2xl bg-neutral-950 shadow-md">
-            
-            @if (imagenColeccionUrl(coleccion)) {
-              <img
-                [src]="imagenColeccionUrl(coleccion)"
-                [alt]="coleccion.titulo"
-                class="absolute inset-0 h-full w-full object-cover object-center transition duration-700 group-hover:scale-110"
-              />
+          <a class="collection-card" [href]="enlaceColeccion(coleccion)">
+            @if (imagenColeccionUrl(coleccion); as src) {
+              <img [src]="src" [alt]="coleccion.titulo || 'Colección'" loading="lazy" />
             } @else {
-              <div class="absolute inset-0 flex items-center justify-center bg-neutral-900">
-                <strong class="text-6xl font-black text-white/10">TS</strong>
-              </div>
+              <div class="collection-placeholder" aria-hidden="true">{{ tiendaService.tiendaActual()?.nombre || 'Colección' }}</div>
             }
-
-            <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent"></div>
-
-            <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
-              @if (coleccion.etiqueta) {
-                <span class="inline-block mb-2 px-2.5 py-1 rounded-md bg-white/20 backdrop-blur-md text-[9px] font-black uppercase tracking-widest text-white">
-                  {{ coleccion.etiqueta }}
-                </span>
-              }
-
-              <h3 class="text-3xl font-black uppercase tracking-tight text-white">
-                {{ coleccion.titulo }}
-              </h3>
-
-              @if (coleccion.textoBoton) {
-                <a
-                  [href]="enlaceColeccion(coleccion)"
-                  class="mt-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-indigo-300 transition hover:text-white">
-                  <span>{{ coleccion.textoBoton }}</span>
-                  <span>→</span>
-                </a>
-              }
+            <div class="collection-info">
+              @if (coleccion.etiqueta) { <small>{{ coleccion.etiqueta }}</small> }
+              <h3>{{ coleccion.titulo }}</h3>
+              <span>{{ coleccion.textoBoton || 'Ver colección' }} →</span>
             </div>
+          </a>
+        }
+      </div>
+    </section>
+  }
 
-          </article>
+  <section class="product-section section-wrap" id="productos">
+    <div class="section-heading heading-row">
+      <div><span class="eyebrow dark">Nuestra selección</span><h2>Novedades que inspiran</h2></div>
+      <a routerLink="/tienda" class="view-all">Ver toda la tienda →</a>
+    </div>
+    @if (cargando) {
+      <div class="status">Cargando productos...</div>
+    } @else if (errorCarga) {
+      <div class="status"><p>No pudimos cargar los productos.</p><button (click)="cargarProductos()" type="button">Reintentar</button></div>
+    } @else if (productos.length === 0) {
+      <div class="status"><h3>Estamos preparando el catálogo</h3><p>Pronto encontrarás nuestras prendas aquí.</p></div>
+    } @else {
+      <div class="product-grid">
+        @for (producto of productosPortada; track producto.idProducto) {
+          <app-product-card [producto]="producto"></app-product-card>
         }
       </div>
     }
-
   </section>
-
-  <!-- ===================================================== -->
-  <!-- PRODUCTOS -->
-  <!-- ===================================================== -->
-  <section id="productos" class="border-t border-neutral-200 bg-neutral-50/50">
-    <div class="mx-auto max-w-[1500px] px-5 py-20 lg:px-10 lg:py-28">
-
-      <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
-          <span class="text-[10px] font-black uppercase tracking-[0.25em] text-indigo-600">Catálogo</span>
-          <h2 class="mt-2 text-3xl font-black uppercase tracking-tight text-neutral-900 sm:text-5xl">
-            Descubre lo Nuevo
-          </h2>
-        </div>
-      </div>
-
-      @if (cargando) {
-        <div class="mt-12 grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4">
-          @for (item of [1, 2, 3, 4]; track item) {
-            <div class="rounded-2xl bg-white p-4 border border-neutral-200 shadow-sm">
-              <div class="aspect-[3/4] animate-pulse rounded-xl bg-neutral-200"></div>
-              <div class="mt-4 h-4 w-3/4 animate-pulse rounded bg-neutral-200"></div>
-              <div class="mt-2 h-3 w-1/3 animate-pulse rounded bg-neutral-200"></div>
-            </div>
-          }
-        </div>
-      } @else if (errorCarga) {
-        <div class="mt-12 rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-          <p class="text-sm text-red-700 font-bold">No pudimos cargar los productos en este momento.</p>
-        </div>
-      } @else if (productos.length === 0) {
-        <div class="mt-12 rounded-2xl bg-white border border-neutral-200 p-12 text-center">
-          <p class="font-bold text-neutral-600">No hay productos disponibles por el momento.</p>
-        </div>
-      } @else {
-        <div class="mt-12 grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
-          @for (producto of productos; track producto.idProducto) {
-            <app-product-card [producto]="producto"></app-product-card>
-          }
-        </div>
-      }
-
-    </div>
-  </section>
-
-  <!-- ===================================================== -->
-  <!-- BANNER PROMOCIONAL / LLAMADO A LA ACCIÓN -->
-  <!-- ===================================================== -->
-  <section id="ofertas" class="relative overflow-hidden bg-gradient-to-r from-neutral-950 via-indigo-950 to-neutral-950 text-white">
-    <div class="mx-auto grid max-w-[1500px] gap-10 px-5 py-24 lg:grid-cols-2 lg:items-center lg:px-10 lg:py-32">
-
-      <div>
-        <span class="inline-block px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-[10px] font-black uppercase tracking-[0.25em] text-indigo-300 mb-4">
-          Exclusivo Sebas
-        </span>
-        <h2 class="text-4xl font-black uppercase leading-tight tracking-tight sm:text-6xl text-white">
-          Tu estilo.<br />Tu elección perfecta.
-        </h2>
-      </div>
-
-      <div class="lg:pl-10">
-        <p class="max-w-md text-base leading-relaxed text-neutral-300">
-          Encuentra la mejor selección de polos, camisas, pantalones y casacas con altos estándares de calidad y diseño moderno.
-        </p>
-        <a
-          href="#productos"
-          class="mt-8 inline-flex h-14 items-center justify-center rounded-xl bg-white px-8 text-xs font-black uppercase tracking-[0.15em] text-neutral-950 shadow-xl transition hover:bg-indigo-50 hover:scale-105">
-          Ver Colección Completa
-        </a>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ===================================================== -->
-  <!-- BOTÓN FLOTANTE DE WHATSAPP -->
-  <!-- ===================================================== -->
-  <a
-    href="https://wa.me/51900000000?text=Hola%20Sebas%20Collection,%20deseo%20consultar%20sobre%20sus%20productos."
-    class="whatsapp-float"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Contactar por WhatsApp"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="30"
-      height="30"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-    >
-      <path
-        d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.068-.315-.099-.448.099-.133.197-.513.646-.629.776-.117.13-.232.148-.43.05-.197-.099-.834-.308-1.588-.98-.587-.524-.984-1.171-1.1-1.368-.116-.198-.012-.305.086-.403.088-.088.197-.232.296-.348.1-.116.133-.197.197-.329.066-.133.033-.249-.017-.348-.05-.099-.448-1.08-.614-1.48-.162-.389-.327-.336-.448-.342-.114-.006-.246-.007-.378-.007-.133 0-.348.05-.53.249-.182.198-.697.682-.697 1.662 0 .98.713 1.928.813 2.06.099.132 1.405 2.146 3.404 3.01.476.206.848.329 1.138.421.478.152.913.131 1.258.079.385-.058 1.17-.478 1.335-.94.165-.462.165-.858.116-.94-.049-.082-.182-.132-.379-.23z"
-      />
-    </svg>
-  </a>
-
+  <section class="closing-banner"><span>Moda para tu día a día</span><h2>Viste lo que eres.</h2><a routerLink="/tienda">Descubrir el catálogo →</a></section>
+  <section class="benefits section-wrap" aria-label="Ventajas"><p>Estilo para cada ocasión</p><p>Encuentra tu talla</p><p>Novedades de temporada</p></section>
+  @if (tiendaService.telefonoWhatsApp(); as numero) {
+    <a class="whatsapp" [href]="'https://wa.me/' + numero" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">WhatsApp</a>
+  }
 </main>
-
 <app-footer></app-footer>

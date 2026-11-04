@@ -32,6 +32,7 @@ export class ProductDetail implements OnInit {
   imagenes: ProductoImagen[] = [];
   imagenSeleccionada: string | null = null;
   cargandoImagenes = true;
+  imagenAmpliada = false;
 
   // ==========================================
   // ESTADO
@@ -264,6 +265,24 @@ export class ProductDetail implements OnInit {
   // SELECCIONAR IMAGEN
   // ==========================================
 
+  get galeriaUnificada(): string[] {
+    const imagenes = [this.producto?.imagen, ...this.imagenes.map(i => i.imagen)].filter((s): s is string => !!s);
+    return [...new Set(imagenes)];
+  }
+
+  get indiceImagenActual(): number {
+    return Math.max(0, this.galeriaUnificada.indexOf(this.imagenSeleccionada ?? ''));
+  }
+
+  moverImagen(direccion: number): void {
+    const fotos = this.galeriaUnificada;
+    if (!fotos.length) return;
+    this.imagenSeleccionada = fotos[(this.indiceImagenActual + direccion + fotos.length) % fotos.length];
+  }
+
+  ampliarImagen(): void { if (this.imagenUrl) this.imagenAmpliada = true; }
+  cerrarAmpliacion(): void { this.imagenAmpliada = false; }
+
   seleccionarImagen(imagen: string): void {
     this.imagenSeleccionada = imagen;
   }
@@ -277,7 +296,8 @@ export class ProductDetail implements OnInit {
       return null;
     }
 
-    return this.uploadsUrl + imagen;
+    if (/^https?:\/\//i.test(imagen)) return imagen;
+    return this.uploadsUrl + imagen.replace(/^\/?uploads\//, '').replace(/^\/+/, '');
   }
 
   // ==========================================

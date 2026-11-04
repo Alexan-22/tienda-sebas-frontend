@@ -1,56 +1,45 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Observable, tap, catchError, of } from 'rxjs';
 
 export interface TiendaConfig {
   id: number;
-  nombre: String;
-  subdominio: String;
-  colorPrimario: String;
-  logoUrl: String;
-  ruc?: String;
-  telefonoSoporte?: String;
+  nombre: string;
+  subdominio: string;
+  colorPrimario: string;
+  logoUrl: string | null;
+  ruc?: string | null;
+  telefonoSoporte?: string | null;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class TiendaService {
-  private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/v1/tiendas`;
-
-  // Signal para almacenar el estado dinámico de la tienda activa
-  public tiendaActual = signal<TiendaConfig | null>(null);
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = `${environment.apiUrl}/api/v1/tiendas`;
+  readonly tiendaActual = signal<TiendaConfig | null>(null);
 
   cargarConfiguracion(): Observable<TiendaConfig> {
-    const domain = window.location.hostname;
-    
-    return this.http.get<TiendaConfig>(`${this.apiUrl}/config?domain=${domain}`).pipe(
-      tap((config) => {
+    // El dominio se resuelve y valida en Spring Boot; no confiamos en un ID del navegador.
+    return this.http.get<TiendaConfig>(`${this.apiUrl}/config`).pipe(
+      tap(config => {
+        if (!config?.id || !config.nombre) throw new Error('Configuración de tienda inválida');
         this.tiendaActual.set(config);
-        this.aplicarTema(config.colorPrimario);
+        const color = /^#[0-9a-fA-F]{6}$/.test(config.colorPrimario ?? '')
+          ? config.colorPrimario : '#171717';
+        document.documentElement.style.setProperty('--color-primario', color);
       }),
-      catchError((err) => {
-        console.error('Error cargando configuración de la tienda:', err);
-        // Fallback predeterminado a Sebas Collection (1)
-        const defaultConfig: TiendaConfig = {
-          id: 1,
-          nombre: 'Sebas Collection',
-          subdominio: 'sebascollection',
-          colorPrimario: '#000000',
-          logoUrl: '/images/home/publiclogo-tienda.jpg.jpg'
-        };
-        this.tiendaActual.set(defaultConfig);
-        this.aplicarTema(defaultConfig.colorPrimario);
-        return of(defaultConfig);
+      catchError(error => {
+        this.tiendaActual.set(null);
+        return throwError(() => error);
       })
     );
   }
 
-  private aplicarTema(colorHex: String): void {
-    if (colorHex) {
-      document.documentElement.style.setProperty('--color-primario', `${colorHex}`);
-    }
+  telefonoWhatsApp(): string | null {
+    const telefono = this.tiendaActual()?.telefonoSoporte?.replace(/\D/g, '') ?? '';
+    if (!telefono) return null;
+    const numero = telefono.length === 9 ? `51${telefono}` : telefono;
+    return /^\d{11,15}$/.test(numero) ? numero : null;
   }
 }

@@ -1,7 +1,9 @@
-import { environment } from '../../../environments/environment';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environment';
 import { ProductoService } from '../../core/services/producto';
 import { HomeContenidoService } from '../../core/services/home-contenido';
+import { TiendaService } from '../../core/services/tienda.service';
 import { Producto } from '../../core/models/producto';
 import { HomeBanner, HomeColeccion } from '../../core/models/home-contenido';
 import { PromoBar } from '../../shared/components/promo-bar/promo-bar';
@@ -12,80 +14,43 @@ import { ProductCard } from '../../shared/components/product-card/product-card';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [PromoBar, Navbar, Footer, ProductCard],
+  imports: [RouterLink, PromoBar, Navbar, Footer, ProductCard],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
 export class Home implements OnInit, OnDestroy {
   private readonly uploadsUrl = `${environment.apiUrl}/uploads/`;
-
-  // =========================================================
-  // PRODUCTOS
-  // =========================================================
-
-  productos: Producto[] = [];
-  cargando = true;
-  errorCarga = false;
-
-  // =========================================================
-  // BANNERS
-  // =========================================================
-
-  banners: HomeBanner[] = [];
-  bannerActual = 0;
-  cargandoBanners = true;
-  errorBanners = false;
-
   private intervaloCarrusel: ReturnType<typeof setInterval> | null = null;
-  private readonly tiempoCarrusel = 3000;
-
-  // =========================================================
-  // COLECCIONES
-  // =========================================================
-
+  productos: Producto[] = [];
+  banners: HomeBanner[] = [];
   colecciones: HomeColeccion[] = [];
+  bannerActual = 0;
+  cargando = true;
+  cargandoBanners = true;
   cargandoColecciones = true;
+  errorCarga = false;
+  errorBanners = false;
   errorColecciones = false;
 
-  // =========================================================
-  // CONSTRUCTOR
-  // =========================================================
-
   constructor(
-    private productoService: ProductoService,
-    private homeContenidoService: HomeContenidoService
+    private readonly productosService: ProductoService,
+    private readonly homeService: HomeContenidoService,
+    public readonly tiendaService: TiendaService
   ) {}
-
-  // =========================================================
-  // INIT
-  // =========================================================
 
   ngOnInit(): void {
     this.cargarProductos();
     this.cargarBanners();
     this.cargarColecciones();
   }
-
-  // =========================================================
-  // DESTROY
-  // =========================================================
-
-  ngOnDestroy(): void {
-    this.detenerCarrusel();
-  }
-
-  // =========================================================
-  // PRODUCTOS
-  // =========================================================
+  ngOnDestroy(): void { this.detenerCarrusel(); }
 
   cargarProductos(): void {
     this.cargando = true;
     this.errorCarga = false;
-
-    this.productoService.listar().subscribe({
-      next: (productos: Producto[]) => {
-        console.log('Productos recibidos:', productos);
-        this.productos = productos.slice(0, 8);
+    this.productosService.listar().subscribe({
+      next: productos => {
+        this.productos = (productos ?? []).filter(p => p.estado !== false);
         this.cargando = false;
       },
       error: error => {
@@ -97,23 +62,15 @@ export class Home implements OnInit, OnDestroy {
     });
   }
 
-  // =========================================================
-  // CARGAR BANNERS
-  // =========================================================
-
   cargarBanners(): void {
     this.cargandoBanners = true;
     this.errorBanners = false;
-
-    this.homeContenidoService.listarBannersPublicos().subscribe({
-      next: (banners: HomeBanner[]) => {
-        this.banners = [...banners].sort((a, b) => a.orden - b.orden);
+    this.homeService.listarBannersPublicos().subscribe({
+      next: banners => {
+        this.banners = [...(banners ?? [])].sort((a, b) => a.orden - b.orden);
         this.bannerActual = 0;
         this.cargandoBanners = false;
-
-        if (this.banners.length > 1) {
-          this.iniciarCarrusel();
-        }
+        this.iniciarCarrusel();
       },
       error: error => {
         console.error('Error cargando banners:', error);
@@ -124,17 +81,12 @@ export class Home implements OnInit, OnDestroy {
     });
   }
 
-  // =========================================================
-  // CARGAR COLECCIONES
-  // =========================================================
-
   cargarColecciones(): void {
     this.cargandoColecciones = true;
     this.errorColecciones = false;
-
-    this.homeContenidoService.listarColeccionesPublicas().subscribe({
-      next: (colecciones: HomeColeccion[]) => {
-        this.colecciones = [...colecciones].sort((a, b) => a.orden - b.orden);
+    this.homeService.listarColeccionesPublicas().subscribe({
+      next: colecciones => {
+        this.colecciones = [...(colecciones ?? [])].sort((a, b) => a.orden - b.orden);
         this.cargandoColecciones = false;
       },
       error: error => {
@@ -146,141 +98,71 @@ export class Home implements OnInit, OnDestroy {
     });
   }
 
-  // =========================================================
-  // BANNER ACTIVO
-  // =========================================================
-
-  obtenerBannerActual(): HomeBanner | null {
-    if (this.banners.length === 0) {
-      return null;
+  get productosPortada(): Producto[] {
+    const ordenados = [...this.productos].sort((a, b) => Number(b.destacado) - Number(a.destacado) || Number(b.nuevo) - Number(a.nuevo));
+    // Mezcla mujeres y hombres cuando ambos grupos tienen artículos.
+    const mujeres = ordenados.filter(p => this.esGenero(p, 'mujer'));
+    const hombres = ordenados.filter(p => this.esGenero(p, 'hombre'));
+    const mezclados: Producto[] = [];
+    for (let i = 0; i < 4; i++) {
+      if (mujeres[i]) mezclados.push(mujeres[i]);
+      if (hombres[i]) mezclados.push(hombres[i]);
     }
-
-    return this.banners[this.bannerActual] ?? null;
+    const seleccion = mezclados.length ? mezclados : ordenados;
+    const ids = new Set(seleccion.map(p => p.idProducto));
+    return [...seleccion, ...ordenados.filter(p => !ids.has(p.idProducto))].slice(0, 8);
   }
 
-  // =========================================================
-  // SIGUIENTE BANNER
-  // =========================================================
-
-  siguienteBanner(): void {
-    if (this.banners.length <= 1) {
-      return;
-    }
-
-    this.bannerActual = (this.bannerActual + 1) % this.banners.length;
-    this.reiniciarCarrusel();
+  private esGenero(producto: Producto, genero: string): boolean {
+    return (producto.genero?.nombreGenero ?? '').trim().toLocaleLowerCase('es').includes(genero);
   }
 
-  // =========================================================
-  // BANNER ANTERIOR
-  // =========================================================
-
-  bannerAnterior(): void {
-    if (this.banners.length <= 1) {
-      return;
-    }
-
-    this.bannerActual = (this.bannerActual - 1 + this.banners.length) % this.banners.length;
-    this.reiniciarCarrusel();
+  get coleccionMujer(): HomeColeccion | null {
+    return this.colecciones.find(c => (c.titulo ?? '').toLocaleLowerCase('es').includes('mujer') && !!c.imagen) ?? null;
+  }
+  get coleccionHombre(): HomeColeccion | null {
+    return this.colecciones.find(c => (c.titulo ?? '').toLocaleLowerCase('es').includes('hombre') && !!c.imagen) ?? null;
   }
 
-  // =========================================================
-  // IR A BANNER
-  // =========================================================
-
-  irABanner(indice: number): void {
-    if (indice < 0 || indice >= this.banners.length) {
-      return;
-    }
-
-    this.bannerActual = indice;
-    this.reiniciarCarrusel();
+  imagenUrl(imagen: string | null | undefined): string | null {
+    if (!imagen?.trim()) return null;
+    if (/^https?:\/\//i.test(imagen)) return imagen;
+    const ruta = imagen.replace(/^\/+/, '').replace(/^uploads\//, '').replace(/^productos\//, '');
+    return this.uploadsUrl + ruta;
   }
+  imagenBannerUrl(banner: HomeBanner): string | null { return this.imagenUrl(banner.imagen); }
+  imagenColeccionUrl(coleccion: HomeColeccion): string | null { return this.imagenUrl(coleccion.imagen); }
 
-  // =========================================================
-  // INICIAR CARRUSEL
-  // =========================================================
-
-  private iniciarCarrusel(): void {
-    this.detenerCarrusel();
-
-    if (this.banners.length <= 1) {
-      return;
-    }
-
-    this.intervaloCarrusel = setInterval(() => {
-      this.bannerActual = (this.bannerActual + 1) % this.banners.length;
-    }, this.tiempoCarrusel);
-  }
-
-  // =========================================================
-  // REINICIAR CARRUSEL
-  // =========================================================
-
-  private reiniciarCarrusel(): void {
-    if (this.banners.length <= 1) {
-      return;
-    }
-
+  obtenerBannerActual(): HomeBanner | null { return this.banners[this.bannerActual] ?? null; }
+  siguienteBanner(): void { this.moverBanner(1); }
+  bannerAnterior(): void { this.moverBanner(-1); }
+  private moverBanner(direccion: number): void {
+    if (this.banners.length < 2) return;
+    this.bannerActual = (this.bannerActual + direccion + this.banners.length) % this.banners.length;
     this.iniciarCarrusel();
   }
-
-  // =========================================================
-  // DETENER CARRUSEL
-  // =========================================================
-
+  irABanner(indice: number): void {
+    if (indice < 0 || indice >= this.banners.length) return;
+    this.bannerActual = indice;
+    this.iniciarCarrusel();
+  }
+  private iniciarCarrusel(): void {
+    this.detenerCarrusel();
+    if (this.banners.length > 1) {
+      this.intervaloCarrusel = setInterval(() => {
+        this.bannerActual = (this.bannerActual + 1) % this.banners.length;
+      }, 6500);
+    }
+  }
   private detenerCarrusel(): void {
-    if (this.intervaloCarrusel) {
-      clearInterval(this.intervaloCarrusel);
-      this.intervaloCarrusel = null;
-    }
+    if (this.intervaloCarrusel) clearInterval(this.intervaloCarrusel);
+    this.intervaloCarrusel = null;
   }
 
-  // =========================================================
-  // URL IMAGEN BANNER
-  // =========================================================
-
-  imagenBannerUrl(banner: HomeBanner): string | null {
-    if (!banner.imagen) {
-      return null;
-    }
-
-    return this.uploadsUrl + banner.imagen;
-  }
-
-  // =========================================================
-  // URL IMAGEN COLECCIÓN
-  // =========================================================
-
-  imagenColeccionUrl(coleccion: HomeColeccion): string | null {
-    if (!coleccion.imagen) {
-      return null;
-    }
-
-    return this.uploadsUrl + coleccion.imagen;
-  }
-
-  // =========================================================
-  // ENLACE BANNER
-  // =========================================================
-
-  enlaceBanner(banner: HomeBanner): string {
-    if (!banner.enlaceBoton || !banner.enlaceBoton.trim()) {
-      return '#productos';
-    }
-
-    return banner.enlaceBoton;
-  }
-
-  // =========================================================
-  // ENLACE COLECCIÓN
-  // =========================================================
-
-  enlaceColeccion(coleccion: HomeColeccion): string {
-    if (!coleccion.enlace || !coleccion.enlace.trim()) {
-      return '#productos';
-    }
-
-    return coleccion.enlace;
+  enlaceBanner(banner: HomeBanner): string { return this.enlaceSeguro(banner.enlaceBoton); }
+  enlaceColeccion(coleccion: HomeColeccion): string { return this.enlaceSeguro(coleccion.enlace); }
+  private enlaceSeguro(ruta?: string | null): string {
+    if (!ruta || !ruta.startsWith('/') || ruta.startsWith('//') || ruta.includes('\\')) return '/tienda';
+    return ruta;
   }
 }
