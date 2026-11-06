@@ -1,4 +1,4 @@
-﻿// =========================================================
+// =========================================================
 // COMPRA ONLINE
 // =========================================================
 
@@ -17,7 +17,7 @@ export interface DireccionEnvioRequest {
 
 export interface CompraRequest {
   items: CompraItem[];
-  medioPago: 'YAPE' | 'TARJETA';
+  medioPago: 'YAPE' | 'TARJETA' | 'CONTRA_ENTREGA';
   direccionEnvio: DireccionEnvioRequest;
 }
 

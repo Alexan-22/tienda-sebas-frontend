@@ -8,9 +8,9 @@
     <!-- LOGO Y MARCA -->
     <div class="admin-brand">
       <a routerLink="/admin/dashboard" (click)="cerrarMenu()">
-        <div class="brand-icon-box">SC</div>
+        <div class="brand-icon-box">{{ (tiendaService.tiendaActual()?.nombre || 'TIENDA').slice(0, 2).toUpperCase() }}</div>
         <div>
-          <strong>SEBAS COLLECTION</strong>
+          <strong>{{ tiendaService.tiendaActual()?.nombre || 'MI TIENDA' }}</strong>
           <span>PANEL ADMINISTRATIVO</span>
         </div>
       </a>
@@ -50,8 +50,20 @@
         </span>
         Productos
       </a>
+      <a routerLink="/admin/categorias" routerLinkActive="active" (click)="cerrarMenu()">
+        <span class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        </span>
+        Categorias
+      </a>
 
-      <a routerLink="/admin/stock" routerLinkActive="active" (click)="cerrarMenu()">
+      <a routerLink="/admin/mayoristas" routerLinkActive="active" title="Ventas por mayor B2B">
+  <span class="nav-icon">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+  </span>
+  <span>Ventas por mayor</span>
+</a>
+<a routerLink="/admin/stock" routerLinkActive="active" (click)="cerrarMenu()">
         <span class="nav-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
         </span>
@@ -82,11 +94,64 @@
         Usuarios
       </a>
 
-      <a routerLink="/admin/reportes" routerLinkActive="active" (click)="cerrarMenu()">
-        <span class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-        </span>
-        Reportes
+      <div class="reportes-nav-grupo">
+
+  <button type="button"
+          class="reportes-nav-boton"
+          [attr.aria-expanded]="menuReportesAbierto"
+          (click)="alternarReportes()">
+
+    <span class="nav-icon">▥</span>
+    <span>Reportes</span>
+    <span class="reportes-flecha">
+      {{ menuReportesAbierto ? '⌄' : '›' }}
+    </span>
+  </button>
+
+  @if (menuReportesAbierto) {
+    <div class="reportes-submenu">
+
+      <a routerLink="/admin/reportes"
+         [queryParams]="{ vista: 'ventas' }"
+         [class.active]="esReporteActivo('ventas')"
+         (click)="cerrarMenu()">
+        <span>▸</span>
+        Ventas e ingresos
+      </a>
+
+      <a routerLink="/admin/reportes"
+         [queryParams]="{ vista: 'inventario' }"
+         [class.active]="esReporteActivo('inventario')"
+         (click)="cerrarMenu()">
+        <span>▸</span>
+        Productos e inventario
+      </a>
+
+      <a routerLink="/admin/reportes"
+         [queryParams]="{ vista: 'canales' }"
+         [class.active]="esReporteActivo('canales')"
+         (click)="cerrarMenu()">
+        <span>▸</span>
+        Medios de pago y canales
+      </a>
+
+      <a routerLink="/admin/reportes"
+         [queryParams]="{ vista: 'clientes' }"
+         [class.active]="esReporteActivo('clientes')"
+         (click)="cerrarMenu()">
+        <span>▸</span>
+        Clientes y cuentas
+      </a>
+
+    </div>
+  }
+
+</div>
+
+      <span class="navigation-title">MI TIENDA</span>
+      <a routerLink="/admin/configuracion" routerLinkActive="active" (click)="cerrarMenu()">
+        <span class="nav-icon">⚙</span>
+        Configuración de tienda
       </a>
 
     </nav>
@@ -128,7 +193,7 @@
 
         <div class="topbar-titles">
           <span>PANEL DE CONTROL</span>
-          <strong>SEBAS COLLECTION</strong>
+          <strong>{{ tiendaService.tiendaActual()?.nombre || 'MI TIENDA' }}</strong>
         </div>
       </div>
 

@@ -85,7 +85,27 @@
                 @if (datos.metodoPago === 'TARJETA') { <span class="payment-check">✓</span> }
               </div>
             </button>
+                      @if (puedeContraEntrega) {
+              <button type="button" (click)="seleccionarPago('CONTRA_ENTREGA')" class="payment-option"
+                      [class.payment-option-active]="datos.metodoPago === 'CONTRA_ENTREGA'">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-base font-black text-slate-900">PAGO CONTRA ENTREGA</p>
+                    <p class="text-xs text-slate-500">Reparto propio en Lima. Paga al recibir.</p>
+                  </div>
+                  @if (datos.metodoPago === 'CONTRA_ENTREGA') { <span class="payment-check">âœ“</span> }
+                </div>
+              </button>
+            }
           </div>
+
+          @if (datos.metodoPago === 'CONTRA_ENTREGA') {
+            <div class="payment-panel">
+              <p class="font-bold">Cobro pendiente al recibir el pedido</p>
+              <p>El delivery propio cobrara el total confirmado por la tienda. No pagues ahora por la web.</p>
+              <p>Tu pedido quedara registrado y el pago solo se confirmara cuando el dinero sea recibido.</p>
+            </div>
+          }
 
           @if (datos.metodoPago === 'YAPE') {
             <div class="payment-panel">
@@ -176,7 +196,7 @@
           </div>
 
           <button type="button" (click)="continuarPago()" [disabled]="procesando" class="checkout-submit mt-6">
-            @if (procesando) { <span>Procesando pedido...</span> } @else { <span>Confirmar y Pagar</span> }
+            @if (procesando) { <span>Procesando pedido...</span> } @else { <span>{{ datos.metodoPago === "CONTRA_ENTREGA" ? "Confirmar pedido sin pagar ahora" : "Confirmar y Pagar" }}</span> }
           </button>
 
           <a [href]="whatsappUrl" target="_blank" rel="noopener noreferrer" class="whatsapp-button mt-3">

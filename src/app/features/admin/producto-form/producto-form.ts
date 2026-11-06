@@ -1,5 +1,8 @@
+import { CategoriaGestionService } from '../../../core/services/categoria-gestion';
+import { inject } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Categoria, Genero, Producto } from '../../../core/models/producto';
@@ -17,6 +20,9 @@ import { finalize, from, concatMap, toArray } from 'rxjs';
   styleUrl: './producto-form.css'
 })
 export class ProductoForm implements OnInit {
+  private readonly categoriaGestionService = inject(CategoriaGestionService);
+  private readonly http = inject(HttpClient);
+
   readonly maximoFotos = 12;
   galeria: ProductoImagen[] = [];
   archivosGaleria: File[] = [];
@@ -47,19 +53,9 @@ export class ProductoForm implements OnInit {
 
   private readonly uploadsUrl = `${environment.apiUrl}/uploads/`;
 
-  generos: Genero[] = [
-    { idGenero: 1, nombreGenero: 'Hombre', estado: true },
-    { idGenero: 2, nombreGenero: 'Mujer', estado: true },
-    { idGenero: 3, nombreGenero: 'Niño', estado: true },
-    { idGenero: 4, nombreGenero: 'Niña', estado: true }
-  ];
+  generos: Genero[] = [];
 
-  categorias: Categoria[] = [
-    { idCategoria: 1, nombreCategoria: 'Polos', estado: true },
-    { idCategoria: 2, nombreCategoria: 'Camisas', estado: true },
-    { idCategoria: 3, nombreCategoria: 'Pantalones', estado: true },
-    { idCategoria: 4, nombreCategoria: 'Casacas', estado: true }
-  ];
+  categorias: Categoria[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -70,6 +66,29 @@ export class ProductoForm implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.http.get<Genero[]>(`${environment.apiUrl}/api/generos`)
+      .subscribe({
+        next: datos => {
+          this.generos = (Array.isArray(datos) ? datos : [])
+            .filter(g => g.estado === true);
+        },
+        error: err => {
+          console.error('Error cargando generos:', err);
+          this.error = 'No se pudieron cargar los generos.';
+        }
+      });
+    // Listado real del administrador autenticado; no usar categorias fijas.
+    this.categoriaGestionService.listar().subscribe({
+      next: (datos) => {
+        this.categorias = (Array.isArray(datos) ? datos : [])
+          .filter((categoria) => categoria.estado === true);
+      },
+      error: (error) => {
+        console.error('No se pudieron cargar las categorias de esta tienda', error);
+        this.categorias = [];
+      }
+    });
+
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     if (id > 0) {
@@ -177,7 +196,7 @@ export class ProductoForm implements OnInit {
   cargarProducto(idProducto: number): void {
     this.cargando = true;
 
-    this.productoService.buscarPorId(idProducto).subscribe({
+    this.productoService.buscarAdmin(idProducto).subscribe({
       next: producto => {
         this.nombre = producto.nombre;
         this.descripcion = producto.descripcion ?? '';

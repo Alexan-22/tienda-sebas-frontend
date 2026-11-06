@@ -17,6 +17,16 @@ export class ProductoService {
   // =====================================================
   // PÚBLICO
   // =====================================================
+  listarAdmin(): Observable<Producto[]> {
+    return this.http.get<Producto[]>(`${this.apiUrl}/admin`);
+  }
+
+  buscarAdmin(idProducto: number): Observable<Producto> {
+    return this.http.get<Producto>(
+      `${this.apiUrl}/admin/${idProducto}`
+    );
+  }
+
   listar(): Observable<Producto[]> {
     return this.http.get<Producto[]>(`${this.apiUrl}/public`);
   }

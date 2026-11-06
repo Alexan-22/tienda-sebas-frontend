@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TiendaService } from '../../../core/services/tienda.service';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
@@ -57,6 +59,14 @@ interface CanalReporte {
   styleUrl: './reportes.css'
 })
 export class Reportes implements OnInit {
+  private readonly ruta = inject(ActivatedRoute);
+  private readonly navegacion = inject(Router);
+  private readonly tiendaService = inject(TiendaService);
+
+  get nombreTienda(): string {
+    return this.tiendaService.tiendaActual()?.nombre || 'Mi tienda';
+  }
+
   // PESTAÑA ACTIVA
   pestanaActiva: PestanaReporte = 'ventas';
 
@@ -67,6 +77,7 @@ export class Reportes implements OnInit {
   usuarios: UsuarioAdmin[] = [];
   detalles: DetalleVenta[] = [];
   inventario: ProductoTalla[] = [];
+  stockIncompleto = false;
 
   // FILTROS
   periodo = 'TODO';
@@ -90,7 +101,23 @@ export class Reportes implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.ruta.queryParamMap.subscribe(params => {
+      const vista = params.get('vista');
+      if (vista === 'ventas' || vista === 'inventario' || vista === 'canales' || vista === 'clientes') {
+        this.pestanaActiva = vista;
+      }
+    });
     this.cargarReportes();
+  }
+
+  seleccionarPestana(vista: PestanaReporte): void {
+    this.pestanaActiva = vista;
+    void this.navegacion.navigate([], {
+      relativeTo: this.ruta,
+      queryParams: { vista },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
   }
 
   cargarReportes(): void {
@@ -98,9 +125,9 @@ export class Reportes implements OnInit {
     this.error = '';
 
     forkJoin({
-      ventas: this.ventaService.listarTodas().pipe(catchError(error => (console.error('Error cargando ventas:', error), of([] as Venta[])))),
-      productos: this.productoService.listar().pipe(catchError(error => (console.error('Error cargando productos:', error), of([] as Producto[])))),
-      usuarios: this.usuarioService.listarTodos().pipe(catchError(error => (console.error('Error cargando usuarios:', error), of([] as UsuarioAdmin[]))))
+      ventas: this.ventaService.listarTodas(),
+      productos: this.productoService.listarAdmin(),
+      usuarios: this.usuarioService.listarTodos()
     }).subscribe({
       next: respuesta => {
         this.ventas = respuesta.ventas ?? [];
@@ -117,28 +144,21 @@ export class Reportes implements OnInit {
   }
 
   private cargarInformacionSecundaria(): void {
-    const detalles$ = this.ventaService.listarDetallesParaReportes().pipe(
-      catchError(error => (console.error('Error cargando detalles para reportes:', error), of([] as DetalleVenta[])))
-    );
-
-    const consultasStock = this.productos.map(producto =>
-      this.productoTallaService.listarPorProducto(producto.idProducto).pipe(
-        catchError(error => (console.error(`Error stock producto ${producto.idProducto}:`, error), of([] as ProductoTalla[])))
-      )
-    );
-
-    const stock$ = consultasStock.length > 0 ? forkJoin(consultasStock) : of([] as ProductoTalla[][]);
-
-    forkJoin({ detalles: detalles$, stock: stock$ }).subscribe({
+    // Dos consultas, ambas protegidas y filtradas por tenant en el backend.
+    forkJoin({
+      detalles: this.ventaService.listarDetallesParaReportes(),
+      inventario: this.productoTallaService.listarInventarioParaReportes()
+    }).subscribe({
       next: respuesta => {
         this.detalles = respuesta.detalles ?? [];
-        this.inventario = respuesta.stock.flat();
+        this.inventario = respuesta.inventario ?? [];
+        this.stockIncompleto = false;
         this.aplicarFiltros();
         this.cargando = false;
       },
       error: error => {
-        console.error('Error cargando información secundaria:', error);
-        this.error = 'No se pudo completar la información de reportes.';
+        console.error('Error cargando detalle o inventario de reportes:', error);
+        this.error = 'No se pudieron cargar los detalles de ventas o el inventario de esta tienda.';
         this.cargando = false;
       }
     });
@@ -158,13 +178,21 @@ export class Reportes implements OnInit {
       const tipoVenta = this.obtenerTipoVenta(venta);
       const cumpleCanal = this.canal === 'TODOS' || tipoVenta === this.canal;
 
-      return cumplePeriodo && cumpleCanal;
+      return cumplePeriodo && cumpleCanal && this.esVentaContabilizable(venta);
     });
 
     this.generarProductosVendidos();
     this.generarMediosPago();
     this.generarCategorias();
     this.generarCanales();
+  }
+
+  private esVentaContabilizable(venta: Venta): boolean {
+    const estado = String(venta.estado ?? '').toUpperCase();
+    const pedido = String(venta.estadoPedido ?? '').toUpperCase();
+    // No sumar pedidos anulados a los importes comerciales.
+    return !['CANCELADO', 'CANCELADA', 'ANULADO', 'ANULADA'].includes(estado)
+      && !['CANCELADO', 'CANCELADA', 'ANULADO', 'ANULADA'].includes(pedido);
   }
 
   private cumplePeriodo(fecha: Date, ahora: Date): boolean {
@@ -246,7 +274,7 @@ export class Reportes implements OnInit {
     const ids = this.idsVentasFiltradas();
     return this.detalles.filter(detalle => {
       const idVenta = this.obtenerIdVentaDetalle(detalle);
-      if (idVenta === null) return this.periodo === 'TODO' && this.canal === 'TODOS';
+      if (idVenta === null) return false;
       return ids.has(idVenta);
     });
   }
@@ -362,6 +390,91 @@ export class Reportes implements OnInit {
     this.categorias = resultado;
   }
 
+  get productosInactivos(): number {
+    return this.productos.filter(p => !p.estado).length;
+  }
+
+  get inventarioCritico(): ProductoTalla[] {
+    return [...this.inventario]
+      .filter(item => Number(item.stock ?? 0) <= 5)
+      .sort((a, b) => Number(a.stock ?? 0) - Number(b.stock ?? 0))
+      .slice(0, 15);
+  }
+
+  get ventasRecientes(): Venta[] {
+    return [...this.ventasFiltradas]
+      .sort((a, b) => new Date(b.fechaVenta).getTime() - new Date(a.fechaVenta).getTime())
+      .slice(0, 12);
+  }
+
+  get mediosDestacados(): MedioPagoReporte[] {
+    return this.mediosPago.slice(0, 4);
+  }
+
+  get clientesCompradores(): number {
+    return this.rankingClientes.length;
+  }
+
+  get clientesRecurrentes(): number {
+    return this.rankingClientes.filter(c => c.compras > 1).length;
+  }
+
+  get compradoresOnline(): number {
+    return new Set(this.ventasFiltradas
+      .filter(v => this.obtenerTipoVenta(v) === 'ONLINE' && v.idUsuario != null)
+      .map(v => 'web-' + v.idUsuario)).size;
+  }
+
+  get compradoresPresenciales(): number {
+    return new Set(this.ventasFiltradas
+      .filter(v => this.obtenerTipoVenta(v) === 'PRESENCIAL' && v.idClientePresencial != null)
+      .map(v => 'pos-' + v.idClientePresencial)).size;
+  }
+
+  get rankingClientes(): Array<{ clave: string; nombre: string; tipo: string; compras: number; total: number }> {
+    const mapa = new Map<string, { clave: string; nombre: string; tipo: string; compras: number; total: number }>();
+    for (const venta of this.ventasFiltradas) {
+      const tipo = this.obtenerTipoVenta(venta);
+      const id = tipo === 'ONLINE' ? venta.idUsuario : venta.idClientePresencial;
+      if (id == null) continue;
+      const clave = `${tipo}-${id}`;
+      const nombre = `${venta.nombreCliente ?? ''} ${venta.apellidoCliente ?? ''}`.trim() || `Cliente ${id}`;
+      const actual = mapa.get(clave);
+      if (actual) {
+        actual.compras++;
+        actual.total += Number(venta.total ?? 0);
+      } else {
+        mapa.set(clave, { clave, nombre, tipo, compras: 1, total: Number(venta.total ?? 0) });
+      }
+    }
+    return Array.from(mapa.values()).sort((a, b) => b.total - a.total);
+  }
+
+  get ventasPorDia(): Array<{ fecha: string; ventas: number; total: number; porcentaje: number }> {
+    const mapa = new Map<string, { fecha: string; ventas: number; total: number; porcentaje: number }>();
+    for (const venta of this.ventasFiltradas) {
+      const fecha = String(venta.fechaVenta ?? '').slice(0, 10);
+      if (!fecha) continue;
+      const actual = mapa.get(fecha) ?? { fecha, ventas: 0, total: 0, porcentaje: 0 };
+      actual.ventas++;
+      actual.total += Number(venta.total ?? 0);
+      mapa.set(fecha, actual);
+    }
+    const filas = Array.from(mapa.values()).sort((a,b) => a.fecha.localeCompare(b.fecha)).slice(-15);
+    const max = Math.max(0, ...filas.map(f => f.total));
+    return filas.map(f => ({ ...f, porcentaje: max ? 100 * f.total / max : 0 }));
+  }
+
+  get ingresoOnline(): number {
+    return this.ventasFiltradas.filter(v => this.obtenerTipoVenta(v) === 'ONLINE')
+      .reduce((acc, v) => acc + Number(v.total ?? 0), 0);
+  }
+
+  get ingresoPresencial(): number {
+    return this.ventasFiltradas.filter(v => this.obtenerTipoVenta(v) === 'PRESENCIAL')
+      .reduce((acc, v) => acc + Number(v.total ?? 0), 0);
+  }
+
   get totalVentas(): number { return this.ventasFiltradas.length; }
   get ingresosTotales(): number { return this.ventasFiltradas.reduce((total, venta) => total + Number(venta.total ?? 0), 0); }
   get ventaPromedio(): number { return this.totalVentas > 0 ? this.ingresosTotales / this.totalVentas : 0; }
@@ -392,7 +505,7 @@ export class Reportes implements OnInit {
     pdf.setTextColor(255, 255, 255);
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(18);
-    pdf.text('TIENDA SEBAS', 14, 15);
+    pdf.text(this.nombreTienda.slice(0, 45), 14, 15);
     pdf.setFont('helvetica', 'normal');
     pdf.setFontSize(9);
     pdf.text('REPORTE DE VENTAS E INDICADORES', 14, 23);
@@ -574,7 +687,7 @@ export class Reportes implements OnInit {
       pdf.setFontSize(7);
       pdf.setTextColor(130, 130, 130);
 
-      pdf.text('Tienda Sebas - Reporte administrativo', 14, altoPagina - 8);
+      pdf.text(`${this.nombreTienda} - Reporte administrativo`.slice(0, 85), 14, altoPagina - 8);
       pdf.text(`Página ${pagina} de ${totalPaginas}`, anchoPagina - 14, altoPagina - 8, { align: 'right' });
     }
 
@@ -582,7 +695,7 @@ export class Reportes implements OnInit {
     const periodoArchivo = this.periodo.toLowerCase().replace(/_/g, '-');
     const canalArchivo = this.canal.toLowerCase();
 
-    pdf.save(`reporte-ventas-${periodoArchivo}-${canalArchivo}-${fechaArchivo}.pdf`);
+    pdf.save(`reporte-general-${periodoArchivo}-${canalArchivo}-${fechaArchivo}.pdf`);
   }
 
   private obtenerNombrePeriodo(): string {
@@ -640,7 +753,7 @@ export class Reportes implements OnInit {
     const generado = new Date().toLocaleString('es-PE');
 
     const resumen = [
-      ['TIENDA SEBAS - REPORTE DE VENTAS'],
+      [`${this.nombreTienda} - REPORTE DE VENTAS`],
       [],
       ['Período', periodo],
       ['Canal', canal],
@@ -823,7 +936,7 @@ export class Reportes implements OnInit {
 
     XLSX.writeFile(
       libro,
-      `reporte-ventas-${periodoArchivo}-${canalArchivo}-${fechaArchivo}.xlsx`,
+      `reporte-general-${periodoArchivo}-${canalArchivo}-${fechaArchivo}.xlsx`,
       { compression: true }
     );
   }

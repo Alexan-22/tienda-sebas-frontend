@@ -9,6 +9,7 @@ import { VentaService } from '../../core/services/venta';
 import { ProductoTallaService } from '../../core/services/producto-talla';
 import { CompraRequest, CompraResponse } from '../../core/models/venta';
 import { DatosCheckout, MetodoPago } from '../../core/models/checkout';
+import { ContraEntregaService } from '../../core/services/contraentrega';
 import { ProductoTalla } from '../../core/models/producto-talla';
 import { PromoBar } from '../../shared/components/promo-bar/promo-bar';
 import { Navbar } from '../../shared/components/navbar/navbar';
@@ -57,6 +58,7 @@ export class Checkout {
   readonly qrYape = '/images/home/yape-qr.jpeg';
   readonly whatsappUrl = 'https://wa.me/51935421403?text=Hola%2C%20tengo%20una%20consulta%20sobre%20mi%20pedido.';
 
+  contraEntregaDisponible = false;
   procesando = false;
   error = '';
   pagoYapeConfirmado = false;
@@ -84,10 +86,15 @@ export class Checkout {
     public carritoService: CarritoService,
     private ventaService: VentaService,
     private productoTallaService: ProductoTallaService,
+    private contraEntregaService: ContraEntregaService,
     private router: Router
   ) {
     this.items = carritoService.items;
     this.subtotal = carritoService.subtotal;
+    this.contraEntregaService.config().subscribe({
+      next: config => { this.contraEntregaDisponible = config.habilitado; },
+      error: () => { this.contraEntregaDisponible = false; }
+    });
 
     if (this.items().length === 0) {
       this.router.navigate(['/carrito']);
@@ -103,6 +110,7 @@ export class Checkout {
   }
 
   cambiarDepartamento(): void {
+    if (this.datos.metodoPago === 'CONTRA_ENTREGA') this.datos.metodoPago = 'YAPE';
     this.datos.provincia = '';
     this.datos.distrito = '';
   }
@@ -158,7 +166,17 @@ export class Checkout {
   // MÉTODO DE PAGO
   // =========================================================
 
+  get puedeContraEntrega(): boolean {
+    return this.contraEntregaDisponible &&
+      this.normalizarTexto(this.datos.departamento) === 'lima' &&
+      this.normalizarTexto(this.datos.provincia) === 'lima';
+  }
+
   seleccionarPago(metodo: MetodoPago): void {
+    if (metodo === 'CONTRA_ENTREGA' && !this.puedeContraEntrega) {
+      this.error = 'Contra entrega solo esta disponible para Lima Metropolitana en tiendas habilitadas.';
+      return;
+    }
     this.datos.metodoPago = metodo;
     this.error = '';
 
@@ -168,6 +186,10 @@ export class Checkout {
   }
 
   continuarPago(): void {
+    if (this.datos.metodoPago === 'CONTRA_ENTREGA' && !this.puedeContraEntrega) {
+      this.error = 'El pago contra entrega no esta disponible para esta direccion.';
+      return;
+    }
     this.error = '';
 
     if (

@@ -138,6 +138,12 @@ export const routes: Routes = [
       },
 
       {
+        path: 'categorias',
+        loadComponent: () => import('./features/admin/categorias/categorias')
+          .then(m => m.CategoriasAdmin)
+      },
+
+      {
         path: 'productos/nuevo',
         component: ProductoForm
       },
@@ -146,6 +152,13 @@ export const routes: Routes = [
         path: 'productos/:id/editar',
         component: ProductoForm
       },
+
+      {
+        path: 'mayoristas',
+        loadComponent: () => import('./features/admin/mayoristas/mayoristas')
+          .then(m => m.Mayoristas)
+      },
+
 
       {
         path: 'stock',
@@ -175,6 +188,12 @@ export const routes: Routes = [
       {
         path: 'home',
         component: HomeAdmin
+      },
+
+      {
+        path: 'configuracion',
+        loadComponent: () => import('./features/admin/configuracion-tienda/configuracion-tienda')
+          .then(m => m.ConfiguracionTienda)
       }
 
     ]

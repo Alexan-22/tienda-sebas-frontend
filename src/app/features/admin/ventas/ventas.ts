@@ -1,3 +1,4 @@
+import { GestionEnvios } from './gestion-envios';
 import {
   ChangeDetectorRef,
   Component,
@@ -29,7 +30,7 @@ import {
 
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule, GestionEnvios
   ],
 
   templateUrl: './ventas.html',

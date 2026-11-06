@@ -1,6 +1,7 @@
-﻿export type MetodoPago =
+export type MetodoPago =
   | 'YAPE'
-  | 'TARJETA';
+  | 'TARJETA'
+  | 'CONTRA_ENTREGA';
 
 
 export interface DatosCheckout {
