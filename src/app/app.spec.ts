@@ -1,12 +1,14 @@
 
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 
 describe('App - Sebas Collection', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App]
+      imports: [App], providers: [provideHttpClient(), provideHttpClientTesting()]
     }).compileComponents();
   });
 
@@ -22,7 +24,12 @@ describe('App - Sebas Collection', () => {
     const fixture = TestBed.createComponent(App);
 
     fixture.detectChanges();
+    TestBed.inject(HttpTestingController).expectOne('/api/v1/tiendas/config').flush({
+      id: 1, nombre: 'Tienda de prueba', subdominio: 'fixture', colorPrimario: '#171717', logoUrl: null
+    });
     await fixture.whenStable();
+    fixture.detectChanges();
+    TestBed.inject(HttpTestingController).verify();
 
     const compiled = fixture.nativeElement as HTMLElement;
 

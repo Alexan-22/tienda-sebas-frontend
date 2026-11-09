@@ -66,95 +66,40 @@
           <h2 class="text-xl font-black uppercase text-slate-900 mt-1">Método de Pago</h2>
 
           <div class="mt-6 grid gap-4 sm:grid-cols-2">
-            <button type="button" (click)="seleccionarPago('YAPE')" class="payment-option" [class.payment-option-active]="datos.metodoPago === 'YAPE'">
+            <button type="button" (click)="seleccionarPago('YAPE')" [disabled]="!yapeDisponible" class="payment-option" [class.payment-option-active]="datos.metodoPago === 'YAPE'">
               <div class="flex items-center justify-between">
                 <div>
                   <p class="text-base font-black text-slate-900">YAPE</p>
-                  <p class="text-xs text-slate-500">Pago rápido mediante QR.</p>
+                  <p class="text-xs text-slate-500">Verificación manual por la tienda.</p>
                 </div>
                 @if (datos.metodoPago === 'YAPE') { <span class="payment-check">✓</span> }
               </div>
             </button>
 
-            <button type="button" (click)="seleccionarPago('TARJETA')" class="payment-option" [class.payment-option-active]="datos.metodoPago === 'TARJETA'">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-base font-black text-slate-900">TARJETA</p>
-                  <p class="text-xs text-slate-500">Débito o Crédito.</p>
-                </div>
-                @if (datos.metodoPago === 'TARJETA') { <span class="payment-check">✓</span> }
-              </div>
-            </button>
-                      @if (puedeContraEntrega) {
-              <button type="button" (click)="seleccionarPago('CONTRA_ENTREGA')" class="payment-option"
-                      [class.payment-option-active]="datos.metodoPago === 'CONTRA_ENTREGA'">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-base font-black text-slate-900">PAGO CONTRA ENTREGA</p>
-                    <p class="text-xs text-slate-500">Reparto propio en Lima. Paga al recibir.</p>
-                  </div>
-                  @if (datos.metodoPago === 'CONTRA_ENTREGA') { <span class="payment-check">âœ“</span> }
-                </div>
-              </button>
-            }
+            <button type="button" (click)="seleccionarPago('TRANSFERENCIA')" [disabled]="!cuentas.length" class="payment-option" [class.payment-option-active]="datos.metodoPago==='TRANSFERENCIA'">TRANSFERENCIA BANCARIA</button>
+
           </div>
 
-          @if (datos.metodoPago === 'CONTRA_ENTREGA') {
-            <div class="payment-panel">
-              <p class="font-bold">Cobro pendiente al recibir el pedido</p>
-              <p>El delivery propio cobrara el total confirmado por la tienda. No pagues ahora por la web.</p>
-              <p>Tu pedido quedara registrado y el pago solo se confirmara cuando el dinero sea recibido.</p>
-            </div>
-          }
+
 
           @if (datos.metodoPago === 'YAPE') {
             <div class="payment-panel">
-              <div class="text-center">
-                <span class="text-[10px] font-black uppercase tracking-widest text-indigo-600">Yape Oficial</span>
-                <h3 class="text-xl font-black uppercase mt-1 text-slate-900">Escanea el Código QR</h3>
-                <p class="text-xs text-slate-500 mt-1">Realiza el depósito por S/ {{ totalEstimado | number:'1.2-2' }}</p>
-              </div>
-              <div class="yape-qr-wrapper">
-                <img [src]="qrYape" alt="QR Yape" class="yape-qr rounded-xl shadow-md">
-              </div>
-              <div class="yape-information">
-                <div><span>Número Yape</span><strong>{{ numeroYape }}</strong></div>
-                <div><span>Monto Exacto</span><strong>S/ {{ totalEstimado | number:'1.2-2' }}</strong></div>
-              </div>
-              <label class="confirmation-check mt-5">
-                <input type="checkbox" [(ngModel)]="pagoYapeConfirmado">
-                <span>Confirmo que realicé el pago mediante Yape correctamente.</span>
-              </label>
+              @if (yapeDisponible) {
+                <p class="font-bold">Pago Yape de esta tienda</p>
+                <p>Al confirmar el pedido, se mostrara el QR de tu tienda y el monto exacto.</p>
+                <p>El pago quedara PENDIENTE hasta que el administrador verifique el deposito.</p>
+                <p>No realices un deposito antes de confirmar tu pedido.</p>
+              } @else {
+                <p role="alert">Yape no esta disponible para esta tienda.</p>
+              }
             </div>
           }
-
-          @if (datos.metodoPago === 'TARJETA') {
-            <div class="payment-panel">
-              <h3 class="text-lg font-black uppercase text-slate-900">Detalles de Tarjeta (Demo)</h3>
-              <div class="mt-4 space-y-4">
-                <div>
-                  <label class="checkout-label">Número de Tarjeta *</label>
-                  <input type="text" maxlength="19" [(ngModel)]="numeroTarjeta" (input)="normalizarNumeroTarjeta()" placeholder="1234 5678 1234 5678" class="checkout-input">
-                </div>
-                <div>
-                  <label class="checkout-label">Titular *</label>
-                  <input type="text" [(ngModel)]="titularTarjeta" placeholder="Nombre en la tarjeta" class="checkout-input">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <label class="checkout-label">Vencimiento *</label>
-                    <input type="text" maxlength="5" [(ngModel)]="vencimientoTarjeta" (input)="normalizarVencimiento()" placeholder="MM/AA" class="checkout-input">
-                  </div>
-                  <div>
-                    <label class="checkout-label">CVV *</label>
-                    <input type="password" maxlength="4" [(ngModel)]="cvvTarjeta" (input)="normalizarCvv()" placeholder="123" class="checkout-input">
-                  </div>
-                </div>
-              </div>
-            </div>
-          }
-
-          <label class="terms-check mt-6">
+          @if(datos.metodoPago==='TRANSFERENCIA') {
+ <div class="payment-panel"><label for="cuenta-banco">Cuenta bancaria de esta tienda</label>
+ <select id="cuenta-banco" [(ngModel)]="cuentaBancariaId" class="checkout-input"><option [ngValue]="null">Selecciona una cuenta</option>@for(c of cuentas;track c.id){<option [ngValue]="c.id">{{c.banco}} · {{c.titular}} · {{c.numeroCuenta}} · {{c.moneda}}</option>}</select>
+ <p>El pago quedará pendiente hasta que el administrador verifique la transferencia.</p></div>
+ }
+ <label class="terms-check mt-6">
             <input type="checkbox" [(ngModel)]="aceptaTerminos">
             <span>He leído y acepto los términos y condiciones de compra de Tienda Sebas.</span>
           </label>
@@ -196,12 +141,10 @@
           </div>
 
           <button type="button" (click)="continuarPago()" [disabled]="procesando" class="checkout-submit mt-6">
-            @if (procesando) { <span>Procesando pedido...</span> } @else { <span>{{ datos.metodoPago === "CONTRA_ENTREGA" ? "Confirmar pedido sin pagar ahora" : "Confirmar y Pagar" }}</span> }
+            @if (procesando) { <span>Procesando pedido...</span> } @else { <span>Confirmar pedido</span> }
           </button>
 
-          <a [href]="whatsappUrl" target="_blank" rel="noopener noreferrer" class="whatsapp-button mt-3">
-            <span>Consultar por WhatsApp 💬</span>
-          </a>
+
 
           <a routerLink="/carrito" class="block text-center mt-4 text-[9px] font-black uppercase tracking-wider text-slate-600 underline">Volver al carrito</a>
         </div>

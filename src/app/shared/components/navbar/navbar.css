@@ -19,6 +19,6 @@
 @media(max-width:850px){.desktop-nav,.search{display:none}.menu-toggle{display:grid!important}.nav-inner{min-height:70px;padding:0 16px}.brand-logo{height:50px}.brand{min-width:0}.mobile-nav{display:flex;flex-direction:column;gap:0;padding:15px 20px 25px;border-top:1px solid #eee;box-shadow:0 15px 25px #0000000d;background:white}.mobile-nav>a,.mobile-nav>button{font-size:12px;font-weight:650;letter-spacing:.09em;text-transform:uppercase;text-decoration:none;color:#161616;background:none;border:0;border-bottom:1px solid #eee;padding:15px 0;text-align:left;cursor:pointer}.mobile-nav form{display:flex;gap:8px;margin-bottom:8px}.mobile-nav input{min-width:0;flex:1;border:1px solid #ddd;padding:10px}.mobile-nav form button{border:0;background:#161616;color:#fff;padding:0 13px}}
 
 
-========================================
+/* Separador de estilos */
 
 @media(prefers-reduced-motion:reduce){.nav-link,.brand-logo{transition:none}}

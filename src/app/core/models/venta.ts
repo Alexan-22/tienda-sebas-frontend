@@ -16,8 +16,10 @@ export interface DireccionEnvioRequest {
 }
 
 export interface CompraRequest {
+  claveIdempotencia?: string;
+  cuentaBancariaId?: number;
   items: CompraItem[];
-  medioPago: 'YAPE' | 'TARJETA' | 'CONTRA_ENTREGA';
+  medioPago: 'YAPE' | 'TRANSFERENCIA';
   direccionEnvio: DireccionEnvioRequest;
 }
 
